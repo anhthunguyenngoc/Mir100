@@ -1,0 +1,38 @@
+.toolbar-selection {
+  position: absolute;
+  height: fit-content;
+  width: 200px;
+  top: 110%;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  background-color: var(--color-button);
+  border: 1px solid var(--color-white-text);
+  border-radius: 5px;
+  padding: 2px;
+  gap: 2px;
+  z-index: 3;
+  box-shadow:
+    0 3px 8px rgb(42, 115, 120, 0.1),
+    -3px 3px 8px rgb(42, 115, 120, 0.1),
+    3px 3px 8px rgb(42, 115, 120, 0.1);
+}
+
+.toolbar-option {
+  border-radius: 2px;
+  color: var(--color-white-text);
+  padding: 8px;
+}
+
+.toolbar-option.selected {
+  background-color: var(--color-button-selected);
+}
+
+.toolbar-option:hover {
+  background-color: var(--color-button-hover);
+  cursor: pointer;
+}
+
+.size-15px {
+  width: 15px;
+  height: 15px;
+}

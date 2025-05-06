@@ -34,18 +34,17 @@ export const MyZigzag = ({
   name,
   pointerLength,
   pointerWidth,
+  pointRadius,
   fill,
   dash,
   stroke,
   strokeWidth,
   draggable,
-  onDragStart,
   onMouseEnter,
   onMouseLeave,
   onClick,
   selected,
   isDrawing,
-  onUpdatePoints,
   radius,
   startP,
   endP,
@@ -63,8 +62,8 @@ export const MyZigzag = ({
 
   useEffect(() => {
     onUpdateShape({
-      width: Math.abs(endP.x - startP.x),
-      height: Math.abs(endP.y - startP.y),
+      width: Math.abs(endP?.x - startP?.x),
+      height: Math.abs(endP?.y - startP?.y),
     });
   }, [startP, endP]);
 
@@ -73,8 +72,6 @@ export const MyZigzag = ({
       <Path
         name={name}
         data={getZigzagPathData([startP, midP, endP], radius)}
-        pointerLength={pointerLength}
-        pointerWidth={pointerWidth}
         fill="transparent"
         dash={dash}
         stroke={selected ? 'red' : hovered ? 'blue' : stroke}
@@ -119,15 +116,16 @@ export const MyZigzag = ({
       {/* Thêm mũi tên hiển thị hướng đi của zigzag */}
       {startP && midP && endP && (
         <Arrow
-          x={direction === LineDirection.START_TO_END ? endP.x : startP.x}
-          y={direction === LineDirection.START_TO_END ? endP.y : startP.y}
+          x={direction === LineDirection.START_TO_END ? endP?.x : startP?.x}
+          y={direction === LineDirection.START_TO_END ? endP?.y : startP?.y}
           pointerAtBeginning={endP.x < midP.x}
           pointerAtEnding={endP.x >= midP.x}
           points={[-10, 0, 0, 0]}
-          pointerLength={15}
-          pointerWidth={10}
-          stroke="black"
-          fill="black"
+          pointerLength={pointerLength}
+          pointerWidth={pointerWidth}
+          strokeWidth={hovered ? strokeWidth + 2 : strokeWidth}
+          stroke={selected ? 'red' : hovered ? 'blue' : stroke}
+          fill={fill}
         />
       )}
 
@@ -135,12 +133,12 @@ export const MyZigzag = ({
         [startP, midP, endP].map((point, index) => (
           <MyCircle
             key={index}
-            x={point.x}
-            y={point.y}
-            radius={6}
+            x={point?.x}
+            y={point?.y}
+            radius={pointRadius}
             fill="white"
             stroke="blue"
-            strokeWidth={1}
+            strokeWidth={strokeWidth}
             draggable={true}
             isVisible={!isDrawing && (hovered || selected)}
             onDragStart={() => {

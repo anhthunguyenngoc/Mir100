@@ -62,6 +62,7 @@ export const MyULine = ({
   name,
   pointerLength,
   pointerWidth,
+  pointRadius,
   fill,
   dash,
   stroke,
@@ -137,10 +138,11 @@ export const MyULine = ({
           x={direction === LineDirection.START_TO_END ? endP.x : startP.x}
           y={direction === LineDirection.START_TO_END ? endP.y : startP.y}
           points={[-10, 0, 0, 0]}
-          pointerLength={15}
-          pointerWidth={10}
-          stroke="black"
-          fill="black"
+          pointerLength={pointerLength}
+          pointerWidth={pointerWidth}
+          strokeWidth={strokeWidth}
+          stroke={selected ? 'red' : hovered ? 'blue' : stroke} 
+          fill={fill}
           rotation={getArrowRotation([startP, bottomP, endP], direction)}
         />
       )}
@@ -150,10 +152,10 @@ export const MyULine = ({
           <MyCircle
             x={point.x}
             y={point.y}
-            radius={6}
+            radius={pointRadius}
             fill="white"
             stroke="blue"
-            strokeWidth={1}
+            strokeWidth={strokeWidth}
             draggable={true}
             isVisible={!isDrawing && (hovered || selected)}
             onDragEnd={(x, y) => {

@@ -24,6 +24,7 @@ export const MyTangent = ({
   points,
   pointerLength,
   pointerWidth,
+  pointRadius,
   fill,
   dash,
   stroke,
@@ -35,7 +36,6 @@ export const MyTangent = ({
   onClick,
   selected,
   isDrawing,
-  onUpdatePoints,
   reversed,
   contactPoint,
   arc,
@@ -44,28 +44,18 @@ export const MyTangent = ({
 }) => {
   const [hovered, setHovered] = useState(false);
 
-  const onContactPointDragEnd = (x, y) => {
+  const onUpdateContactPoint = (x, y) => {
     const dx = x - arc.center.x;
     const dy = y - arc.center.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
 
     if (Math.abs(distance - arc.radius) <= 5) {
-      onUpdatePoints(getTangentLine({ x, y }, arc.center, arc.radius));
-    }
-  };
-
-  const onContactPointDragMove = (x, y) => {
-    const dx = x - arc.center.x;
-    const dy = y - arc.center.y;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-
-    if (Math.abs(distance - arc.radius) < 5) {
-      onUpdatePoints(getTangentLine({ x, y }, arc.center, arc.radius));
+      onUpdateShape({points: getTangentLine({ x, y }, arc.center, arc.radius)});
     }
   };
 
   useEffect(() => {
-    onUpdatePoints(getTangentLine(contactPoint, arc.center, arc.radius));
+    onUpdateShape({points: getTangentLine(contactPoint, arc.center, arc.radius)});
   }, [contactPoint]);
 
   return (
@@ -120,10 +110,10 @@ export const MyTangent = ({
               <MyCircle
                 x={points[index]}
                 y={points[index + 1]}
-                radius={6}
+                radius={pointRadius}
                 fill="white"
                 stroke="blue"
-                strokeWidth={1}
+                strokeWidth={strokeWidth}
                 draggable={true}
                 isVisible={!isDrawing && (hovered || selected)}
                 onDragEnd={(x, y) => {
@@ -145,14 +135,14 @@ export const MyTangent = ({
       <MyCircle //Contact Point
         x={contactPoint.x}
         y={contactPoint.y}
-        radius={6}
+        radius={pointRadius}
         fill="white"
         stroke="blue"
-        strokeWidth={1}
+        strokeWidth={strokeWidth}
         draggable={true}
         isVisible={hovered || selected}
-        onDragEnd={onContactPointDragEnd}
-        onDragMove={onContactPointDragMove}
+        onDragEnd={onUpdateContactPoint}
+        onDragMove={onUpdateContactPoint}
         dragBoundFunc={(pos) => {
           const dx = pos.x - arc.center.x;
           const dy = pos.y - arc.center.y;

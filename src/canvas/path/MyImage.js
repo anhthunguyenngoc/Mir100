@@ -15,12 +15,23 @@ export const MyImage = ({
   const [image, setImage] = useState(null);
 
   useEffect(() => {
-    const img = new window.Image();
-    img.src = imageSrc; // hoặc PNG cũng được
-    img.onload = () => setImage(img);
-  }, []);
+    if (!imageSrc) return;
 
-  if (!width || !height || !x || !y) return;
+    const img = new window.Image();
+    img.src = imageSrc;
+    img.onload = () => {
+      if (img.width > 0 && img.height > 0) {
+        setImage(img);
+      } else {
+        console.warn("Loaded image has 0 width or height:", imageSrc);
+      }
+    };
+    img.onerror = () => {
+      console.warn("Failed to load image:", imageSrc);
+    };
+  }, [imageSrc]);
+
+  if (!image || !width || !height || x === undefined || y === undefined) return null;
 
   return (
     image && (

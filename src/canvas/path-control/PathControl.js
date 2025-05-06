@@ -140,8 +140,8 @@ export const PathControl = ({
         0.5,
         metadata.forbiddenZone.map((wall) => ({
           ...wall,
-          polygon: wall.polygon.map(
-            (p) => Utils.getRealPosition(p.x, p.y, {
+          polygon: wall.polygon.map((p) =>
+            Utils.getRealPosition(p.x, p.y, {
               metadata: { height: 568 },
               resolution: 0.05,
               origin_x: 0,
@@ -149,8 +149,8 @@ export const PathControl = ({
             })
           ),
         })),
-        obstacles.map(
-          (p) => Utils.getRealPosition(p.x, p.y, {
+        obstacles.map((p) =>
+          Utils.getRealPosition(p.x, p.y, {
             metadata: { height: 568 },
             resolution: 0.05,
             origin_x: 0,
@@ -160,8 +160,8 @@ export const PathControl = ({
 
         metadata.walls.map((wall) => ({
           ...wall,
-          polygon: wall.polygon.map(
-            (p) => Utils.getRealPosition(p.x, p.y, {
+          polygon: wall.polygon.map((p) =>
+            Utils.getRealPosition(p.x, p.y, {
               metadata: { height: 568 },
               resolution: 0.05,
               origin_x: 0,

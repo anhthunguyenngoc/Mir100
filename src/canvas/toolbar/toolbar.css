@@ -64,7 +64,7 @@
   opacity: 60%;
 }
 
-.oneline-width {
+.grid-oneline {
   display: grid;
   grid-template-columns: auto auto auto;
   align-content: flex-start;

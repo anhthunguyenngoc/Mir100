@@ -13,6 +13,8 @@ export const SmallToolButton = ({
   setOptions,
   onClick,
   isActive = true,
+  buttonStyle,
+  expandStyle,
 }) => {
   const { drawingMode } = Context.useCanvasContext();
   const [showSelection, setShowSelection] = useState(false);
@@ -22,6 +24,7 @@ export const SmallToolButton = ({
       <button
         id={id}
         className={`tool-btn icon-btn radius-5px center height-fit-content ${!isActive ? 'inactive' : ''} ${drawingMode === id ? 'selected' : ''}`}
+        style={buttonStyle}
         onClick={() => {
           if (drawingMode !== id) {
             if (isActive && id) toggleMode?.(id);
@@ -41,7 +44,8 @@ export const SmallToolButton = ({
       {showExpand && (
         <div className="flex col relative-pos expand-container">
           <button
-            className={`tool-btn icon-btn radius-5px center full-height padding-4px ${showSelection ? 'selected' : ''} ${!isActive ? 'inactive' : ''}`}
+            className={`tool-btn icon-btn radius-5px center padding-4px ${showSelection ? 'selected' : ''} ${!isActive ? 'inactive' : ''}`}
+            style={{ height: '38.4px', ...expandStyle }}
             onClick={(e) => {
               if (isActive) {
                 setShowSelection(!showSelection);

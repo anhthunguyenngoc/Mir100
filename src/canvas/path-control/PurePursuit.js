@@ -28,7 +28,8 @@ export function getNextVelocity(
   if (!originalPath.length) return null;
 
   // --- Thêm điểm đệm tại các góc cua ---
-  const path = insertCornerBufferPoints(originalPath);
+  // const path = insertCornerBufferPoints(originalPath);
+  const path = originalPath;
 
   // Xoá các điểm quá gần
   while (path.length > 0) {
@@ -113,7 +114,7 @@ export function getNextVelocity(
 }
 
 // ==== Chèn điểm đệm tại góc cua ====
-function insertCornerBufferPoints(path, angleThreshold = Math.PI / 4) {
+export function insertCornerBufferPoints(path, angleThreshold = Math.PI / 4) {
   if (path.length < 3) return path;
 
   const newPath = [path[0]];

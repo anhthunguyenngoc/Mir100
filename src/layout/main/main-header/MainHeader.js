@@ -1,13 +1,18 @@
+import { useState, useEffect } from 'react';
 import './main-header.css';
-import { ImageSrc } from '../../../constant';
+import { ImageSrc } from '../../../constant/ImageSrc';
+import * as Context from 'context';
+import * as Icons from 'components/icons/Icons';
 
 export const MainHeader = () => {
+  const { robotStatus } = Context.useAppContext();
+
   return (
     <ul id="right-header-list">
       <li
         id="startRobot"
         className="header-button"
-        onclick="toggleHidden('startRobot-section')"
+        onClick="toggleHidden('startRobot-section')"
       >
         <img
           className="header-btn-img"
@@ -20,7 +25,7 @@ export const MainHeader = () => {
       <li
         id="status"
         className="header-button"
-        onclick="toggleHidden('status-section')"
+        onClick="toggleHidden('status-section')"
       >
         <img
           className="header-btn-img"
@@ -33,7 +38,7 @@ export const MainHeader = () => {
       <li
         id="loggedInUser"
         className="relative-pos header-button"
-        onclick="toggleHidden('loggedInUser-section')"
+        onClick="toggleHidden('loggedInUser-section')"
       >
         <img
           className="plus-btn-img"
@@ -85,7 +90,7 @@ export const MainHeader = () => {
       <li
         id="control"
         className="relative-pos header-button"
-        onclick="toggleHidden('control-section')"
+        onClick="toggleHidden('control-section')"
       >
         <img
           className="header-btn-img"
@@ -103,8 +108,8 @@ export const MainHeader = () => {
           >
             <circle cx="12" cy="12" r="12" fill="#DEF2F1"></circle>
             <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
+              fillRule="evenodd"
+              clipRule="evenodd"
               d="M12 4C7.58104 4 4 7.58328 4 11.9995C4 16.4177 7.58204 20 12 20C16.418 20 20 16.4167 20 11.9995C20 7.58328 16.418 4 12 4ZM7.5 13C7.257 13.1886 7.24394 13.1886 7 13L6.18155 12.3132C5.93948 12.1228 5.93948 11.8146 6.18155 11.6251L7 11C7.24394 10.8096 7.257 10.8096 7.5 11V13ZM11 7L11.6558 6.15027C11.8466 5.90724 12.1542 5.90724 12.3432 6.15027L13 7C13.1927 7.24396 13.1927 7.25792 13 7.5H11C10.8101 7.25792 10.811 7.24396 11 7ZM13 17L12.3444 17.768C12.1514 18.0107 11.8442 18.0107 11.655 17.768L11 17C10.8098 16.7574 10.8098 16.6459 11 16.4023H13C13.1911 16.645 13.1911 16.7574 13 17ZM17 13C16.7577 13.1901 16.7442 13.1901 16.5 13V11C16.7442 10.8099 16.7577 10.8099 17 11L17.8169 11.6242C18.061 11.8153 18.061 12.1235 17.8169 12.3127L17 13Z"
               fill="#00474F"
             ></path>
@@ -112,13 +117,11 @@ export const MainHeader = () => {
         </section>
       </li>
       <li id="battery" className="header-button">
-        <img
-          className="header-btn-img"
-          alt="battery"
-          src={ImageSrc['battery100']}
-          loading="lazy"
+        <Icons.Battery
+          percentage={robotStatus?.battery_percentage}
+          isCharging={false}
         />
-        100%
+        {Math.round(robotStatus?.battery_percentage)}%
       </li>
     </ul>
   );

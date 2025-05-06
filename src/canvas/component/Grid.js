@@ -2,15 +2,9 @@ import React, { forwardRef } from 'react';
 import { Layer, Line, Rect } from 'react-konva';
 
 export const Grid = forwardRef(
-  ({ gridData, canvasPos, width, height, snapPoint, gridSize }, ref) => {
+  ({ gridData, canvasPos, snapPoint, gridSize }, ref) => {
     return (
-      <Layer
-        ref={ref}
-        x={canvasPos.x}
-        y={canvasPos.y}
-        width={width}
-        height={height}
-      >
+      <Layer ref={ref} x={canvasPos.x} y={canvasPos.y}>
         {gridData.map((line, i) => (
           <Line
             key={i}

@@ -12,6 +12,7 @@ export const HorizonLine = ({
         width,
         height,
         backgroundColor: color,
+        border: 0,
         borderRadius,
         opacity: isVisible ? '100%' : '0%',
         ...rest,

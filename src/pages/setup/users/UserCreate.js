@@ -19,7 +19,7 @@ export const UserCreate = () => {
           </div>
 
           <div className="row-5px">
-            <button id="go-back" onclick="goBack()">
+            <button id="go-back" onClick="goBack()">
               <img
                 className="plus-btn-img"
                 alt="Go back"
@@ -71,7 +71,7 @@ export const UserCreate = () => {
           <input
             className="plus-btn-img pointer"
             type="checkbox"
-            onclick="toggleHidden('create-pincode')"
+            onClick="toggleHidden('create-pincode')"
           />
           <div>Allow this user to log in by PIN code</div>
         </div>
@@ -116,7 +116,7 @@ export const UserCreate = () => {
             Create user
           </button>
 
-          <button className="flex row gap-5px outline-btn" onclick="goBack()">
+          <button className="flex row gap-5px outline-btn" onClick="goBack()">
             <svg
               className="plus-btn-img fill-color-btn stroke-color-btn"
               viewBox="0 0 1024 1024"

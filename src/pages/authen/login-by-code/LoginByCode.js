@@ -55,7 +55,7 @@ export const LoginByCode = () => {
         className="button"
         type="submit"
         style={{ width: '25%', padding: '10px' }}
-        onclick="confirmSignInByCode()"
+        onClick="confirmSignInByCode()"
       >
         Sign in
       </button>

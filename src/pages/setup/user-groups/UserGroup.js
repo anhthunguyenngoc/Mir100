@@ -20,7 +20,7 @@ export const UserGroup = () => {
         <div className="row-5px">
           <button
             id="create-user"
-            onclick="openWindow(getURLForItemID('create-user-group'))"
+            onClick="openWindow(getURLForItemID('create-user-group'))"
           >
             <img
               className="plus-btn-img"
@@ -39,7 +39,7 @@ export const UserGroup = () => {
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <g clip-path="url(#clip0_271_514)">
+              <g clipPath="url(#clip0_271_514)">
                 <path
                   className="fill-color-btn"
                   d="M2.95485 4.63098C2.95485 4.63098 2.07617 5.25708 2.07617 6.75711V7.92868C2.07617 8.72433 2.39224 9.48739 2.95485 10.05L8.78328 15.8784C8.97081 16.066 9.07617 16.3203 9.07617 16.5855V22.0428C9.07617 23.5663 10.9182 24.3293 11.9955 23.252L14.1975 21.05C14.7601 20.4874 15.0762 19.7243 15.0762 18.9287V16.7571L2.95485 4.63098Z"
@@ -136,7 +136,7 @@ export const UserGroup = () => {
             </td>
             <td className="col-n" id="user-groups-table-functions">
               <div className="row-5px">
-                <button onclick="openWindow(getURLForItemID('set-permission'))">
+                <button onClick="openWindow(getURLForItemID('set-permission'))">
                   <img
                     className="plus-btn-img"
                     alt="Create mission"
@@ -144,7 +144,7 @@ export const UserGroup = () => {
                     loading="lazy"
                   />
                 </button>
-                <button onclick="openWindow(getURLForItemID('edit-user-group'))">
+                <button onClick="openWindow(getURLForItemID('edit-user-group'))">
                   <img
                     className="plus-btn-img"
                     alt="Edit mission"
@@ -154,7 +154,7 @@ export const UserGroup = () => {
                 </button>
                 <button
                   className="del-btn"
-                  onclick="openWindow(getURLForItemID('delete-user-group'))"
+                  onClick="openWindow(getURLForItemID('delete-user-group'))"
                 >
                   <img
                     className="plus-btn-img"

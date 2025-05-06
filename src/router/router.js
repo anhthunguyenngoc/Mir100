@@ -36,10 +36,7 @@ import {
   SystemLog,
 } from '../pages';
 
-import { PATH, SUB_SIDEBAR_PATH, SIDEBAR_PATH } from './Path';
-
-import Canvas from '../canvas/canvas';
-import Test from '../test';
+import { PATH } from './Path';
 
 export const PUBLIC_ROUTER = [
   {
@@ -74,7 +71,7 @@ const SUB_SETUP_ROUTER = [
   },
   {
     key: 'maps',
-    path: '/maps',
+    path: PATH.maps,
     element: <Map />,
     name: 'Maps',
   },
@@ -135,6 +132,18 @@ const SETUP_ROUTER = [
     path: PATH.edit_mission(),
     element: <MissionEdit />,
     name: 'Edit Mission',
+  },
+  {
+    key: 'create-map',
+    path: PATH.create_map,
+    element: <MapCreate />,
+    name: 'Create Map',
+  },
+  {
+    key: 'edit-map',
+    path: PATH.edit_map(),
+    element: <MapEdit />,
+    name: 'Edit Map',
   },
 ];
 

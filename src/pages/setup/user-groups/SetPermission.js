@@ -18,7 +18,7 @@ export const SetPermission = () => {
             </div>
           </div>
 
-          <button id="go-back" onclick="goBack()">
+          <button id="go-back" onClick="goBack()">
             <img
               className="plus-btn-img"
               alt="Go back"

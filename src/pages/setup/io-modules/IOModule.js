@@ -82,7 +82,7 @@ export const IOModule = () => (
                   loading="lazy"
                 />
               </button>
-              <button className="del-btn href-btn" onclick="confirmDelete()">
+              <button className="del-btn href-btn" onClick="confirmDelete()">
                 <img
                   className="plus-btn-img"
                   alt="Create io-module groups"

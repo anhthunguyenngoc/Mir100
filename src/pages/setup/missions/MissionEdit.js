@@ -1,7 +1,21 @@
-import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+
+import { PATH } from '../../../router';
+import * as api from '../../../api';
+import * as Const from '../../../constant';
+import * as Icons from '../../../components/icons/Icons';
+import * as Comps from '../../../components';
 
 export const MissionEdit = () => {
   const { guid } = useParams();
+  const navigate = useNavigate();
+
+  const fetchMissionActions = () => {
+    try {
+      const { statusCode, data } = api.getActions();
+    } catch (error) {}
+  };
 
   return (
     <div>
@@ -12,7 +26,7 @@ export const MissionEdit = () => {
         <li>
           <div
             class="flex row gap-5px nowrap pointer mission-group-btn"
-            onclick="toggleHidden('${guid}-actions-list')"
+            onClick="toggleHidden('${guid}-actions-list')"
           >
             <img
               class="plus-btn-img"
@@ -47,7 +61,11 @@ export const MissionEdit = () => {
           </div>
 
           <div className="row-5px">
-            <button className="button" id="go-back" onclick="goBack()">
+            <button
+              className="button"
+              id="go-back"
+              onClick={() => navigate(-1)}
+            >
               <img
                 className="plus-btn-img"
                 alt="Go back"
@@ -74,7 +92,7 @@ export const MissionEdit = () => {
               />
               Save as
             </button>
-            <button className="button del-btn" onclick="deleteMission()">
+            <button className="button del-btn" onClick="deleteMission()">
               <img
                 className="plus-btn-img"
                 alt="Delete mission"
@@ -115,7 +133,7 @@ export const MissionEdit = () => {
 
                     <button
                       className="button radius-none"
-                      onclick="toggleHidden('edit-action-description')"
+                      onClick="toggleHidden('edit-action-description')"
                     >
                       <img
                         className="plus-btn-img"
@@ -128,6 +146,7 @@ export const MissionEdit = () => {
                 </div>
               </li>
             </ul>
+            <span>The mission contains no actions.</span>
           </section>
 
           <section id="edit-action-description" className="width-30per hidden">

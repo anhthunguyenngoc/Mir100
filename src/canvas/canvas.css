@@ -35,7 +35,6 @@
 .right-info-showcontent,
 .left-info-showcontent {
   width: 20%;
-  height: 100%;
 }
 
 .right-info-hidecontent,
@@ -120,4 +119,12 @@
 
 .right-info-showcontent {
   overflow-y: auto;
+}
+
+.type-dropdown div {
+  width: 100%;
+}
+
+.height-input {
+  height: var(--height-input);
 }

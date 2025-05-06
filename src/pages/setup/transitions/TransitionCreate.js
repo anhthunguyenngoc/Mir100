@@ -18,7 +18,7 @@ export const TransitionCreate = () => {
         </div>
 
         <div className="row-5px">
-          <button id="go-back" onclick="goBack()">
+          <button id="go-back" onClick="goBack()">
             <img
               className="plus-btn-img"
               alt="Go back"
@@ -73,7 +73,7 @@ export const TransitionCreate = () => {
 
         <button
           className="flex row gap-5px outline-btn"
-          onclick="openWindow('setup/transitions/transition.html')"
+          onClick="openWindow('setup/transitions/transition.html')"
         >
           <svg
             className="plus-btn-img fill-color-btn stroke-color-btn"

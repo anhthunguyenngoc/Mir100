@@ -2872,7 +2872,7 @@ function dashboarddesigner_add_widget(t, e, a) {
   (o.innerHTML = s), r.appendChild(o);
   var u = document.createElement('div');
   u.setAttribute('class', 'grid-stack-item-edit'),
-    (u.onclick = function () {
+    (u.onClick = function () {
       dashboarddesigner_launch_widgetsettings(
         this.parentNode.getAttribute('data-local-id')
       );
@@ -3339,7 +3339,7 @@ function dashboarddesigner_launch_widgetsettings(t) {
           t + '_' + e.parameters[c].systemname + '_casesetup_holder'
         ),
         (E.innerHTML = mir_translate('Add another case')),
-        (E.onclick = function () {
+        (E.onClick = function () {
           dashboarddesigner_registercasesetup_add_case(
             this.getAttribute('data-holder-id')
           );
@@ -3586,7 +3586,7 @@ function dashboarddesigner_launch_widgetsettings(t) {
     J.setAttribute('id', 'dashboarddesigner_widgetsettings_delbtn'),
     J.setAttribute('data-local-id', t),
     J.setAttribute('value', mir_translate('Delete')),
-    (J.onclick = function () {
+    (J.onClick = function () {
       submitwarn_set();
       var t = $('#dashboarddesigner_workspace_list').children(
         "div[data-local-id='" +
@@ -3613,7 +3613,7 @@ function dashboarddesigner_launch_widgetsettings(t) {
     z.setAttribute('id', 'dashboarddesigner_widgetsettings_cancelbtn'),
     z.setAttribute('value', mir_translate('Cancel')),
     L.appendChild(z),
-    (z.onclick = function () {
+    (z.onClick = function () {
       document
         .getElementsByTagName('body')[0]
         .setAttribute('data-mobile-dialogue', 'false'),
@@ -3711,7 +3711,7 @@ function dashboarddesigner_registercasesetup_add_case(t) {
         window.dashboarddesigner_widgetsettings_plc_statetable_counter
     ),
     (r.innerHTML = '<span>Delete</span>'),
-    (r.onclick = function () {
+    (r.onClick = function () {
       $('#' + this.getAttribute('data-row')).remove(),
         0 ==
           $('#' + this.getAttribute('data-id'))

@@ -11,6 +11,7 @@ export const BigToolButton = ({
   options,
   setOptions,
   onClick,
+  isActive = true,
 }) => {
   const [showSelection, setShowSelection] = useState(false);
 
@@ -39,7 +40,7 @@ export const BigToolButton = ({
     <li className="flex col full-height">
       <button
         id={id}
-        className="padding-15px tool-btn icon-btn radius-5px full-height center"
+        className={`padding-15px tool-btn icon-btn radius-5px full-height center ${!isActive ? 'inactive' : ''}`}
         onClick={() => {
           toolBtnClick();
         }}
@@ -54,7 +55,7 @@ export const BigToolButton = ({
       {showExpand && (
         <div className="flex col relative-pos expand-container">
           <button
-            className={`tool-btn icon-btn radius-5px center height-fit-content full-width ${showSelection ? 'selected' : ''}`}
+            className={`tool-btn icon-btn radius-5px center height-fit-content full-width ${showSelection ? 'selected' : ''} ${!isActive ? 'inactive' : ''}`}
             onClick={(e) => {
               setShowSelection(!showSelection);
             }}

@@ -11,7 +11,7 @@ export const DropdownList = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <div className="form-input-row">
+    <div className="flex col gap-5px">
       <div className="flex row align-center space-between">
         <div className="flex row align-center gap-5px">
           <button
@@ -53,7 +53,7 @@ export const DropdownList = ({
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: isOpen ? 1 : 0, height: isOpen ? 'auto' : 0 }}
           transition={{ duration: 0.3 }}
-          className="flex col"
+          className="flex col gap-5px"
         >
           {datalist.map((item) => {
             return (

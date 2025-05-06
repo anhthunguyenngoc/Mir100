@@ -5,6 +5,7 @@ import {
   putMap,
   putMission,
   putPosition,
+  putStatus,
 } from './Api';
 
 export const URL = {
@@ -13,6 +14,7 @@ export const URL = {
   postMission: '/missions',
   postPositions: '/positions',
 
+  putStatus: '/status',
   putPosition: (guid) => `/positions/${guid}`,
   putMap: (guid) => `/maps/${guid}`,
   putMissionQueue: (id) => `/mission_queue/${id}`,
@@ -23,13 +25,14 @@ export const URL = {
   getAction: (action_type) => `/actions/${action_type}`,
   getStatus: '/status',
   getMap: (guid) => `/maps/${guid}`,
+  getMaps: '/maps',
   getMissionGroups: '/mission_groups',
   getMissionGroupId: (guid) => `/mission_groups/${guid}`,
   getMissions: '/missions',
   getMissionId: (guid) => `/missions/${guid}`,
   getMissionQueues: '/mission_queue',
   getMissionQueueId: (id) => `/mission_queue/${id}`,
-  getMapPositions: (map_id) => `GET /maps/${map_id}/positions`,
+  getMapPositions: (map_id) => `/maps/${map_id}/positions`,
   getPositionTypes: '/position_types',
   getPositionType: (id) => `/position_types/${id}`,
   getPositions: '/positions',

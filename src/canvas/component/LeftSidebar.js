@@ -9,7 +9,7 @@ export const LeftSidebar = ({
   layers,
   setLayers,
 }) => {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(true);
 
   const handleLayerClick = (layerId) => {
     setLayers(

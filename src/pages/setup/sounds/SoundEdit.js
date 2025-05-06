@@ -19,7 +19,7 @@ export const SoundEdit = () => {
           </div>
 
           <div className="row-5px">
-            <button id="go-back" onclick="goBack()">
+            <button id="go-back" onClick="goBack()">
               <img
                 className="plus-btn-img"
                 alt="Go back"
@@ -120,7 +120,7 @@ export const SoundEdit = () => {
             </svg>
             Listen
           </button>
-          <button className="del-btn" onclick="confirmDelete('sound')">
+          <button className="del-btn" onClick="confirmDelete('sound')">
             <img
               className="plus-btn-img"
               alt="Delete sound"
@@ -131,7 +131,7 @@ export const SoundEdit = () => {
           </button>
           <button
             className="flex row gap-5px outline-btn"
-            onclick="openWindow('setup/sounds/sound.html')"
+            onClick="openWindow('setup/sounds/sound.html')"
           >
             <svg
               className="plus-btn-img fill-color-btn stroke-color-btn"

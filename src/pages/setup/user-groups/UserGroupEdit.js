@@ -18,7 +18,7 @@ export const UserGroupEdit = () => {
             </div>
           </div>
 
-          <button id="go-back" onclick="goBack()">
+          <button id="go-back" onClick="goBack()">
             <img
               className="plus-btn-img"
               alt="Go back"
@@ -44,7 +44,7 @@ export const UserGroupEdit = () => {
             />
             Save changes
           </button>
-          <button onclick="openWindow('setup/user-groups/set-permission.html')">
+          <button onClick="openWindow('setup/user-groups/set-permission.html')">
             <img
               className="plus-btn-img"
               alt="Create mission"
@@ -55,7 +55,7 @@ export const UserGroupEdit = () => {
           </button>
           <button
             className="del-btn"
-            onclick="openWindow('setup/user-groups/delete-user-group.html')"
+            onClick="openWindow('setup/user-groups/delete-user-group.html')"
           >
             <img
               className="plus-btn-img"
@@ -65,7 +65,7 @@ export const UserGroupEdit = () => {
             />
             Delete
           </button>
-          <button className="flex row gap-5px outline-btn" onclick="goBack()">
+          <button className="flex row gap-5px outline-btn" onClick="goBack()">
             <svg
               className="plus-btn-img fill-color-btn stroke-color-btn"
               viewBox="0 0 1024 1024"

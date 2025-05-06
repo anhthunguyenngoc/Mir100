@@ -223,12 +223,19 @@ export const I_PostMission_queues = (props) => {
  */
 
 /**
+ * @typedef {Object} TGetMaps
+ * @property {string} [guid] - Mã định danh toàn cục, duy nhất trên các robot, dùng để xác định bản đồ.
+ * @property {string} [name] - Tên của bản đồ.
+ * @property {string} [url] - Đường dẫn URL của tài nguyên bản đồ.
+ */
+
+/**
  * @typedef {Object} TGetMap
  * @property {string} [created_by] - URL mô tả người tạo bản đồ.
  * @property {string} [created_by_id] - ID toàn cục của người tạo bản đồ.
  * @property {string} [guid] - ID toàn cục duy nhất xác định bản đồ này.
  * @property {string} [map] - Xác định bản đồ có phải bản đồ điều hướng hay không (dạng byte).
- * @property {string} [metadata] - Xác định bản đồ có phải là web map hay không (dạng byte).
+ * @property {TMetadata} [metadata] - Xác định bản đồ có phải là web map hay không (dạng byte).
  * @property {string} [name] - Tên của bản đồ.
  * @property {string} [one_way_map] - Bản đồ một chiều hay không (dạng byte).
  * @property {number} [origin_theta] - Góc quay gốc của bản đồ so với vị trí robot (đơn vị độ).
@@ -242,12 +249,76 @@ export const I_PostMission_queues = (props) => {
  */
 
 /**
+ * @typedef {Object} TMetadata
+ * @property {string} base_map_floor - Base map floor hình ảnh dưới dạng base64.
+ * @property {string} base_map_walls - Base map walls hình ảnh dưới dạng base64.
+ * @property {number} height - Chiều cao của bản đồ.
+ * @property {TLayers} layers - Các lớp bản đồ.
+ * @property {boolean} new_mappicture - Chỉ thị liệu có hình ảnh bản đồ mới.
+ * @property {boolean} render_nav_maps - Chỉ thị liệu có render bản đồ điều hướng.
+ * @property {number} width - Chiều rộng của bản đồ.
+ */
+
+/**
+ * @typedef {Object} TLayers
+ * @property {TLayer} oneway - Lớp một chiều, chứa các hình dạng.
+ * @property {TLayer} areaevents_blink - Lớp sự kiện nhấp nháy, chứa các hình dạng.
+ * @property {TLayer} areaevents_disable_localization - Lớp sự kiện vô hiệu hóa định vị, chứa các hình dạng.
+ * @property {TLayer} areaevents_door - Lớp sự kiện cửa, chứa các hình dạng.
+ * @property {TLayer} areaevents_evacuation - Lớp sự kiện thoát hiểm, chứa các hình dạng.
+ * @property {TLayer} areaevents_fleet_and_emergency - Lớp sự kiện đội tàu và khẩn cấp, chứa các hình dạng.
+ * @property {TLayer} areaevents_io - Lớp sự kiện IO, chứa các hình dạng.
+ * @property {TLayer} areaevents_look_ahead_distance - Lớp sự kiện nhìn trước khoảng cách, chứa các hình dạng.
+ * @property {TLayer} areaevents_planner_zone - Lớp sự kiện khu vực lập kế hoạch, chứa các hình dạng.
+ * @property {TLayer} areaevents_sound - Lớp sự kiện âm thanh, chứa các hình dạng.
+ * @property {TLayer} areaevents_sound_and_light_zone - Lớp sự kiện âm thanh và ánh sáng, chứa các hình dạng.
+ * @property {TLayer} areaevents_speed - Lớp sự kiện tốc độ, chứa các hình dạng.
+ * @property {TLayer} areaprefs_critical - Lớp vùng quan trọng, chứa các hình dạng.
+ * @property {TLayer} areaprefs_forbidden - Lớp vùng bị cấm, chứa các hình dạng.
+ * @property {TLayer} areaprefs_preferred - Lớp vùng ưu tiên, chứa các hình dạng.
+ * @property {TLayer} areaprefs_unpreferred - Lớp vùng không ưu tiên, chứa các hình dạng.
+ * @property {TLayer} bluetooth - Lớp bluetooth, chứa các hình dạng.
+ * @property {TLayer} emergency_zone - Lớp vùng khẩn cấp, chứa các hình dạng.
+ * @property {TLayer} floor - Lớp sàn, chứa các hình dạng.
+ * @property {TLayer} positions - Lớp vị trí, chứa các hình dạng.
+ * @property {TLayer} walls - Lớp tường, chứa các hình dạng.
+ */
+
+/**
+ * @typedef {Object} TLayer
+ * @property {Array<TZone>} shapes
+ */
+
+/**
+ * @typedef {Object} TZone
+ * @property {string} name - Tên của khu vực.
+ * @property {string} type - Loại khu vực (ví dụ: shape, stroke, etc.).
+ * @property {string} color - Màu sắc của khu vực.
+ * @property {number} brushsize - Kích thước cọ vẽ khu vực.
+ * @property {Array<TCoordinates>} polygon - Các tọa độ của đa giác (nếu là shape dạng polygon).
+ */
+
+/**
+ * @typedef {Object} TCoordinates
+ * @property {Number} x
+ * @property {Number} y
+ */
+
+/**
+ * @typedef { TGetMaps & TGetMap} TDetailedMap
+ */
+
+/**
  * @typedef {Object} TGetMap_positions
  * @property {string} [guid] - ID toàn cục, duy nhất giữa các robot, đại diện cho vị trí này.
  * @property {string} [map] - URL của bản đồ mà vị trí này thuộc về.
  * @property {string} [name] - Tên của vị trí.
  * @property {number} [type_id] - Loại vị trí. Xem mô tả chung để biết chi tiết các loại.
  * @property {string} [url] - URL của tài nguyên đại diện cho vị trí này.
+ */
+
+/**
+ * @typedef { TGetMap_positions & TGetPosition} TDetailedPosition
  */
 
 /**
@@ -339,6 +410,25 @@ export const I_PostMission_queues = (props) => {
  */
 
 //======================================           PUT           ======================================
+
+/**
+ * @typedef {Object} TPutStatus
+ * @property {string} [answer] - Câu trả lời của người dùng (tùy chọn). Độ dài từ 1 đến 255 ký tự.
+ * @property {boolean} [clear_error] - Cờ cho biết có cần xóa lỗi hiện tại không (tùy chọn).
+ * @property {string} [datetime] - Thời gian theo định dạng ISO 8601 (ví dụ: '2025-04-25T10:00:00Z') (tùy chọn).
+ * @property {string} [guid] - Mã định danh duy nhất toàn cục cho yêu cầu (tùy chọn).
+ * @property {string} [map_id] - ID của bản đồ được sử dụng hiện tại (tùy chọn).
+ * @property {number} [mode_id] - Chế độ hoạt động của robot. Giá trị hợp lệ: 3 hoặc 7 (tùy chọn).
+ * @property {string} [name] - Tên người gửi trạng thái. Độ dài từ 1 đến 20 ký tự (tùy chọn).
+ * @property {Object} [position] - Thông tin vị trí hiện tại của robot (tùy chọn). Cấu trúc cụ thể tùy theo hệ thống.
+ * @property {string} [serial_number] - Số serial của robot (tùy chọn).
+ * @property {number} [state_id] - Trạng thái hiện tại của robot. Các giá trị hợp lệ:
+ *   - 3: Ready
+ *   - 4: Pause
+ *   - 11: Manual control
+ * (tùy chọn)
+ * @property {string} [web_session_id] - ID phiên web hiện tại (tùy chọn).
+ */
 
 /**
  * @typedef {Object} TPutPosition

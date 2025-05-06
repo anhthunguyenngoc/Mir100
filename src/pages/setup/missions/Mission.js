@@ -2,14 +2,14 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as api from '../../../api';
 import { PATH } from '../../../router';
-import { useConfirmDialog } from 'components';
-import * as Const from '../../../constant'
+import { useAppContext } from 'context';
+import * as Const from '../../../constant';
 
 import './mission.css';
 
 export const Mission = () => {
   const navigate = useNavigate();
-  const { showDialog } = useConfirmDialog();
+  const { showDialog } = useAppContext();
 
   /** @type {[Array<api.TDetailedMissionGroup>, Function]} */
   const [missionGroups, setMissionGroups] = useState([]);
@@ -63,10 +63,10 @@ export const Mission = () => {
   const fetchMissionQueues = async () => {
     try {
       const { statusCode, data } = await api.getMissionQueues();
-      
+
       const detailedQueues = await Promise.all(
         data
-          .filter(missionQueue => missionQueue.state === "Executing")
+          .filter((missionQueue) => missionQueue.state === 'Executing')
           .map(async (missionQueue) => {
             const detail = await fetchMissionQueue(missionQueue.id);
             const detailMision = await fetchMission(detail.mission_id);
@@ -288,7 +288,10 @@ export const Mission = () => {
                   </div>
 
                   <div className="row-5px">
-                    <button className="icon-btn radius-5px" onClick={() => editMissionClick(mission.guid)}>
+                    <button
+                      className="button"
+                      onClick={() => editMissionClick(mission.guid)}
+                    >
                       <img
                         className="size-20px"
                         alt="Edit mission"
@@ -298,7 +301,7 @@ export const Mission = () => {
                     </button>
 
                     <button
-                      className="del-btn icon-btn radius-5px"
+                      className="del-btn button"
                       onClick={() => deleteMission(mission.guid)}
                     >
                       <img
@@ -309,7 +312,10 @@ export const Mission = () => {
                       />
                     </button>
 
-                    <button className="icon-btn radius-5px" onClick={() => postMissionQueues(mission.guid)}>
+                    <button
+                      className="button"
+                      onClick={() => postMissionQueues(mission.guid)}
+                    >
                       <img
                         className="size-20px"
                         alt="Add to queue"
@@ -356,7 +362,7 @@ export const Mission = () => {
                   <div className="row-5px">
                     <div>{missionQueue.state}</div>
                     <button
-                      className="del-btn icon-btn radius-5px"
+                      className="del-btn button"
                       id="del-mission-queue"
                       onClick={() => deleteMissionQueue(missionQueue.id)}
                     >

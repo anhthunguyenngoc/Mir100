@@ -3,7 +3,7 @@ import { Path, Group, Arrow } from 'react-konva';
 import { MyCircle } from './MyCircle';
 import { LineDirection } from '../../constant';
 
-const getPathData = (start, bottom, ry) => {
+export const getUlinePathData = (start, bottom, ry) => {
   const end = { x: 2 * bottom.x - start.x, y: start.y };
   const rx = Math.abs(start.x - bottom.x);
   const isLeft = start.x < bottom.x;
@@ -53,7 +53,7 @@ const getArrowRotation = (points, direction) => {
 
 const getULine = (startP, bottomP, ry) => {
   return {
-    data: getPathData(startP, bottomP, ry),
+    data: getUlinePathData(startP, bottomP, ry),
   };
 };
 

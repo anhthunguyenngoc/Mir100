@@ -4,19 +4,27 @@ export const Direction = {
   NONE: 'none',
 };
 
-export const ShapeName = {
+export const LineName = {
   ARC: 'arc',
   LINE: 'line',
-  CIRCLE: 'circle',
-  ELLIPSE: 'ellipse',
-  GROUP: 'group',
-  POLYGON: 'polygon',
-  RECTANGLE: 'rectangle',
   SPLINE: 'spline',
   TANGENT: 'tangent',
   ULINE: 'uline',
   ZIGZAG: 'zigzag',
+};
+
+export const ZoneName = {
+  CIRCLE: 'circle',
+  ELLIPSE: 'ellipse',
+  POLYGON: 'polygon',
+  RECTANGLE: 'rectangle',
   FREESHAPE: 'freeShape',
+  GROUP: 'group',
+};
+
+export const ShapeName = {
+  ...LineName,
+  ...ZoneName,
 };
 
 export const LineDirection = {

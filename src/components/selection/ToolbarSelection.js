@@ -1,8 +1,6 @@
-import { useState } from 'react';
 import OutsideClickHandler from 'react-outside-click-handler';
 import './toolbar-selection.css';
 import { VerticalLine } from '../VerticalLine';
-import { HorizonLine } from '../HorizonLine';
 import { ImageSrc } from '../../constant';
 
 const verticalLine = {

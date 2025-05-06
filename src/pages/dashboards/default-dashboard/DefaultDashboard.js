@@ -1,42 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import './default-dashboard.css';
-import Canvas from '../../../canvas/canvas';
-
+import { CanvasView } from 'canvas';
+import * as Context from 'context';
 import * as api from '../../../api';
 
 export const DefaultDashboard = () => {
-  const containerRef = useRef(null);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-
-  /** @type {[Array<api.TGetStatus>, Function]} */
-  const [robotStatus, setRobotStatus] = useState(null);
-
-  useEffect(() => {
-    const updateSize = () => {
-      if (containerRef.current) {
-        const { offsetWidth, offsetHeight } = containerRef.current;
-        setDimensions({ width: offsetWidth, height: offsetHeight });
-      }
-    };
-
-    updateSize(); // initial set
-    window.addEventListener('resize', updateSize); // optional: for responsive
-
-    return () => window.removeEventListener('resize', updateSize);
-  }, []);
-
-  useEffect(() => {
-    const fetchRobotStatus = async () => {
-      try {
-        const { statusCode, data } = await api.getStatus();
-        setRobotStatus(data);
-      } catch (err) {
-        console.error('Error fetching robot status:', err);
-      }
-    };
-
-    fetchRobotStatus();
-  }, []);
+  const { robotStatus } = Context.useAppContext();
 
   return (
     <div id="content" className="content flex">
@@ -68,7 +37,7 @@ export const DefaultDashboard = () => {
             <li className="robot-info-text">
               Battery percentage
               <div id="robot-battery">
-                {robotStatus?.battery_percentage ?? '...'}
+                {robotStatus?.battery_percentage.toFixed(2) ?? '...'}
               </div>
             </li>
             <li className="robot-info-text">
@@ -98,17 +67,8 @@ export const DefaultDashboard = () => {
         </section>
       </div>
 
-      <section ref={containerRef} id="map-canvas">
-        <Canvas
-          canvasW={dimensions.width - 50}
-          canvasH={dimensions.height - 50 - 173.8 - 43.6}
-          mapId={robotStatus?.map_id}
-          // robotPosition={robotStatus?.position}
-          robotPosition={{
-            x: 100,
-            y: 100,
-          }}
-        />
+      <section id="map-canvas">
+        <CanvasView mapId={robotStatus?.map_id} />
       </section>
     </div>
   );

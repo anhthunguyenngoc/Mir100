@@ -138,7 +138,7 @@ export const ErrorLog = () => {
                   </button>
                   <button
                     className="del-btn"
-                    onclick="openWindow(getURLForItemID('delete-user-group'))"
+                    onClick="openWindow(getURLForItemID('delete-user-group'))"
                   >
                     <img
                       className="plus-btn-img"

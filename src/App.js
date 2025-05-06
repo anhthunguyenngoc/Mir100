@@ -2,13 +2,13 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { PUBLIC_ROUTER, PRIVATE_ROUTER } from './router/router';
 import './App.css';
 import { LoginLayout, MainLayout } from './layout';
-import { ConfirmDialogProvider } from 'components';
+import { AppProvider } from 'context';
 
 function App() {
   const private_routes = Object.values(PRIVATE_ROUTER).flat();
   return (
     <BrowserRouter>
-      <ConfirmDialogProvider>
+      <AppProvider>
         <Routes>
           {PUBLIC_ROUTER.map((e, index) => (
             <Route
@@ -27,7 +27,7 @@ function App() {
             />
           ))}
         </Routes>
-      </ConfirmDialogProvider>
+      </AppProvider>
     </BrowserRouter>
   );
 }

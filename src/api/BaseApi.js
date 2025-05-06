@@ -1,4 +1,3 @@
-const ip = '192.168.0.173';
 const host = `/api/v2.0.0`;
 const authorization =
   'Basic YWRtaW46OGM2OTc2ZTViNTQxMDQxNWJkZTkwOGJkNGRlZTE1ZGZiMTY3YTljODczZmM0YmI4YTgxZjZmMmFiNDQ4YTkxOA==';

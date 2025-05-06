@@ -2,13 +2,35 @@ import React, { useState } from 'react';
 import * as Const from '../../constant';
 import * as Comp from '../../components';
 
-const TypeSection = () => {
+const getOptionByType = (type, name) => {
+  const options = Object.values(Const.LineName).includes(name)
+    ? Const.PathOptions
+    : Object.values(Const.ZoneName).includes(name)
+      ? Const.ZoneOptions
+      : [];
+
+  const option = type
+    ? options.find((item) => item.guid === type)
+    : { guid: null, name: 'Type unselect' };
+
+  // Nếu không tìm thấy
+  return { option, options };
+};
+
+const TypeSection = ({ name, type }) => {
+  const { option, options } = getOptionByType(type, name);
+
   return (
-    <div className="form-input-row">
+    <div className="flex col gap-5px">
       <span>Type</span>
-      <br />
-      <div className="flex row">
-        <Comp.SelectionDropdown />
+      <div className="flex row type-dropdown">
+        <Comp.SelectionDropdown
+          containerStyleClass="full-width"
+          styleClass="full-width align-center height-input background"
+          placeHolderText={option.name}
+          options={options}
+          iconColor={Const.Color.BUTTON}
+        />
       </div>
     </div>
   );
@@ -66,7 +88,7 @@ const DimensionsSection = ({ shape, handleUpdateShape, saveState }) => {
           onChange={(e) => {
             handleUpdateShape(shape.id, {
               width: Number(e.target.value),
-            })
+            });
             saveState();
           }}
           imgSrc="letterW"
@@ -77,7 +99,7 @@ const DimensionsSection = ({ shape, handleUpdateShape, saveState }) => {
           onChange={(e) => {
             handleUpdateShape(shape.id, {
               height: Number(e.target.value),
-            })
+            });
             saveState();
           }}
           imgSrc="letterH"
@@ -113,14 +135,22 @@ const horizonLineProps = {
   borderRadius: '2px',
 };
 
-export const RightSidebar = ({ shape, handleUpdateShape, saveState }) => {
-  const [visible, setVisible] = useState(false);
+export const RightSidebar = ({
+  shape,
+  handleUpdateShape,
+  saveState,
+  sidebarHeight,
+}) => {
+  const [visible, setVisible] = useState(true);
 
   return (
     <div className="right-info-container">
       {!visible &&
         (shape ? (
-          <div className="right-info-showcontent">
+          <div
+            className="right-info-showcontent"
+            style={{ height: sidebarHeight }}
+          >
             <div className="flex col">
               <Comp.ImageButton
                 className="left-sidebar-btn"
@@ -129,7 +159,7 @@ export const RightSidebar = ({ shape, handleUpdateShape, saveState }) => {
                 onClick={() => setVisible(true)}
               />
             </div>
-            <TypeSection />
+            <TypeSection name={shape.name} type={shape.type} />
             <Comp.HorizonLine {...horizonLineProps} />
             <AlignmentSection />
             <Comp.HorizonLine {...horizonLineProps} />
@@ -275,7 +305,12 @@ const componentKeyList = (name) => {
   }
 };
 
-const ShapeComponent = ({ shape, componentKey, handleUpdateShape, saveState }) => {
+const ShapeComponent = ({
+  shape,
+  componentKey,
+  handleUpdateShape,
+  saveState,
+}) => {
   switch (componentKey) {
     case SCK.STARTP:
       return (
@@ -291,8 +326,7 @@ const ShapeComponent = ({ shape, componentKey, handleUpdateShape, saveState }) =
                     startP: { ...shape.startP, x: Number(e.target.value) },
                   });
                   saveState();
-                }
-                }
+                }}
                 imgSrc="letterX"
               />
               <InputNumber
@@ -301,7 +335,7 @@ const ShapeComponent = ({ shape, componentKey, handleUpdateShape, saveState }) =
                 onChange={(e) => {
                   handleUpdateShape(shape.id, {
                     startP: { ...shape.startP, y: Number(e.target.value) },
-                  })
+                  });
                   saveState();
                 }}
                 imgSrc="letterY"
@@ -323,7 +357,7 @@ const ShapeComponent = ({ shape, componentKey, handleUpdateShape, saveState }) =
                 onChange={(e) => {
                   handleUpdateShape(shape.id, {
                     endP: { ...shape.endP, x: Number(e.target.value) },
-                  })
+                  });
                   saveState();
                 }}
                 imgSrc="letterX"

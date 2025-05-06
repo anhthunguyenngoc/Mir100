@@ -1,33 +1,63 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import { PATH } from '../../../router';
 import * as api from '../../../api';
+import * as Const from '../../../constant';
+import * as Icons from '../../../components/icons/Icons';
+import * as Comps from '../../../components';
 
 export const MissionCreate = () => {
   const navigate = useNavigate();
+
+  /** @type {[Array<api.TGetMission_groups>, Function]} */
+  const [missionGroups, setMissionGroups] = useState([]);
+
+  /** @type {[Array<api.TPostMissions>, Function]} */
+  const [formData, setFormData] = useState({});
+
+  const handleChange = (props) => {
+    setFormData((prev) => ({
+      ...prev,
+      ...props,
+    }));
+  };
 
   async function handleSubmit(event) {
     event.preventDefault(); // Ngăn chặn hành vi gửi mặc định
 
     const form = event.target;
 
-    const name = form['create-mission-name'].value;
-    const description = form['create-mission-description'].value;
-    const group_id = form['mission-groups-list'].key;
-    const session_id = form['site'].key;
-
-    const { statusCode, data } = await api.postMission({
-      group_id: group_id,
-      name: name,
-      description: description,
-      session_id: session_id,
+    handleChange({
+      name: form['create-mission-name']?.value,
+      description: form['create-mission-description']?.value,
     });
 
-    if (statusCode === api.STATUS_CODE.SUCCESS_POST) {
-      navigate(PATH.edit_mission(data.guid));
-    } else {
+    try {
+      const { statusCode, data } = await api.postMission(formData);
+
+      if (statusCode === api.STATUS_CODE.SUCCESS_POST) {
+        navigate(PATH.edit_mission(data.guid));
+      }
+    } catch (error) {
       console.log('Error post mission');
     }
+
+    navigate(PATH.edit_mission());
   }
+
+  const fetchMissionGroups = async () => {
+    try {
+      const { statusCode, data } = await api.getMissionGroups();
+      setMissionGroups(data);
+    } catch (err) {
+      console.error('Error fetching mission groups:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchMissionGroups();
+  }, []);
 
   return (
     <div id="create-mission-content" className="content flex">
@@ -41,18 +71,18 @@ export const MissionCreate = () => {
                 <img
                   className="help-btn-img"
                   alt="Help"
-                  src="../../../images/help.svg"
+                  src={Const.ImageSrc.help}
                   loading="lazy"
                 />
               </button>
             </div>
           </div>
 
-          <button className="button" onclick="goBack()">
+          <button className="button" onClick={() => navigate(PATH.missions)}>
             <img
               className="plus-btn-img"
               alt="Go back"
-              src="../../../images/go-back.svg"
+              src={Const.ImageSrc.goBack}
               loading="lazy"
             />
             Go back
@@ -81,10 +111,11 @@ export const MissionCreate = () => {
           <div className="col-3px width-50per">
             <label for="name">Mission group</label>
             <div className="flex row gap-5px">
-              <select
-                className="full-width"
-                name="mission-groups-list"
-              ></select>
+              <Comps.SelectionDropdown
+                options={missionGroups}
+                placeHolderText={'Mission group'}
+                onChange={(value) => handleChange({ group_id: value.guid })}
+              />
 
               <button className="button nowrap" style={{ height: 'auto' }}>
                 Create / Edit
@@ -94,47 +125,28 @@ export const MissionCreate = () => {
 
           <div className="col-3px width-50per">
             <label for="name">Site</label>
-            <select className="full-width" name="site">
-              <option value="Back and forth">Back and forth</option>
-              <option value="saab">Saab</option>
-              <option value="mercedes">Mercedes</option>
-              <option value="audi">Audi</option>
-            </select>
+            <Comps.SelectionDropdown
+              options={missionGroups}
+              placeHolderText={'Site'}
+              onChange={(value) => handleChange({ session_id: value.guid })}
+            />
           </div>
         </div>
         <div className="row-5px">
-          <button className="button flex row gap-5px" onclick="postMission()">
+          <button className="button flex row gap-5px" type="submit">
             <img
               className="plus-btn-img"
               alt="Save user groups"
               src="../../../images/tick.svg"
               loading="lazy"
-              type="submit"
             />
             Create mission
           </button>
           <button
             className="button flex row gap-5px outline-btn"
-            onclick="goBack()"
+            onClick={() => navigate(PATH.missions)}
           >
-            <svg
-              className="plus-btn-img fill-color-btn stroke-color-btn"
-              viewBox="0 0 1024 1024"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g id="SVGRepo_bgCarrier" stroke-width="0" />
-              <g
-                id="SVGRepo_tracerCarrier"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <g id="SVGRepo_iconCarrier">
-                <path
-                  className="fill-color-btn"
-                  d="M195.2 195.2a64 64 0 0 1 90.496 0L512 421.504 738.304 195.2a64 64 0 0 1 90.496 90.496L602.496 512 828.8 738.304a64 64 0 0 1-90.496 90.496L512 602.496 285.696 828.8a64 64 0 0 1-90.496-90.496L421.504 512 195.2 285.696a64 64 0 0 1 0-90.496z"
-                />
-              </g>
-            </svg>
+            <Icons.GoBack iconColorClass={'fill-color-btn'} />
             Cancel
           </button>
         </div>

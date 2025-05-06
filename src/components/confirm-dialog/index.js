@@ -1,1 +1,1 @@
-export * from './ConfirmDialogContext';
+export * from './ConfirmDialog';

@@ -2,7 +2,11 @@ import { useState } from 'react';
 
 import './toolbar.css';
 import { VerticalLine } from '../../components/VerticalLine';
-import { SmallToolButton, BigToolButton } from '../../components';
+import {
+  SmallToolButton,
+  BigToolButton,
+  SelectionDropdown,
+} from '../../components';
 import * as Const from '../../constant';
 
 const verticalLine = {
@@ -24,6 +28,14 @@ export const CanvasToolbar = ({
   redo,
   undoActive,
   redoActive,
+  setLineType,
+  setZoneType,
+  lineType,
+  zoneType,
+  copyActive,
+  hasShapeSelected,
+  editable,
+  setEditable,
 }) => {
   const [selectOptions, setSelectOptions] = useState(Const.select);
   const [lineOptions, setLineOptions] = useState(Const.line);
@@ -62,20 +74,43 @@ export const CanvasToolbar = ({
     defaultCursor: defaultCursor,
   };
 
-  return (
+  return editable ? (
     <div>
-      <div className='flex row' style={{marginBottom: "1px", gap: "1px"}}>
-        <button className="icon-btn" style={{borderTopLeftRadius: "5px", borderBottomLeftRadius: "5px", width: "79.9px"}}>
+      <div className="flex row" style={{ marginBottom: '1px', gap: '1px' }}>
+        <button
+          className="icon-btn"
+          style={{
+            borderTopLeftRadius: '5px',
+            borderBottomLeftRadius: '5px',
+            width: '79.9px',
+          }}
+          onClick={() => setEditable(false)}
+        >
           <img className="size-20px" src={Const.ImageSrc['save']}></img>
         </button>
-        <button className={`icon-btn ${!undoActive ? 'inactive' : ''}`} style={{width: "79.9px"}} onClick={undo}>
+        <button
+          className={`icon-btn ${!undoActive ? 'inactive' : ''}`}
+          style={{ width: '79.9px' }}
+          onClick={undo}
+        >
           <img className="size-20px" src={Const.ImageSrc['undo']}></img>
         </button>
-        <button className={`icon-btn ${!redoActive ? 'inactive' : ''}`} style={{borderTopRightRadius: "5px", borderBottomRightRadius: "5px", width: "79.9px"}} onClick={redo}>
+        <button
+          className={`icon-btn ${!redoActive ? 'inactive' : ''}`}
+          style={{
+            borderTopRightRadius: '5px',
+            borderBottomRightRadius: '5px',
+            width: '79.9px',
+          }}
+          onClick={redo}
+        >
           <img className="size-20px" src={Const.ImageSrc['redo']}></img>
         </button>
       </div>
-      <div className="toolbar-container sidebar_background radius-5px" style={{marginBottom: "5px"}}>
+      <div
+        className="toolbar-container sidebar_background radius-5px"
+        style={{ marginBottom: '5px' }}
+      >
         <div className="height-fit-content width-fit-content flex col gap-15px">
           <div className="height-fit-content width-fit-content flex row gap-10px">
             <ul className="center col padding-10px gap-5px">
@@ -120,6 +155,7 @@ export const CanvasToolbar = ({
                 imgSrc="paste"
                 onClick={pasteShape}
                 options={selectOptions}
+                isActive={copyActive}
               />
             </ul>
 
@@ -135,6 +171,7 @@ export const CanvasToolbar = ({
                     showExpand={option.showExpand}
                     setOptions={setClipBoardOptions}
                     onClick={setOptionFunc}
+                    isActive={hasShapeSelected}
                   />
                 );
               })}
@@ -160,16 +197,24 @@ export const CanvasToolbar = ({
                   showExpand={option.showExpand}
                   options={option.options}
                   setOptions={setOptionFunc} // Truyền hàm set tương ứng
+                  isActive={!!lineType}
                 />
               );
             })}
           </ul>
-          <span className="light-text center">Path</span>
+          <SelectionDropdown
+            onChange={(value) => setLineType(value.guid)}
+            placeHolderText="No type selected"
+            options={Const.PathOptions}
+            containerStyleClass="flex justify-center"
+            styleClass="path-zone-dropdown"
+            iconColor={Const.Color.WHITE}
+          />
         </div>
 
         <VerticalLine {...verticalLine} />
 
-        <div className="width-fit-content flex col gap-15px">
+        <div className="flex col gap-15px" style={{ width: '175px' }}>
           <ul className="col2-oneline-width full-height width-fit-content gap-5px">
             {zoneOptions.map((option) => {
               const setOptionFunc = setOptionsMap[option.id] || (() => {}); // Nếu không có thì dùng function rỗng
@@ -184,11 +229,19 @@ export const CanvasToolbar = ({
                   showExpand={option.showExpand}
                   options={option.options}
                   setOptions={setOptionFunc} // Truyền hàm set tương ứng
+                  isActive={!!zoneType}
                 />
               );
             })}
           </ul>
-          <span className="light-text center">Zone</span>
+          <SelectionDropdown
+            onChange={(value) => setZoneType(value.guid)}
+            placeHolderText="No type selected"
+            options={Const.ZoneOptions}
+            containerStyleClass="flex justify-center"
+            styleClass="path-zone-dropdown"
+            iconColor={Const.Color.WHITE}
+          />
         </div>
 
         <VerticalLine {...verticalLine} />
@@ -234,6 +287,38 @@ export const CanvasToolbar = ({
                 {drawingMode === "arc" ? "Hủy vẽ Arc" : "Vẽ Arc"}
             </button> */}
       </div>
+    </div>
+  ) : (
+    <div className="flex row">
+      <SmallToolButton
+        imageSrc="search"
+        showExpand={false}
+        alt="Search position"
+      />
+      <SmallToolButton
+        id="add-marker"
+        imageSrc="addMarker"
+        showExpand={false}
+        alt="Draw a new marker"
+        onClick={() => {
+          toggleMode('add-marker');
+        }}
+      />
+      <SmallToolButton
+        id="add-pos"
+        imageSrc="addPos"
+        showExpand={false}
+        alt="Draw a new position"
+        onClick={() => {
+          toggleMode('add-pos');
+        }}
+      />
+      <SmallToolButton
+        imageSrc="edit"
+        showExpand={false}
+        alt="Edit map"
+        onClick={() => setEditable(true)}
+      />
     </div>
   );
 };

@@ -64,5 +64,38 @@
 
 #map-canvas {
   width: 100%;
-  height: 90vh;
+  height: fit-content;
+}
+
+.joystick {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* Các thuộc tính khác của joystick */
+}
+
+.joystick .thumb {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: blue;
+  border-radius: 50%;
+}
+
+.joystick-holder {
+  width: 200px;
+  height: 200px;
+  position: relative;
+  background-color: #f0f0f0; /* màu nền để dễ nhận diện */
+  border-radius: 50%;
+}
+
+.joystick {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #ff0000;
+  position: absolute;
+  cursor: pointer;
 }

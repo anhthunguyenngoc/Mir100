@@ -72,6 +72,113 @@ const getArrowRotation = (points, direction) => {
   return (Math.atan2(dy, dx) * 180) / Math.PI;
 };
 
+// Tính khoảng cách giữa hai điểm
+const getDistance = (p1, p2) =>
+  Math.sqrt((p2.x - p1.x) ** 2 + (p2.y - p1.y) ** 2);
+
+// Nội suy điểm giữa hai điểm theo t (0 <= t <= 1)
+const interpolatePoint = (p1, p2, t) => ({
+  x: p1.x + (p2.x - p1.x) * t,
+  y: p1.y + (p2.y - p1.y) * t,
+});
+
+/**
+ * Lấy mẫu điểm trên spline theo khoảng cách đều nhau
+ * @param {number[]} flatPoints - Mảng phẳng chứa các điểm [x1, y1, x2, y2, ...]
+ * @param {number} distance - Khoảng cách giữa các điểm mong muốn
+ * @param {number} degree - Bậc của B-Spline
+ * @param {number} numSamples - Số lượng điểm ban đầu trên spline để tính toán
+ * @returns {number[]} Mảng phẳng các điểm cách đều
+ */
+export const sampleBSplineByDistance = (
+  flatPoints,
+  distance = 10,
+  degree = 2,
+  numSamples = 200
+) => {
+  if (flatPoints.length < (degree + 1) * 2) return flatPoints;
+
+  // Tính spline với nhiều điểm
+  const splineFlat = computeBSpline(flatPoints, degree, numSamples);
+
+  // Chuyển thành mảng điểm {x, y}
+  const splinePoints = [];
+  for (let i = 0; i < splineFlat.length; i += 2) {
+    splinePoints.push({ x: splineFlat[i], y: splineFlat[i + 1] });
+  }
+
+  // Lấy mẫu theo khoảng cách đều
+  const sampledPoints = [];
+  let currentDistance = 0;
+  sampledPoints.push(splinePoints[0]);
+
+  for (let i = 1; i < splinePoints.length; i++) {
+    const prev = splinePoints[i - 1];
+    const curr = splinePoints[i];
+    const segmentLength = getDistance(prev, curr);
+
+    if (currentDistance + segmentLength >= distance) {
+      const remain = distance - currentDistance;
+      const t = remain / segmentLength;
+      const newPoint = interpolatePoint(prev, curr, t);
+      sampledPoints.push(newPoint);
+
+      // Restart loop from new point
+      splinePoints.splice(i, 0, newPoint);
+      currentDistance = 0;
+    } else {
+      currentDistance += segmentLength;
+    }
+  }
+
+  // Trả về dưới dạng mảng phẳng
+  return sampledPoints.flatMap((p) => [p.x, p.y]);
+};
+
+const sampleLinearSplineByDistance = (flatPoints, distance = 10) => {
+  if (!flatPoints || flatPoints.length < 4) return flatPoints;
+
+  const result = [];
+  let current = { x: flatPoints[0], y: flatPoints[1] };
+  result.push(current);
+
+  for (let i = 2; i < flatPoints.length; i += 2) {
+    const next = { x: flatPoints[i], y: flatPoints[i + 1] };
+    let dx = next.x - current.x;
+    let dy = next.y - current.y;
+    let segmentLength = Math.sqrt(dx * dx + dy * dy);
+
+    while (segmentLength >= distance) {
+      const t = distance / segmentLength;
+      current = {
+        x: current.x + t * dx,
+        y: current.y + t * dy,
+      };
+      result.push(current);
+
+      dx = next.x - current.x;
+      dy = next.y - current.y;
+      segmentLength = Math.sqrt(dx * dx + dy * dy);
+    }
+
+    // Sau đoạn này, điểm hiện tại là gần cuối đoạn, tiếp tục với đoạn kế tiếp
+    current = next;
+  }
+
+  // Trả kết quả dạng mảng phẳng
+  return result.flatMap((p) => [p.x, p.y]);
+};
+
+export const samplePSplineByDistance = (
+  flatPoints,
+  distance = 5,
+  degree = 2
+) => {
+  const splinePoints = computeBSpline(flatPoints, degree, 200); // Trả về mảng phẳng [x1, y1, x2, y2, ...]
+
+  return sampleLinearSplineByDistance(splinePoints, distance);
+};
+
 export const MySpline = ({
   ref,
   points,

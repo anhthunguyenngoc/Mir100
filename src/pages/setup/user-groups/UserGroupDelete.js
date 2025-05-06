@@ -19,7 +19,7 @@ export const UserGroupDelete = () => {
           </div>
 
           <div className="row-5px">
-            <button id="go-back" onclick="goBack()">
+            <button id="go-back" onClick="goBack()">
               <img
                 className="plus-btn-img"
                 alt="Go back"
@@ -93,7 +93,7 @@ export const UserGroupDelete = () => {
             />
             Delete user group
           </button>
-          <button className="flex row gap-5px outline-btn" onclick="goBack()">
+          <button className="flex row gap-5px outline-btn" onClick="goBack()">
             <svg
               className="plus-btn-img fill-color-btn stroke-color-btn"
               viewBox="0 0 1024 1024"

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ImageSrc } from '../../constant';
 import { ToolbarSelection } from '../selection';
+import * as Context from '../../context';
 
 export const SmallToolButton = ({
   id,
@@ -11,35 +12,22 @@ export const SmallToolButton = ({
   options,
   setOptions,
   onClick,
+  isActive = true,
 }) => {
+  const { drawingMode } = Context.useCanvasContext();
   const [showSelection, setShowSelection] = useState(false);
-
-  const toolBtnClick = () => {
-    const currentButton = document.getElementById(id);
-    const isSelected = currentButton.classList.contains('selected');
-
-    // Xóa tất cả các "selected" khác trước khi xử lý toggle
-    document
-      .querySelectorAll('.tool-btn')
-      .forEach((btn) => btn.classList.remove('selected'));
-
-    if (!isSelected) {
-      // Nếu button chưa được chọn, thêm class 'selected'
-      currentButton.classList.add('selected');
-      toggleMode?.(id);
-    } else {
-      // Nếu button đã được chọn, bỏ chọn
-      toggleMode?.(null); // Gửi giá trị null hoặc undefined nếu cần
-    }
-  };
 
   return (
     <li className="flex row">
       <button
         id={id}
-        className="tool-btn icon-btn radius-5px center height-fit-content"
+        className={`tool-btn icon-btn radius-5px center height-fit-content ${!isActive ? 'inactive' : ''} ${drawingMode === id ? 'selected' : ''}`}
         onClick={() => {
-          toolBtnClick();
+          if (drawingMode !== id) {
+            if (isActive && id) toggleMode?.(id);
+          } else {
+            toggleMode?.(null);
+          }
           onClick?.();
         }}
       >
@@ -53,9 +41,11 @@ export const SmallToolButton = ({
       {showExpand && (
         <div className="flex col relative-pos expand-container">
           <button
-            className={`tool-btn icon-btn radius-5px center full-height padding-4px ${showSelection ? 'selected' : ''}`}
+            className={`tool-btn icon-btn radius-5px center full-height padding-4px ${showSelection ? 'selected' : ''} ${!isActive ? 'inactive' : ''}`}
             onClick={(e) => {
-              setShowSelection(!showSelection);
+              if (isActive) {
+                setShowSelection(!showSelection);
+              }
             }}
           >
             <img
@@ -77,7 +67,9 @@ export const SmallToolButton = ({
                 .querySelectorAll('.tool-btn')
                 .forEach((btn) => btn.classList.remove('selected'));
               document.getElementById(id).classList.add('selected');
-              toggleMode(optionId);
+              if (isActive) {
+                toggleMode?.(optionId);
+              }
             }}
           />
         </div>

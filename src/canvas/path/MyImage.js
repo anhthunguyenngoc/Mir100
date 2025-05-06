@@ -3,14 +3,24 @@ import { Image } from 'react-konva';
 
 import { ImageSrc } from '../../constant';
 
-export const MyImage = ({ x, y, rotation, orientation }) => {
+export const MyImage = ({
+  x,
+  y,
+  rotation,
+  imageSrc,
+  width,
+  height,
+  onClick,
+}) => {
   const [image, setImage] = useState(null);
 
   useEffect(() => {
     const img = new window.Image();
-    img.src = ImageSrc['robot']; // hoặc PNG cũng được
+    img.src = imageSrc; // hoặc PNG cũng được
     img.onload = () => setImage(img);
   }, []);
+
+  if (!width || !height || !x || !y) return;
 
   return (
     image && (
@@ -18,11 +28,12 @@ export const MyImage = ({ x, y, rotation, orientation }) => {
         image={image}
         x={x}
         y={y}
-        width={40}
-        height={40}
-        offsetX={20} // để xoay quanh tâm
-        offsetY={20}
-        rotation={rotation}
+        width={width}
+        height={height}
+        offsetX={width / 2} // để xoay quanh tâm
+        offsetY={height / 2}
+        rotation={-rotation}
+        onClick={() => onClick?.()}
       />
     )
   );

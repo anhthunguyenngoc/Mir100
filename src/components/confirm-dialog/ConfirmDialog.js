@@ -9,12 +9,12 @@ export const ConfirmDialog = ({
     open && (
       <div
         id="confirm-container"
-        className="flex col width-30per radius-5px section-background-color"
+        className="flex col width-30per radius-5px section-background-color confirm-dialog-zindex"
       >
         <div className="full-width flex row justify-right error-background-color padding-1025px">
           <img
             className="img-35px pointer"
-            onclick="closeConfirmWindow()"
+            onClick="closeConfirmWindow()"
             alt="Close"
             src="../../../images/x.svg"
             loading="lazy"

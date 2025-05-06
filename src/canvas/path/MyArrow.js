@@ -91,7 +91,7 @@ export const MyArrow = ({
           <MyCircle
             x={point.x}
             y={point.y}
-            radius={6}
+            radius={2}
             fill="white"
             stroke="blue"
             strokeWidth={1}

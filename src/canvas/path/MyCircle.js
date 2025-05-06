@@ -104,7 +104,7 @@ export const MyCircle = ({
       <Circle //hitbox
         x={circle.x}
         y={circle.y}
-        radius={circle.radius + 10}
+        radius={circle.radius + 1}
         visible={hitboxVisible}
         onMouseEnter={() => {
           setShowCircle(true);
@@ -122,7 +122,7 @@ export const MyCircle = ({
         radius={circle.radius}
         fill={fill}
         stroke={selected ? 'red' : hovered ? 'blue' : stroke}
-        strokeWidth={hovered ? strokeWidth + 2 : strokeWidth}
+        strokeWidth={hovered ? strokeWidth + 1 : strokeWidth}
         draggable={draggable}
         visible={showCircle}
         onDragEnd={(e) => {

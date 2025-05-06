@@ -15,9 +15,7 @@ import * as IApi from './api_interface';
  *   data: { id, state, url }
  */
 export const postMissionQueue = async (body) => {
-  const response = await postAPI(URL.postMissionQueue, {
-    Mission_queues: body,
-  });
+  const response = await postAPI(URL.postMissionQueue, body);
   return {
     statusCode: response.statusCode,
     data: response.rawData,
@@ -36,7 +34,7 @@ export const postMissionQueue = async (body) => {
  *   data: { guid, name, url }
  */
 export const postMission = async (body) => {
-  const response = await postAPI(URL.postMission, { Missions: { body } });
+  const response = await postAPI(URL.postMission, body);
   return {
     statusCode: response.statusCode,
     data: response.rawData,
@@ -56,7 +54,7 @@ export const postMission = async (body) => {
  *   data: { guid, map, name, type_id, url }
  */
 export const postAreaEvents = async (body) => {
-  const response = await postAPI(URL.postAreaEvents, { Area_events: { body } });
+  const response = await postAPI(URL.postAreaEvents, body);
   return {
     statusCode: response.statusCode,
     data: response.rawData,
@@ -67,7 +65,7 @@ export const postAreaEvents = async (body) => {
  * POST /positions
  *
  * Description
- * Add a new positiont
+ * Add a new position
  *
  * @param {IApi.TPostPositions} body -
  *   { created_by_id, guid, map_id, name, orientation, parent_id, pos_x, pos_y, type_id }
@@ -76,7 +74,7 @@ export const postAreaEvents = async (body) => {
  *   data: { guid, map, name, type_id, url }
  */
 export const postPositions = async (body) => {
-  const response = await postAPI(URL.postPositions, { Positions: { body } });
+  const response = await postAPI(URL.postPositions, body);
   return {
     statusCode: response.statusCode,
     data: response.rawData,
@@ -99,7 +97,7 @@ export const postPositions = async (body) => {
  *   data: { created_by, created_by_id, docking_offsets, guid, help_positions, map, map_id, name, orientation, parent, parent_id, pos_x, pos_y, type, type_id }
  */
 export const putPosition = async (guid, body) => {
-  const response = await putAPI(URL.putPosition(guid), { Position: { body } });
+  const response = await putAPI(URL.putPosition(guid), body);
   return {
     statusCode: response.statusCode,
     data: response.rawData,
@@ -120,7 +118,7 @@ export const putPosition = async (guid, body) => {
  *   data: { created_by, created_by_id, guid, map, metadata, name, one_way_map, origin_theta, origin_x, origin_y, path_guides, paths, positions, resolution, session_id }
  */
 export const putMap = async (guid, body) => {
-  const response = await putAPI(URL.putMap(guid), { Map: { body } });
+  const response = await putAPI(URL.putMap(guid), body);
   return {
     statusCode: response.statusCode,
     data: response.rawData,
@@ -141,7 +139,7 @@ export const putMap = async (guid, body) => {
  *   data: { actions, created_by, created_by_id, definition, description, group_id, guid, has_user_parameters, hidden, name, session_id, valid }
  */
 export const putMission = async (guid, body) => {
-  const response = await putAPI(URL.putMission(guid), { Mission: { body } });
+  const response = await putAPI(URL.putMission(guid), body);
   return {
     statusCode: response.statusCode,
     data: response.rawData,
@@ -162,9 +160,33 @@ export const putMission = async (guid, body) => {
  *   data: { actions, control_posid, control_state, created_by, created_by_id, description, finished, id, message, mission, mission_id, ordered, parameters, priority, started, state }
  */
 export const putMissionQueue = async (id, body) => {
-  const response = await putAPI(URL.putMissionQueue(id), {
-    ' Mission_queue': { body },
-  });
+  const response = await putAPI(URL.putMissionQueue(id), body);
+  return {
+    statusCode: response.statusCode,
+    data: response.rawData,
+  };
+};
+
+/**
+ * PUT /status
+ *
+ * Description
+ * Modify the status
+ *
+ * @param {IApi.TPutStatus} body
+ *   { answer, clear_error, datetime, guid, map_id, mode_id, name, position, serial_number, state_id, web_session_id }
+ *
+ * @returns {Promise<{statusCode: number, data: IApi.TGetStatus}>}
+ *   // TGetStatus: { battery_percentage, battery_time_remaining, distance_to_next_target, errors, footprint, hook_status, joystick_low_speed_mode_enabled, joystick_web_session_id, map_id, mission_queue_id, mission_queue_url, mission_text, mode_id, mode_key_state, mode_text, moved, position, robot_model, robot_name, safety_system_muted, serial_number, session_id, state_id, state_text, unloaded_map_changes, uptime, user_prompt, velocity }
+ *   // TError: { code, description, module }
+ *   // THookStatus: { angle, available, braked, cart_attached, height, length, cart }
+ *   // TCart: { height, id, length, offset_locked_wheels, width }
+ *   // TPosition: { orientation, x, y }
+ *   // TUserPrompt: { guid, options, question, timeout, user_group }
+ *   // TVelocity: { angular, linear }
+ */
+export const putStatus = async (body) => {
+  const response = await putAPI(URL.putStatus, body);
   return {
     statusCode: response.statusCode,
     data: response.rawData,
@@ -190,6 +212,23 @@ export const putMissionQueue = async (id, body) => {
  */
 export const getStatus = async () => {
   const response = await getAPI(URL.getStatus);
+  return {
+    statusCode: response.statusCode,
+    data: response.rawData,
+  };
+};
+
+/**
+ * GET /maps
+ *
+ * Description
+ * Retrieve the list of maps
+ *
+ * @returns {Promise<{statusCode: number, data: Array<IApi.TGetMaps>}>}
+ *   data: { guid, name, url }
+ */
+export const getMaps = async () => {
+  const response = await getAPI(URL.getMaps);
   return {
     statusCode: response.statusCode,
     data: response.rawData,
@@ -518,6 +557,7 @@ export const deleteMissionQueueId = async (id) => {
  */
 export const deletePosition = async (guid) => {
   const response = await deleteAPI(URL.deletePositionId(guid));
+  console.log(response);
   return {
     statusCode: response.statusCode,
   };

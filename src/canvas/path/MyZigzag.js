@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Path, Group, Arrow, Line } from 'react-konva';
+
 import { MyCircle } from './MyCircle';
 import { LineDirection } from '../../constant/Line';
 import { normalizeAbsolutePosition } from 'canvas/utils';
@@ -16,7 +17,7 @@ export const calculateMidPoint = (start, end) => {
   return { x: xMid, y: yMid };
 };
 
-const getPathData = (points, radius) => {
+export const getZigzagPathData = (points, radius) => {
   if (!points[0] || !points[1] || !points[2]) return '';
   return `
     M ${points[0].x} ${points[0].y} 
@@ -71,7 +72,7 @@ export const MyZigzag = ({
     <Group ref={(node) => ref?.(node)}>
       <Path
         name={name}
-        data={getPathData([startP, midP, endP], radius)}
+        data={getZigzagPathData([startP, midP, endP], radius)}
         pointerLength={pointerLength}
         pointerWidth={pointerWidth}
         fill="transparent"
@@ -84,7 +85,9 @@ export const MyZigzag = ({
         }}
         onDragEnd={(e) => {
           const zigzag = e.target;
-          const absPos = normalizeAbsolutePosition(zigzag.getAbsolutePosition());
+          const absPos = normalizeAbsolutePosition(
+            zigzag.getAbsolutePosition()
+          );
 
           const newPoints = [startP, midP, endP].map((point) => ({
             x: point.x + absPos.x,
@@ -164,16 +167,16 @@ export const MyZigzag = ({
               );
             }}
             hitboxVisible={!isDrawing}
-            dragBoundFunc={(pos) => {
+            dragBoundFunc={(p) => {
               if (index === 1) {
                 return {
-                  x: pos.x,
+                  x: p.x,
                   y: point.y,
                 };
               } else {
                 return {
-                  x: pos.x,
-                  y: pos.y,
+                  x: p.x,
+                  y: p.y,
                 };
               }
             }}

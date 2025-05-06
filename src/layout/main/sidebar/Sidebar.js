@@ -23,7 +23,7 @@ export const Sidebar = ({ defaultIndex, onSelect }) => {
       </li>
       {sidebarControl.map((item, index) => (
         <li
-          id={item.key}
+          key={item.key}
           className={`sidebar-button ${selectedIndex === index ? 'selected' : ''}`}
           onClick={() => handleItemClick(index)}
         >

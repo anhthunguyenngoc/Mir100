@@ -1,4 +1,11 @@
+import { useNavigate } from 'react-router-dom';
+import { PATH } from '../../../router';
+import * as api from '../../../api';
+import * as Const from '../../../constant';
+
 export const MapCreate = () => {
+  const navigate = useNavigate();
+
   return (
     <div id="edit-map-content" className="content">
       <section>
@@ -7,7 +14,7 @@ export const MapCreate = () => {
             <h1>Create map</h1>
             <div className="row-5px">
               Create a new map.
-              <button className="help-btn">
+              <button className="button help-btn">
                 <img
                   className="help-btn-img"
                   alt="Help"
@@ -18,11 +25,11 @@ export const MapCreate = () => {
             </div>
           </div>
 
-          <button id="go-back" onclick="goBack()">
+          <button className="button" onClick={() => navigate(-1)}>
             <img
               className="plus-btn-img"
               alt="Go back"
-              src="../../../images/go-back.svg"
+              src={Const.ImageSrc.goBack}
               loading="lazy"
             />
             Go back
@@ -48,11 +55,11 @@ export const MapCreate = () => {
               <option value="audi">Audi</option>
             </select>
 
-            <button className="nowrap">Create / Edit</button>
+            <button className="button nowrap">Create / Edit</button>
           </div>
         </div>
         <div className="row-5px">
-          <button className="flex row gap-5px" onclick="editMapClick()">
+          <button className="button flex row gap-5px" onClick="editMapClick()">
             <img
               className="plus-btn-img"
               alt="Save user groups"
@@ -61,7 +68,10 @@ export const MapCreate = () => {
             />
             Create map
           </button>
-          <button className="flex row gap-5px outline-btn" onclick="goBack()">
+          <button
+            className="button flex row gap-5px outline-btn"
+            onClick="goBack()"
+          >
             <svg
               className="plus-btn-img fill-color-btn stroke-color-btn"
               viewBox="0 0 1024 1024"

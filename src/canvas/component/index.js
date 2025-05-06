@@ -7,3 +7,4 @@ export * from './DropdownList';
 export * from './PositionDialog';
 export * from './MarkerCreate';
 export * from './PositionCreate';
+export * from './joystick';

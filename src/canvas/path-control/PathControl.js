@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
-import { JoystickControl } from '../../components';
+import { JoystickControl } from '../component/joystick';
 import * as Context from '../../context';
 import * as Const from '../../constant';
 import * as Utils from '../utils';
+import * as Comp from '../../components';
 
 import { RosService } from '../../ros';
 import * as api from '../../api';
-import { getNextVelocity } from './PurePursuit';
+import { getNextVelocity, insertCornerBufferPoints } from './PurePursuit';
 
 export const PathControl = ({
   rosInstance,
@@ -63,137 +64,132 @@ export const PathControl = ({
   };
 
   const startPath = async () => {
-    joystickToggle();
-    setIsMoving(true);
-  };
+    if (!joystickControl) {
+      joystickToggle();
+    }
 
-  const pausePath = () => {
-    setIsMoving(false);
-  };
-
-  const resumePath = () => {
-    setIsMoving(true);
+    setIsMoving((prev) => !prev);
   };
 
   //========================Giả lập
 
   const [selectedShapeId, setSelectedShapeId] = useState(null);
 
-  // useEffect(() => {
-  //   if (!joystickControl) return;
+  useEffect(() => {
+    if (!joystickControl) return;
 
-  //   if (!pathPoints || pathPoints.length === 0 || !isMoving) {
-  //     joystickControl.emergencyStop();
-  //     return;
-  //   }
+    if (!pathPoints || pathPoints.length === 0 || !isMoving) {
+      joystickControl.emergencyStop();
+      return;
+    }
 
-  //   const result = getNextVelocity(
-  //     {
-  //       x: robotStatus.position.x,
-  //       y: robotStatus.position.y,
-  //       orientation: Utils.degreesToRadians(robotStatus.position.orientation),
-  //     },
-  //     [...pathPoints],
-  //     SPEED,
-  //     SPEED,
-  //     map?.metadata.layers.areaprefs_forbidden.shapes.map((wall) => ({
-  //       ...wall,
-  //       polygon: wall.polygon.map(
-  //         (p) => Utils.getRealPosition(p.x, p.y, map) //!!!
-  //       ),
-  //     })),
-  //     [],
+    const result = getNextVelocity(
+      {
+        x: robotStatus.position.x,
+        y: robotStatus.position.y,
+        orientation: Utils.degreesToRadians(robotStatus.position.orientation),
+      },
+      [...pathPoints],
+      SPEED,
+      SPEED,
+      map?.metadata.layers.areaprefs_forbidden.shapes.map((wall) => ({
+        ...wall,
+        polygon: wall.polygon.map(
+          (p) => Utils.getRealPosition(p.x, p.y, map) //!!!
+        ),
+      })),
+      [],
 
-  //     map?.metadata.layers.walls.shapes.map((wall) => ({
-  //       ...wall,
-  //       polygon: wall.polygon.map(
-  //         (p) => Utils.getRealPosition(p.x, p.y, map) //!!!
-  //       ),
-  //     }))
-  //   );
+      map?.metadata.layers.walls.shapes.map((wall) => ({
+        ...wall,
+        polygon: wall.polygon.map(
+          (p) => Utils.getRealPosition(p.x, p.y, map) //!!!
+        ),
+      }))
+    );
 
-  //   if (!result) return;
+    if (!result) return;
 
-  //   const { linear, angular, path: updatedPath } = result;
+    const { linear, angular, path: updatedPath } = result;
 
-  //   if (linear === 0 && angular === 0) setIsMoving(false);
+    if (linear === 0 && angular === 0) setIsMoving(false);
 
-  //   setPathPoints(updatedPath); // Cập nhật path đã loại bỏ điểm đã qua
+    setPathPoints(updatedPath); // Cập nhật path đã loại bỏ điểm đã qua
 
-  //   joystickControl.sendMovementCommand(linear, angular);
+    joystickControl.sendMovementCommand(linear, angular);
 
-  //   //Chờ cập nhật vị trí
-  //   fetchRobotStatus();
-  // }, [joystickControl, robotStatus, isMoving, pathPoints]);
+    //Chờ cập nhật vị trí
+    fetchRobotStatus();
+  }, [joystickControl, robotStatus, isMoving, pathPoints]);
 
   //$$$ Test
-  useEffect(() => {
-    if (!isMoving) return;
+  // useEffect(() => {
+  //   if (!isMoving) return;
 
-    const dt = 0.1; // bước thời gian mô phỏng (giây)
-    const interval = setInterval(() => {
-      //$$$ Test
-      const result = getNextVelocity(
-        simPose,
-        [...pathPoints],
-        0.5,
-        0.5,
-        metadata.forbiddenZone.map((wall) => ({
-          ...wall,
-          polygon: wall.polygon.map(
-            (p) => Utils.getRealPosition(p.x, p.y, {
-              metadata: { height: 568 },
-              resolution: 0.05,
-              origin_x: 0,
-              origin_y: 0,
-            })
-          ),
-        })),
-        obstacles.map(
-          (p) => Utils.getRealPosition(p.x, p.y, {
-            metadata: { height: 568 },
-            resolution: 0.05,
-            origin_x: 0,
-            origin_y: 0,
-          })
-        ),
+  //   const dt = 0.1; // bước thời gian mô phỏng (giây)
+  //   const interval = setInterval(() => {
+  //     //$$$ Test
+  //     const result = getNextVelocity(
+  //       simPose,
+  //       [...pathPoints],
+  //       0.5,
+  //       0.5,
+  //       metadata.forbiddenZone.map((wall) => ({
+  //         ...wall,
+  //         polygon: wall.polygon.map((p) =>
+  //           Utils.getRealPosition(p.x, p.y, {
+  //             metadata: { height: 568 },
+  //             resolution: 0.05,
+  //             origin_x: 0,
+  //             origin_y: 0,
+  //           })
+  //         ),
+  //       })),
+  //       obstacles.map((p) =>
+  //         Utils.getRealPosition(p.x, p.y, {
+  //           metadata: { height: 568 },
+  //           resolution: 0.05,
+  //           origin_x: 0,
+  //           origin_y: 0,
+  //         })
+  //       ),
 
-        metadata.walls.map((wall) => ({
-          ...wall,
-          polygon: wall.polygon.map(
-            (p) => Utils.getRealPosition(p.x, p.y, {
-              metadata: { height: 568 },
-              resolution: 0.05,
-              origin_x: 0,
-              origin_y: 0,
-            })
-          ),
-        }))
-      );
+  //       metadata.walls.map((wall) => ({
+  //         ...wall,
+  //         polygon: wall.polygon.map((p) =>
+  //           Utils.getRealPosition(p.x, p.y, {
+  //             metadata: { height: 568 },
+  //             resolution: 0.05,
+  //             origin_x: 0,
+  //             origin_y: 0,
+  //           })
+  //         ),
+  //       }))
+  //     );
 
-      if (!result) return;
+  //     if (!result) return;
 
-      const { linear, angular, path: updatedPath } = result;
+  //     const { linear, angular, path: updatedPath } = result;
 
-      if (linear === 0 && angular === 0) setIsMoving(false);
+  //     if (linear === 0 && angular === 0) setIsMoving(false);
 
-      setPathPoints(updatedPath); // Cập nhật path đã loại bỏ điểm đã qua
+  //     setPathPoints(updatedPath); // Cập nhật path đã loại bỏ điểm đã qua
 
-      setSimPose((prev) => {
-        const newTheta = prev.orientation + angular * dt;
-        return {
-          x: prev.x + linear * Math.cos(newTheta) * dt,
-          y: prev.y + linear * Math.sin(newTheta) * dt,
-          orientation: newTheta,
-        };
-      });
-    }, dt * 100); // Chuyển dt từ giây sang mili giây
+  //     setSimPose((prev) => {
+  //       const newTheta = prev.orientation + angular * dt;
+  //       return {
+  //         x: prev.x + linear * Math.cos(newTheta) * dt,
+  //         y: prev.y + linear * Math.sin(newTheta) * dt,
+  //         orientation: newTheta,
+  //       };
+  //     });
+  //   }, dt * 100); // Chuyển dt từ giây sang mili giây
 
-    return () => clearInterval(interval);
-  }, [simPose, isMoving, pathPoints]);
+  //   return () => clearInterval(interval);
+  // }, [simPose, isMoving, pathPoints]);
 
   return (
-    <div>
+    <div className="flex row">
       <select
         value={selectedShapeId || ''}
         onChange={(e) => {
@@ -207,7 +203,7 @@ export const PathControl = ({
 
           if (shape) {
             const points = shape.getShapePoints(); // Gọi hàm lấy điểm
-            setPathPoints(points);
+            setPathPoints(insertCornerBufferPoints(points));
           }
         }}
       >
@@ -221,40 +217,12 @@ export const PathControl = ({
         )}
       </select>
 
-      <button
-        className="button"
+      <Comp.ImageButton
+        className="icon-btn height-fit-content"
+        imageId={isMoving ? 'pause' : 'start'}
+        imageclassName="size-20px"
         onClick={startPath}
-        style={{ marginRight: 8 }}
-        disabled={isMoving}
-      >
-        Start
-      </button>
-
-      <button className="button" onClick={pausePath} disabled={!isMoving}>
-        Pause
-      </button>
-
-      <button className="button" onClick={resumePath} disabled={isMoving}>
-        Resume Path
-      </button>
+      />
     </div>
   );
-};
-
-const calculateAngularSpeed = (targetAngle, currentOrientation) => {
-  const Kp = 0.1; // hệ số điều chỉnh, bạn có thể chỉnh nhỏ hoặc to tùy độ mượt mong muốn
-
-  let error = targetAngle - currentOrientation;
-
-  // Đảm bảo error luôn nằm trong khoảng [-pi, pi]
-  if (error > Math.PI) error -= 2 * Math.PI;
-  if (error < -Math.PI) error += 2 * Math.PI;
-
-  const angularSpeed = Kp * error;
-  return angularSpeed;
-};
-
-const degreesToRadians = (degrees) => {
-  if (!degrees) return;
-  return degrees * (Math.PI / 180);
 };

@@ -1,4 +1,4 @@
-import { RosPublisher } from '../../ros';
+import { RosPublisher } from '../../../ros';
 
 export class JoystickControl {
   constructor({ rosInstance, joystickToken }) {

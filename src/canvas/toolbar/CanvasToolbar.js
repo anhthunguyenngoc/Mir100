@@ -8,6 +8,8 @@ import {
   SelectionDropdown,
 } from '../../components';
 import * as Const from '../../constant';
+import { PathControl } from 'canvas/path-control';
+import { random } from 'testt';
 
 const verticalLine = {
   width: '1px',
@@ -36,6 +38,7 @@ export const CanvasToolbar = ({
   hasShapeSelected,
   editable,
   setEditable,
+  PathControl,
 }) => {
   const [selectOptions, setSelectOptions] = useState(Const.select);
   const [lineOptions, setLineOptions] = useState(Const.line);
@@ -183,7 +186,7 @@ export const CanvasToolbar = ({
         <VerticalLine {...verticalLine} />
 
         <div className="width-fit-content flex col gap-15px">
-          <ul className="oneline-width full-height width-fit-content gap-5px">
+          <ul className="grid-oneline full-height width-fit-content gap-5px">
             {pathOptions.map((option) => {
               const setOptionFunc = setOptionsMap[option.id] || (() => {}); // Nếu không có thì dùng function rỗng
 
@@ -247,7 +250,7 @@ export const CanvasToolbar = ({
         <VerticalLine {...verticalLine} />
 
         <div className="width-fit-content flex col gap-15px">
-          <ul className="oneline-width full-height width-fit-content gap-5px">
+          <ul className="grid-oneline full-height width-fit-content gap-5px">
             {groupOptions.map((option) => {
               const onOptionClick = setOptionsMap[option.id] || (() => {});
 
@@ -269,14 +272,14 @@ export const CanvasToolbar = ({
         <VerticalLine {...verticalLine} />
 
         <div className="width-fit-content flex col gap-15px">
-          <ul className="oneline-width full-height width-fit-content gap-5px"></ul>
+          <ul className="grid-oneline full-height width-fit-content gap-5px"></ul>
           <span className="light-text center">Import</span>
         </div>
 
         <VerticalLine {...verticalLine} />
 
         <div className="width-fit-content flex col gap-15px">
-          <ul className="oneline-width full-height width-fit-content gap-5px"></ul>
+          <ul className="grid-oneline full-height width-fit-content gap-5px"></ul>
           <span className="light-text center">Export</span>
         </div>
 
@@ -289,30 +292,118 @@ export const CanvasToolbar = ({
       </div>
     </div>
   ) : (
-    <div className="flex row">
-      <SmallToolButton
-        imageSrc="search"
-        showExpand={false}
-        alt="Search position"
-      />
-      <SmallToolButton
-        id="add-marker"
-        imageSrc="addMarker"
-        showExpand={false}
-        alt="Draw a new marker"
-        onClick={() => {
-          toggleMode('add-marker');
-        }}
-      />
-      <SmallToolButton
-        id="add-pos"
-        imageSrc="addPos"
-        showExpand={false}
-        alt="Draw a new position"
-        onClick={() => {
-          toggleMode('add-pos');
-        }}
-      />
+    <div className="flex row space-between full-width">
+      <div className="flex row" style={{gap: '1px'}}>
+        <SmallToolButton
+          imageSrc="search"
+          showExpand={false}
+          alt="Search position"
+          buttonStyle={{
+            borderRadius: '0',
+            borderTopLeftRadius: '5px',
+              borderBottomLeftRadius: '5px',
+          }}
+        />
+        <SmallToolButton
+          id="add-marker"
+          imageSrc="addMarker"
+          showExpand={false}
+          alt="Draw a new marker"
+          buttonStyle={{
+            borderRadius: '0',
+          }}
+          onClick={() => {
+            toggleMode('add-marker');
+          }}
+        />
+        <SmallToolButton
+          id="add-pos"
+          imageSrc="addPos"
+          showExpand={false}
+          alt="Draw a new position"
+          buttonStyle={{
+            borderRadius: '0',
+            borderTopRightRadius: '5px',
+              borderBottomRightRadius: '5px',
+          }}
+          onClick={() => {
+            toggleMode('add-pos');
+          }}
+        />
+      </div>
+
+      {PathControl}
+
+      <ul className="flex row full-height width-fit-content gap-5px">
+        <div className="flex row" style={{ gap: '1px' }}>
+          {[6, 0, 3]
+            .map((index) => pathOptions[index])
+            .map((option, index) => {
+              const setOptionFunc = setOptionsMap[option.id] || (() => {}); // Nếu không có thì dùng function rỗng
+
+              return (
+                <SmallToolButton
+                  key={option.id}
+                  id={option.id}
+                  alt={option.alt}
+                  imageSrc={option.imgSrc}
+                  toggleMode={toggleMode}
+                  showExpand={option.showExpand}
+                  options={option.options}
+                  setOptions={setOptionFunc} // Truyền hàm set tương ứng
+                  isActive={true}
+                  buttonStyle={{
+                    borderRadius: '0',
+                    ...(index === 0 && {
+                      borderTopLeftRadius: '5px',
+                      borderBottomLeftRadius: '5px',
+                    }),
+                    ...(index === 2 && {
+                      borderTopRightRadius: '5px',
+                      borderBottomRightRadius: '5px',
+                    }),
+                  }}
+                />
+              );
+            })}
+        </div>
+        <div className="flex row" style={{ gap: '1px' }}>
+          {[1, 2, 4, 5]
+            .map((index) => pathOptions[index])
+            .map((option, index) => {
+              const setOptionFunc = setOptionsMap[option.id] || (() => {}); // Nếu không có thì dùng function rỗng
+
+              return (
+                <SmallToolButton
+                  key={option.id}
+                  id={option.id}
+                  alt={option.alt}
+                  imageSrc={option.imgSrc}
+                  toggleMode={toggleMode}
+                  showExpand={true}
+                  options={option.options}
+                  setOptions={setOptionFunc} // Truyền hàm set tương ứng
+                  isActive={true}
+                  buttonStyle={{
+                    borderRadius: '0',
+                    ...(index === 0 && {
+                      borderTopLeftRadius: '5px',
+                      borderBottomLeftRadius: '5px',
+                    }),
+                  }}
+                  expandStyle={{
+                    borderRadius: '0',
+                    ...(index === 3 && {
+                      borderTopRightRadius: '5px',
+                      borderBottomRightRadius: '5px',
+                    }),
+                  }}
+                />
+              );
+            })}
+        </div>
+      </ul>
+
       <SmallToolButton
         imageSrc="edit"
         showExpand={false}

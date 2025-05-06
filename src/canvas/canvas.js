@@ -254,40 +254,40 @@ const Canvas = () => {
     const lines = [];
 
     //!!!!
-    // // Lặp qua các zones trong layers
-    // for (const zones in map?.metadata.layers) {
-    //   // Lấy shapes của từng zone
-    //   const shapes = map?.metadata.layers[zones].shapes;
+    // Lặp qua các zones trong layers
+    for (const zones in map?.metadata.layers) {
+      // Lấy shapes của từng zone
+      const shapes = map?.metadata.layers[zones].shapes;
 
-    //   // Nếu có shapes, lặp qua các shape để tạo các Line
-    //   shapes.forEach((zone, index) => {
-    //     lines.push(
-    //       <Line
-    //         points={zone.polygon.flatMap((point) => [point.x, point.y])}
-    //         stroke={zone.color}
-    //         strokeWidth={zone.brushsize}
-    //         closed={shapes[0]?.type === 'shape'} // Giữ `false` nếu không muốn tạo đa giác kín
-    //         fill={zone.color}
-    //       />
-    //     );
-    //   });
-    // }
-
-    //$$$Test */
-    Object.entries(metadata).forEach(([key, zones]) => {
-      zones.forEach((zone) => {
+      // Nếu có shapes, lặp qua các shape để tạo các Line
+      shapes.forEach((zone, index) => {
         lines.push(
           <Line
-            key={`${key}-${JSON.stringify(zone.polygon)}`}
             points={zone.polygon.flatMap((point) => [point.x, point.y])}
             stroke={zone.color}
             strokeWidth={zone.brushsize}
-            closed={zone.type === 'shape'}
+            closed={shapes[0]?.type === 'shape'} // Giữ `false` nếu không muốn tạo đa giác kín
             fill={zone.color}
           />
         );
       });
-    });
+    }
+
+    //$$$Test */
+    // Object.entries(metadata).forEach(([key, zones]) => {
+    //   zones.forEach((zone) => {
+    //     lines.push(
+    //       <Line
+    //         key={`${key}-${JSON.stringify(zone.polygon)}`}
+    //         points={zone.polygon.flatMap((point) => [point.x, point.y])}
+    //         stroke={zone.color}
+    //         strokeWidth={zone.brushsize}
+    //         closed={zone.type === 'shape'}
+    //         fill={zone.color}
+    //       />
+    //     );
+    //   });
+    // });
 
     // Trả về mảng các phần tử Line
     return lines;
@@ -666,15 +666,15 @@ const Canvas = () => {
           getShapePoints: () => {
             return Utils.getPointsAlongLine(line.startP, line.endP, 10).map(
               (p) => {
-                // return Utils.getRealPosition(p.x, p.y, map); //!!!!
+                return Utils.getRealPosition(p.x, p.y, map); //!!!!
 
                 //$$$ Test
-                return Utils.getRealPosition(p.x, p.y, {
-                  metadata: { height: 568 },
-                  resolution: 0.05,
-                  origin_x: 0,
-                  origin_y: 0,
-                });
+                // return Utils.getRealPosition(p.x, p.y, {
+                //   metadata: { height: 568 },
+                //   resolution: 0.05,
+                //   origin_x: 0,
+                //   origin_y: 0,
+                // });
               }
             );
           },
@@ -701,15 +701,15 @@ const Canvas = () => {
               line.radius
             );
             return Utils.getPointsOnPath(pathData, 10).map((p) => {
-              // return Utils.getRealPosition(p.x, p.y, map); // !!!!
+              return Utils.getRealPosition(p.x, p.y, map); // !!!!
 
               //$$$ Test
-              return Utils.getRealPosition(p.x, p.y, {
-                metadata: { height: 568 },
-                resolution: 0.05,
-                origin_x: 0,
-                origin_y: 0,
-              });
+              // return Utils.getRealPosition(p.x, p.y, {
+              //   metadata: { height: 568 },
+              //   resolution: 0.05,
+              //   origin_x: 0,
+              //   origin_y: 0,
+              // });
             });
           },
         };
@@ -722,31 +722,36 @@ const Canvas = () => {
 
             if (line.mode.includes('p-')) {
               // Dữ liệu gốc, không dùng spline
-              const sampled = ShapeComp.samplePSplineByDistance(line.points, 10);
+              const sampled = ShapeComp.samplePSplineByDistance(
+                line.points,
+                10
+              );
               for (let i = 0; i < sampled.length; i += 2) {
                 pointPairs.push({ x: sampled[i], y: sampled[i + 1] });
               }
             } else if (line.mode.includes('cv-')) {
               // Dữ liệu spline được lấy mẫu đều
-              const sampled = ShapeComp.sampleBSplineByDistance(line.points, 10);
+              const sampled = ShapeComp.sampleBSplineByDistance(
+                line.points,
+                10
+              );
               for (let i = 0; i < sampled.length; i += 2) {
                 pointPairs.push({ x: sampled[i], y: sampled[i + 1] });
               }
             }
 
             return pointPairs.map((p) => {
-              // return Utils.getRealPosition(p.x, p.y, map); // !!!!
+              return Utils.getRealPosition(p.x, p.y, map); // !!!!
 
               //$$$ Test
-              return Utils.getRealPosition(p.x, p.y, {
-                metadata: { height: 568 },
-                resolution: 0.05,
-                origin_x: 0,
-                origin_y: 0,
-              });
+              // return Utils.getRealPosition(p.x, p.y, {
+              //   metadata: { height: 568 },
+              //   resolution: 0.05,
+              //   origin_x: 0,
+              //   origin_y: 0,
+              // });
             });
           },
-          
         };
       case Const.ShapeName.ULINE:
         return {
@@ -762,15 +767,15 @@ const Canvas = () => {
             );
 
             return Utils.getPointsOnPath(pathData, 10).map((p) => {
-              // return Utils.getRealPosition(p.x, p.y, map); // !!!!
+              return Utils.getRealPosition(p.x, p.y, map); // !!!!
 
               //$$$ Test
-              return Utils.getRealPosition(p.x, p.y, {
-                metadata: { height: 568 },
-                resolution: 0.05,
-                origin_x: 0,
-                origin_y: 0,
-              });
+              // return Utils.getRealPosition(p.x, p.y, {
+              //   metadata: { height: 568 },
+              //   resolution: 0.05,
+              //   origin_x: 0,
+              //   origin_y: 0,
+              // });
             });
           },
         };
@@ -1546,17 +1551,17 @@ const Canvas = () => {
     if (!pathPoints) return;
 
     return pathPoints.map((p) => {
-      // const canvasP = Utils.getCanvasPosition(p.x, p.y, map); //!!!
+      const canvasP = Utils.getCanvasPosition(p.x, p.y, map); //!!!
 
       //$$$ Test
-      const canvasP = Utils.getCanvasPosition(p.x, p.y, {
-        metadata: { height: 568 },
-        resolution: 0.05,
-        origin_x: 0,
-        origin_y: 0,
-      });
+      // const canvasP = Utils.getCanvasPosition(p.x, p.y, {
+      //   metadata: { height: 568 },
+      //   resolution: 0.05,
+      //   origin_x: 0,
+      //   origin_y: 0,
+      // });
       return (
-        canvasP && <Circle x={canvasP.x} y={canvasP.y} fill="red" radius="2" />
+        canvasP && <Circle x={canvasP.x} y={canvasP.y} fill="red" radius={2} />
       );
     });
   };
@@ -1646,9 +1651,9 @@ const Canvas = () => {
 
   //======Test
   const [simPose, setSimPose] = useState({
-    y: 12.866586685180664,
-    x: 16.529640197753906,
-    orientation: Math.PI/2,
+    y: 18.0, //12.866586685180664,
+    x: 11.05, //16.529640197753906,
+    orientation: 1.681,
   });
 
   // useEffect(() => {
@@ -1693,17 +1698,6 @@ const Canvas = () => {
 
   return (
     <div className="full-height flex col">
-      <PathControl
-        rosInstance={ros}
-        simPose={simPose}
-        setSimPose={setSimPose}
-        layers={layers}
-        pathPoints={pathPoints}
-        setPathPoints={setPathPoints}
-        metadata={metadata}
-        obstacles={obstacles}
-      />
-
       <CanvasToolbar
         toggleMode={toggleDrawingMode}
         defaultCursor={defaultCursor}
@@ -1724,6 +1718,18 @@ const Canvas = () => {
         hasShapeSelected={selectedShapes.length > 0}
         editable={editable}
         setEditable={setEditable}
+        PathControl={
+          <PathControl
+            rosInstance={ros}
+            simPose={simPose}
+            setSimPose={setSimPose}
+            layers={layers}
+            pathPoints={pathPoints}
+            setPathPoints={setPathPoints}
+            metadata={metadata}
+            obstacles={obstacles}
+          />
+        }
       />
 
       <div className="full-height" style={{ position: 'relative' }}>
@@ -1810,15 +1816,15 @@ const Canvas = () => {
 
               {simPose && (
                 <ShapeComp.MyImage
-                  // x={(simPose?.x - map?.origin_x) / map?.resolution}
-                  // y={
-                  //   map?.metadata.height -
-                  //   (simPose?.y - map?.origin_y) / map?.resolution
-                  // }
-                  // rotation={simPose?.orientation}
-                  x={(simPose.x - 0) / 0.05}
-                  y={568 - (simPose.y - 0) / 0.05}
-                  rotation={(simPose.orientation * 180) / Math.PI}
+                  x={(simPose?.x - map?.origin_x) / map?.resolution}
+                  y={
+                    map?.metadata.height -
+                    (simPose?.y - map?.origin_y) / map?.resolution
+                  }
+                  rotation={simPose?.orientation}
+                  // x={(simPose.x - 0) / 0.05}
+                  // y={568 - (simPose.y - 0) / 0.05}
+                  // rotation={(simPose.orientation * 180) / Math.PI}
                   imageSrc={Const.ImageSrc.robot}
                   width={30}
                   height={20}

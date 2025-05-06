@@ -1,5 +1,6 @@
 export const ImageSrc = {
   start: '/images/start.svg',
+  pause: '/images/pause.svg',
   tick: '/images/tick.svg',
   user: '/images/user.svg',
   signout: '/images/signout.svg',
@@ -47,7 +48,6 @@ export const ImageSrc = {
   showLeftbar: '/images/show-leftbar.svg',
   plus: '/images/plus.svg',
   addLayer: '/images/add-layer.svg',
-  expand: '/images/expand.svg',
   canvasExpand: '/images/canvas-expand.svg',
   arrowLeft: '/images/arrow-left.svg',
   arrowRight: '/images/arrow-right.svg',

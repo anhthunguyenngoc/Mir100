@@ -15,7 +15,7 @@ function clamp(value, min, max) {
  */
 export function getNextVelocity(
   robotPos,
-  path,
+  originalPath,
   linearBase,
   angularBase,
   forbiddenZones = [],
@@ -25,7 +25,11 @@ export function getNextVelocity(
   const K_linear = 1.0;
   const K_angular = 2.0;
 
-  if (!path.length) return null;
+  if (!originalPath.length) return null;
+
+  // --- Thêm điểm đệm tại các góc cua ---
+  // const path = insertCornerBufferPoints(originalPath);
+  const path = originalPath;
 
   // Xoá các điểm quá gần
   while (path.length > 0) {
@@ -52,15 +56,10 @@ export function getNextVelocity(
       isInForbiddenZone(p, forbiddenZones) ||
       pathCrossesWall(robotPos, p, walls)
     ) {
-      console.log(
-        'Forbidden Zone or Crosses Wall',
-        isInForbiddenZone(p, forbiddenZones),
-        pathCrossesWall(robotPos, p, walls)
-      );
+      console.log('Forbidden Zone or Crosses Wall');
       return { linear: 0, angular: 0, path };
     }
 
-    // Nếu gần vật cản, cập nhật target gần vật cản
     if (pathCrossesObstacle(robotPos, p, obstacles, 1)) {
       console.log('Crosses Obstacle');
       target = adjustTargetNearObstacle(robotPos, p, obstacles, 1);
@@ -84,15 +83,68 @@ export function getNextVelocity(
   angleDiff = Math.atan2(Math.sin(angleDiff), Math.cos(angleDiff));
 
   const distance = Math.hypot(dx, dy);
-  const linear =
-    K_linear * distance * (Math.abs(angleDiff) < Math.PI / 2 ? 1 : -0.5);
-  const angular = K_angular * angleDiff;
+
+  // --- Giảm tốc nếu góc lệch lớn ---
+  const anglePenalty = Math.max(0.2, 1 - Math.abs(angleDiff) / Math.PI);
+  const isSharpTurn = Math.abs(angleDiff) > Math.PI / 6;
+  const turnPenalty = isSharpTurn ? 0.5 : 1;
+  const angularPenalty = isSharpTurn ? 0.5 : 1;
+
+  const linear = clamp(
+    K_linear *
+      distance *
+      anglePenalty *
+      turnPenalty *
+      (Math.abs(angleDiff) < Math.PI / 2 ? 1 : -0.5),
+    -linearBase,
+    linearBase
+  );
+
+  const angular = clamp(
+    K_angular * angleDiff * angularPenalty,
+    -angularBase,
+    angularBase
+  );
 
   return {
-    linear: clamp(linear, -linearBase, linearBase),
-    angular: clamp(angular, -angularBase, angularBase),
+    linear,
+    angular,
     path,
   };
+}
+
+// ==== Chèn điểm đệm tại góc cua ====
+export function insertCornerBufferPoints(path, angleThreshold = Math.PI / 4) {
+  if (path.length < 3) return path;
+
+  const newPath = [path[0]];
+  for (let i = 1; i < path.length - 1; i++) {
+    const prev = path[i - 1];
+    const curr = path[i];
+    const next = path[i + 1];
+
+    const a1 = Math.atan2(curr.y - prev.y, curr.x - prev.x);
+    const a2 = Math.atan2(next.y - curr.y, next.x - curr.x);
+    const angleDiff = Math.abs(
+      Math.atan2(Math.sin(a2 - a1), Math.cos(a2 - a1))
+    );
+
+    if (angleDiff > angleThreshold) {
+      const ratio = 0.3;
+      const bx = curr.x + ratio * (prev.x - curr.x);
+      const by = curr.y + ratio * (prev.y - curr.y);
+      const fx = curr.x + ratio * (next.x - curr.x);
+      const fy = curr.y + ratio * (next.y - curr.y);
+
+      newPath.push({ x: bx, y: by });
+      newPath.push(curr);
+      newPath.push({ x: fx, y: fy });
+    } else {
+      newPath.push(curr);
+    }
+  }
+  newPath.push(path[path.length - 1]);
+  return newPath;
 }
 
 // ==== Hỗ trợ ====
@@ -142,7 +194,6 @@ function pointInPolygon(point, polygon) {
       yi > point.y !== yj > point.y &&
       point.x < ((xj - xi) * (point.y - yi)) / (yj - yi + 1e-9) + xi;
 
-    if (intersect) console.log(point, xi, yi, xj, yj);
     if (intersect) inside = !inside;
   }
 
@@ -208,4 +259,3 @@ function adjustTargetNearObstacle(start, target, obstacles, threshold = 0.25) {
     y: start.y + uy * safeDist,
   };
 }
-

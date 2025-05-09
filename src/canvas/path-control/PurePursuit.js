@@ -1,3 +1,5 @@
+import * as Utils from '../utils';
+
 function clamp(value, min, max) {
   return Math.max(min, Math.min(value, max));
 }
@@ -27,8 +29,6 @@ export function getNextVelocity(
 
   if (!originalPath.length) return null;
 
-  // --- Thêm điểm đệm tại các góc cua ---
-  // const path = insertCornerBufferPoints(originalPath);
   const path = originalPath;
 
   // Xoá các điểm quá gần
@@ -54,7 +54,7 @@ export function getNextVelocity(
 
     if (
       isInForbiddenZone(p, forbiddenZones) ||
-      pathCrossesWall(robotPos, p, walls)
+      Utils.pathCrossesWall(robotPos, p, walls)
     ) {
       console.log('Forbidden Zone or Crosses Wall');
       return { linear: 0, angular: 0, path };
@@ -90,15 +90,17 @@ export function getNextVelocity(
   const turnPenalty = isSharpTurn ? 0.5 : 1;
   const angularPenalty = isSharpTurn ? 0.5 : 1;
 
-  const linear = clamp(
-    K_linear *
-      distance *
-      anglePenalty *
-      turnPenalty *
-      (Math.abs(angleDiff) < Math.PI / 2 ? 1 : -0.5),
-    -linearBase,
-    linearBase
-  );
+  let linear = 0;
+  if (Math.abs(angleDiff) < Math.PI / 12) {
+    linear = clamp(
+      K_linear * distance * anglePenalty * turnPenalty,
+      -linearBase,
+      linearBase
+    );
+  } else {
+    // Góc quá lớn, chỉ xoay tại chỗ
+    linear = 0;
+  }
 
   const angular = clamp(
     K_angular * angleDiff * angularPenalty,
@@ -113,44 +115,10 @@ export function getNextVelocity(
   };
 }
 
-// ==== Chèn điểm đệm tại góc cua ====
-export function insertCornerBufferPoints(path, angleThreshold = Math.PI / 4) {
-  if (path.length < 3) return path;
-
-  const newPath = [path[0]];
-  for (let i = 1; i < path.length - 1; i++) {
-    const prev = path[i - 1];
-    const curr = path[i];
-    const next = path[i + 1];
-
-    const a1 = Math.atan2(curr.y - prev.y, curr.x - prev.x);
-    const a2 = Math.atan2(next.y - curr.y, next.x - curr.x);
-    const angleDiff = Math.abs(
-      Math.atan2(Math.sin(a2 - a1), Math.cos(a2 - a1))
-    );
-
-    if (angleDiff > angleThreshold) {
-      const ratio = 0.3;
-      const bx = curr.x + ratio * (prev.x - curr.x);
-      const by = curr.y + ratio * (prev.y - curr.y);
-      const fx = curr.x + ratio * (next.x - curr.x);
-      const fy = curr.y + ratio * (next.y - curr.y);
-
-      newPath.push({ x: bx, y: by });
-      newPath.push(curr);
-      newPath.push({ x: fx, y: fy });
-    } else {
-      newPath.push(curr);
-    }
-  }
-  newPath.push(path[path.length - 1]);
-  return newPath;
-}
-
 // ==== Hỗ trợ ====
 
 function isInForbiddenZone(point, zones) {
-  return zones.some((polygon) => pointInPolygon(point, polygon.polygon));
+  return zones.some((polygon) => Utils.pointInPolygon(point, polygon.polygon));
 }
 
 function pathCrossesObstacle(start, end, obstacles, threshold = 0.25) {
@@ -181,48 +149,6 @@ function pointToSegmentDistance(p, v, w) {
   t = Math.max(0, Math.min(1, t));
   const proj = { x: v.x + t * (w.x - v.x), y: v.y + t * (w.y - v.y) };
   return Math.hypot(p.x - proj.x, p.y - proj.y);
-}
-
-function pointInPolygon(point, polygon) {
-  let inside = false;
-  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
-    const xi = polygon[i].x,
-      yi = polygon[i].y;
-    const xj = polygon[j].x,
-      yj = polygon[j].y;
-    const intersect =
-      yi > point.y !== yj > point.y &&
-      point.x < ((xj - xi) * (point.y - yi)) / (yj - yi + 1e-9) + xi;
-
-    if (intersect) inside = !inside;
-  }
-
-  return inside;
-}
-
-// ==== MỚI: kiểm tra giao cắt tường ====
-
-function pathCrossesWall(start, end, walls) {
-  for (const wall of walls) {
-    const points = wall.polygon;
-    for (let i = 0; i < points.length - 1; i++) {
-      if (segmentsIntersect(start, end, points[i], points[i + 1])) {
-        console.log(start, end, points[i], points[i + 1]);
-        return true;
-      }
-    }
-  }
-  return false;
-}
-
-function segmentsIntersect(p1, p2, q1, q2) {
-  function ccw(a, b, c) {
-    return (c.y - a.y) * (b.x - a.x) > (b.y - a.y) * (c.x - a.x);
-  }
-
-  return (
-    ccw(p1, q1, q2) !== ccw(p2, q1, q2) && ccw(p1, p2, q1) !== ccw(p1, p2, q2)
-  );
 }
 
 // ==== MỚI: cập nhật target nếu gần vật cản ====

@@ -23,15 +23,16 @@ export const MyImage = ({
       if (img.width > 0 && img.height > 0) {
         setImage(img);
       } else {
-        console.warn("Loaded image has 0 width or height:", imageSrc);
+        console.warn('Loaded image has 0 width or height:', imageSrc);
       }
     };
     img.onerror = () => {
-      console.warn("Failed to load image:", imageSrc);
+      console.warn('Failed to load image:', imageSrc);
     };
   }, [imageSrc]);
 
-  if (!image || !width || !height || x === undefined || y === undefined) return null;
+  if (!image || !width || !height || x === undefined || y === undefined)
+    return null;
 
   return (
     image && (

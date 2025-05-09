@@ -50,12 +50,16 @@ export const MyTangent = ({
     const distance = Math.sqrt(dx * dx + dy * dy);
 
     if (Math.abs(distance - arc.radius) <= 5) {
-      onUpdateShape({points: getTangentLine({ x, y }, arc.center, arc.radius)});
+      onUpdateShape({
+        points: getTangentLine({ x, y }, arc.center, arc.radius),
+      });
     }
   };
 
   useEffect(() => {
-    onUpdateShape({points: getTangentLine(contactPoint, arc.center, arc.radius)});
+    onUpdateShape({
+      points: getTangentLine(contactPoint, arc.center, arc.radius),
+    });
   }, [contactPoint]);
 
   return (

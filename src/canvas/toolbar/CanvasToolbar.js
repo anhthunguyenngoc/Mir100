@@ -293,7 +293,7 @@ export const CanvasToolbar = ({
     </div>
   ) : (
     <div className="flex row space-between full-width">
-      <div className="flex row" style={{gap: '1px'}}>
+      <div className="flex row" style={{ gap: '1px' }}>
         <SmallToolButton
           imageSrc="search"
           showExpand={false}
@@ -301,7 +301,7 @@ export const CanvasToolbar = ({
           buttonStyle={{
             borderRadius: '0',
             borderTopLeftRadius: '5px',
-              borderBottomLeftRadius: '5px',
+            borderBottomLeftRadius: '5px',
           }}
         />
         <SmallToolButton
@@ -324,7 +324,7 @@ export const CanvasToolbar = ({
           buttonStyle={{
             borderRadius: '0',
             borderTopRightRadius: '5px',
-              borderBottomRightRadius: '5px',
+            borderBottomRightRadius: '5px',
           }}
           onClick={() => {
             toggleMode('add-pos');

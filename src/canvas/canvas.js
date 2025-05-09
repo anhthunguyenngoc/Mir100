@@ -60,6 +60,7 @@ const Canvas = () => {
   const [newTangent, setNewTangent] = useState(null);
   const [newULine, setNewULine] = useState(null);
   const [newSpline, setNewSpline] = useState(null);
+  const [newPath, setNewPath] = useState(null);
 
   const [newCircle, setNewCircle] = useState(null);
   const [newRectangle, setNewRectangle] = useState(null);
@@ -93,6 +94,8 @@ const Canvas = () => {
 
   const [createPos, setCreatePos] = useState(null);
   const [createMarker, setCreateMarker] = useState(null);
+
+  const [speed, setSpeed] = useState({ linear: 0, angular: 0 });
 
   const selectedLayer = useMemo(() => {
     return layers.find((layer) => layer.selected) || null;
@@ -278,7 +281,6 @@ const Canvas = () => {
     //   zones.forEach((zone) => {
     //     lines.push(
     //       <Line
-    //         key={`${key}-${JSON.stringify(zone.polygon)}`}
     //         points={zone.polygon.flatMap((point) => [point.x, point.y])}
     //         stroke={zone.color}
     //         strokeWidth={zone.brushsize}
@@ -632,6 +634,7 @@ const Canvas = () => {
     points: line.points,
     pointerLength: 4,
     pointerWidth: 4,
+    pointRadius: 2,
     fill: '#ACACAC',
     stroke: 'black',
     strokeWidth: 1,
@@ -664,19 +667,7 @@ const Canvas = () => {
         return {
           ...baseShapeProps(line),
           getShapePoints: () => {
-            return Utils.getPointsAlongLine(line.startP, line.endP, 10).map(
-              (p) => {
-                return Utils.getRealPosition(p.x, p.y, map); //!!!!
-
-                //$$$ Test
-                // return Utils.getRealPosition(p.x, p.y, {
-                //   metadata: { height: 568 },
-                //   resolution: 0.05,
-                //   origin_x: 0,
-                //   origin_y: 0,
-                // });
-              }
-            );
+            return Utils.getPointsAlongLine(line.startP, line.endP, 10);
           },
         };
       case Const.ShapeName.ARC:
@@ -700,17 +691,7 @@ const Canvas = () => {
               [line.startP, line.midP, line.endP],
               line.radius
             );
-            return Utils.getPointsOnPath(pathData, 10).map((p) => {
-              return Utils.getRealPosition(p.x, p.y, map); // !!!!
-
-              //$$$ Test
-              // return Utils.getRealPosition(p.x, p.y, {
-              //   metadata: { height: 568 },
-              //   resolution: 0.05,
-              //   origin_x: 0,
-              //   origin_y: 0,
-              // });
-            });
+            return Utils.getPointsOnPath(pathData, 10);
           },
         };
       case Const.ShapeName.SPLINE:
@@ -740,17 +721,7 @@ const Canvas = () => {
               }
             }
 
-            return pointPairs.map((p) => {
-              return Utils.getRealPosition(p.x, p.y, map); // !!!!
-
-              //$$$ Test
-              // return Utils.getRealPosition(p.x, p.y, {
-              //   metadata: { height: 568 },
-              //   resolution: 0.05,
-              //   origin_x: 0,
-              //   origin_y: 0,
-              // });
-            });
+            return pointPairs;
           },
         };
       case Const.ShapeName.ULINE:
@@ -766,17 +737,7 @@ const Canvas = () => {
               line.ry
             );
 
-            return Utils.getPointsOnPath(pathData, 10).map((p) => {
-              return Utils.getRealPosition(p.x, p.y, map); // !!!!
-
-              //$$$ Test
-              // return Utils.getRealPosition(p.x, p.y, {
-              //   metadata: { height: 568 },
-              //   resolution: 0.05,
-              //   origin_x: 0,
-              //   origin_y: 0,
-              // });
-            });
+            return Utils.getPointsOnPath(pathData, 10);
           },
         };
       case Const.ShapeName.TANGENT:
@@ -813,6 +774,12 @@ const Canvas = () => {
           direction: Const.LineDirection.NONE,
         };
     }
+  };
+
+  const addLineToPath = (line) => {
+    setNewPath(prev => ({
+      lines: [...prev.lines, line]
+    }));
   };
 
   const handleStageLeftClick = (e) => {
@@ -887,6 +854,7 @@ const Canvas = () => {
           endP: { x: pointer.x, y: pointer.y },
         });
       } else {
+
         addShapeToLayer(selectedLayer.id, { ...shapeProps(newLine) });
         setNewLine(null);
         setDrawing(true);
@@ -1483,37 +1451,8 @@ const Canvas = () => {
       box.y + box.height <= selectionBox.y + selectionBox.height
     );
   };
-
-  const isPointInPolygon = (point, polygon) => {
-    let [x, y] = point;
-    let inside = false;
-    for (let i = 0, j = polygon.length - 2; i < polygon.length; i += 2) {
-      let xi = polygon[i],
-        yi = polygon[i + 1];
-      let xj = polygon[j],
-        yj = polygon[j + 1];
-      let intersect =
-        yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
-      if (intersect) inside = !inside;
-      j = i;
-    }
-    return inside;
-  };
-
-  const cellSize = 1; // Kích thước ô vuông trên bản đồ
-
-  // Hàm chuyển đổi giá trị thành màu sắc
-  const getColor = (value) => {
-    const colors = [
-      '#ffffff',
-      '#ffdddd',
-      '#ffaaaa',
-      '#ff7777',
-      '#ff4444',
-      '#ff0000',
-    ];
-    return colors[Math.min(value, colors.length - 1)];
-  };
+  const [tP, setTP] = useState([]);
+  const [sps, setSps] = useState([]);
 
   const saveState = () => {
     const snapshot = JSON.parse(JSON.stringify(layers));
@@ -1566,57 +1505,6 @@ const Canvas = () => {
     });
   };
 
-  const renderPointAlongZigzag = (line) => {
-    if (!line || !line.endP || !line.radius) return;
-
-    const pathData = ShapeComp.getZigzagPathData(
-      [line.startP, line.midP, line.endP],
-      line.radius
-    );
-    const points = Utils.getPointsOnPath(pathData, 5);
-    return points.map((p) => {
-      return <Circle x={p.x} y={p.y} fill="red" radius={1} />;
-    });
-  };
-
-  const renderPointAlongUline = (line) => {
-    if (!line || !line.endP || !line.ry) return;
-
-    const pathData = ShapeComp.getUlinePathData(
-      line.startP,
-      line.bottomP,
-      line.ry
-    );
-    const points = Utils.getPointsOnPath(pathData, 5);
-    return points.map((p) => {
-      return <Circle x={p.x} y={p.y} fill="red" radius={1} />;
-    });
-  };
-
-  const renderPointAlongSpline = (line) => {
-    if (!line || !line.points) return null;
-
-    let pointPairs = [];
-
-    if (line.mode.includes('p-')) {
-      // Dữ liệu gốc, không dùng spline
-      const sampled = ShapeComp.samplePSplineByDistance(line.points, 5);
-      for (let i = 0; i < sampled.length; i += 2) {
-        pointPairs.push({ x: sampled[i], y: sampled[i + 1] });
-      }
-    } else if (line.mode.includes('cv-')) {
-      // Dữ liệu spline được lấy mẫu đều
-      const sampled = ShapeComp.sampleBSplineByDistance(line.points, 5);
-      for (let i = 0; i < sampled.length; i += 2) {
-        pointPairs.push({ x: sampled[i], y: sampled[i + 1] });
-      }
-    }
-
-    return pointPairs.map((p, idx) => (
-      <Circle key={idx} x={p.x} y={p.y} fill="red" radius={1} />
-    ));
-  };
-
   //===========================================CALL API============================================
 
   const ros = useRosConnection(); // chỉ 1 connection chung
@@ -1651,53 +1539,34 @@ const Canvas = () => {
 
   //======Test
   const [simPose, setSimPose] = useState({
-    y: 18.0, //12.866586685180664,
-    x: 11.05, //16.529640197753906,
-    orientation: 1.681,
+    y: 12.866586685180664,
+    x: 16.529640197753906,
+    orientation: -171,
   });
 
-  // useEffect(() => {
-  //   console.log(simPose);
-  // }, [simPose]);
+  useEffect(() => {
+    console.log(pathPoints);
+  }, [pathPoints]);
 
-  // useEffect(() => {
-  //   console.log(pathPoints);
-  // }, [pathPoints]);
+    const obstacles = [
+      map?.metadata.layers.areaprefs_forbidden.shapes,
+      map?.metadata.layers.walls.shapes
+      
+    ]
 
-  const metadata = {
-    walls: [
-      {
-        polygon: [
-          { x: 460, y: 380 },
-          { x: 460, y: 200 },
-        ],
-        color: '#000000',
-        brushsize: 1,
-        type: 'line',
-      },
-    ],
-    forbiddenZone: [
-      {
-        polygon: [
-          { x: 520, y: 380 },
-          { x: 520, y: 200 },
-          { x: 600, y: 200 },
-          { x: 600, y: 380 },
-        ],
-        color: '#FFEBEE',
-        brushsize: 1,
-        type: 'shape',
-      },
-    ],
-  };
+     const metadata = {
+      walls: map?.metadata.layers.walls.shapes,
+      forbiddenZone: map?.metadata.layers.areaprefs_forbidden.shapes,
+    };
 
-  const obstacles = [
-    // { x: 420, y: 300 },
-    // { x: 400, y: 300 },
-  ];
+  useEffect(() => {
+    console.log(layers)
+  }, [layers])
 
   return (
     <div className="full-height flex col">
+      Linear: {speed.linear} <br />
+      Angular: {speed.angular}
       <CanvasToolbar
         toggleMode={toggleDrawingMode}
         defaultCursor={defaultCursor}
@@ -1728,10 +1597,12 @@ const Canvas = () => {
             setPathPoints={setPathPoints}
             metadata={metadata}
             obstacles={obstacles}
+            setTP={setTP}
+            setSps={setSps}
+            setSpeed={setSpeed}
           />
         }
       />
-
       <div className="full-height" style={{ position: 'relative' }}>
         <CanvasComponent.Zoom zoom={zoom} setZoom={setZoom} />
         {editable && (
@@ -1793,10 +1664,6 @@ const Canvas = () => {
 
               {renderPathPoints()}
 
-              {renderPointAlongUline(newULine)}
-
-              {renderPointAlongSpline(newSpline)}
-
               {robotStatus && (
                 <ShapeComp.MyImage
                   x={
@@ -1816,20 +1683,40 @@ const Canvas = () => {
 
               {simPose && (
                 <ShapeComp.MyImage
-                  x={(simPose?.x - map?.origin_x) / map?.resolution}
-                  y={
-                    map?.metadata.height -
-                    (simPose?.y - map?.origin_y) / map?.resolution
-                  }
-                  rotation={simPose?.orientation}
-                  // x={(simPose.x - 0) / 0.05}
-                  // y={568 - (simPose.y - 0) / 0.05}
-                  // rotation={(simPose.orientation * 180) / Math.PI}
+                  // x={(simPose?.x - map?.origin_x) / map?.resolution}
+                  // y={
+                  //   map?.metadata.height -
+                  //   (simPose?.y - map?.origin_y) / map?.resolution
+                  // }
+                  // rotation={simPose?.orientation}
+                  x={(simPose.x - 0) / 0.05}
+                  y={568 - (simPose.y - 0) / 0.05}
+                  rotation={simPose.orientation}
                   imageSrc={Const.ImageSrc.robot}
                   width={30}
                   height={20}
                 />
               )}
+
+              {
+                <Line
+                  points={tP.flatMap((point) => [point.x, point.y])}
+                  stroke="black"
+                  strokeWidth={1}
+                  fill="black"
+                />
+              }
+              {tP.map((p) => {
+                return <Circle x={p.x} y={p.y} radius={2} fill="red"></Circle>;
+              })}
+              {
+                <Line
+                  points={sps.flatMap((point) => [point.x, point.y])}
+                  stroke="red"
+                  strokeWidth={1}
+                  fill="red"
+                />
+              }
             </Layer>
           ))}
 

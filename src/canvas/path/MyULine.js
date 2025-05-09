@@ -141,7 +141,7 @@ export const MyULine = ({
           pointerLength={pointerLength}
           pointerWidth={pointerWidth}
           strokeWidth={strokeWidth}
-          stroke={selected ? 'red' : hovered ? 'blue' : stroke} 
+          stroke={selected ? 'red' : hovered ? 'blue' : stroke}
           fill={fill}
           rotation={getArrowRotation([startP, bottomP, endP], direction)}
         />

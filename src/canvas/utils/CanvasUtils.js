@@ -168,3 +168,157 @@ export const degreesToRadians = (degrees) => {
   if (!degrees) return;
   return degrees * (Math.PI / 180);
 };
+
+export const radiansToDegrees = (rad) => {
+  if (!rad) return;
+  return (rad * 180) / Math.PI;
+};
+
+export function pointInPolygon(point, polygon) {
+  let inside = false;
+  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+    const xi = polygon[i].x,
+      yi = polygon[i].y;
+    const xj = polygon[j].x,
+      yj = polygon[j].y;
+    const intersect =
+      yi > point.y !== yj > point.y &&
+      point.x < ((xj - xi) * (point.y - yi)) / (yj - yi + 1e-9) + xi;
+    if (intersect) inside = !inside;
+  }
+  return inside;
+}
+
+// kiểm tra giao cắt tường
+
+export function pathCrossesWall(start, end, walls) {
+  for (const wall of walls) {
+    const points = wall.polygon;
+    for (let i = 0; i < points.length - 1; i++) {
+      const a = points[i];
+      const b = points[(i + 1) % points.length];
+      if (segmentsIntersect(start, end, a, b)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+export function isPathIntersectingPolygons(start, end, obstacles) {
+  for (const item of obstacles) {
+    const points = item.polygon;
+    for (let i = 0; i < points.length; i++) {
+      const a = points[i];
+      const b = points[(i + 1) % points.length]; // nối vòng
+      if (segmentsIntersect(start, end, a, b)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+function segmentsIntersect(p1, p2, q1, q2) {
+  function ccw(a, b, c) {
+    return (c.y - a.y) * (b.x - a.x) > (b.y - a.y) * (c.x - a.x);
+  }
+
+  return (
+    ccw(p1, q1, q2) !== ccw(p2, q1, q2) && ccw(p1, p2, q1) !== ccw(p1, p2, q2)
+  );
+}
+
+export function pointInForbidden(point, zones) {
+  return zones.some((polygon) => pointInPolygon(point, polygon.polygon));
+}
+
+/**
+ * Tính khoảng cách từ điểm đến đoạn thẳng
+ * @param {{x: number, y: number}} p - điểm cần đo
+ * @param {{x: number, y: number}} v - điểm đầu đoạn
+ * @param {{x: number, y: number}} w - điểm cuối đoạn
+ * @returns {number} khoảng cách tối thiểu
+ */
+export function distancePointToLineSegment(p, v, w) {
+  const l2 = (v.x - w.x) ** 2 + (v.y - w.y) ** 2;
+  if (l2 === 0) return Math.hypot(p.x - v.x, p.y - v.y); // đoạn thẳng là điểm
+  let t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
+  t = Math.max(0, Math.min(1, t));
+  const projection = {
+    x: v.x + t * (w.x - v.x),
+    y: v.y + t * (w.y - v.y),
+  };
+  return Math.hypot(p.x - projection.x, p.y - projection.y);
+}
+
+/**
+ * Tính khoảng cách từ điểm đến polygon
+ * @param {{x: number, y: number}} point - điểm cần đo
+ * @param {{x: number, y: number}[]} polygon - mảng điểm định nghĩa polygon
+ * @returns {number} khoảng cách tối thiểu từ point đến các cạnh polygon
+ */
+export function distancePointToPolygon(point, polygon) {
+  let minDist = Infinity;
+  for (let i = 0; i < polygon.length; i++) {
+    const p1 = polygon[i];
+    const p2 = polygon[(i + 1) % polygon.length];
+    const dist = distancePointToLineSegment(point, p1, p2);
+    if (dist < minDist) minDist = dist;
+  }
+  return minDist;
+}
+
+export function pointNearPolygon(point, polygons, threshold) {
+  return polygons.some(
+    (poly) => distancePointToPolygon(point, poly.polygon) < threshold
+  );
+}
+
+export function pointNearLine(point, lines, threshold) {
+  return lines.some(
+    (line) =>
+      distancePointToLineSegment(point, line.polygon[0], line.polygon[1]) <
+      threshold
+  );
+}
+
+/**
+ * Tính khoảng cách Euclidean giữa hai điểm.
+ * @param {{x: number, y: number}} a
+ * @param {{x: number, y: number}} b
+ * @returns {number}
+ */
+export function distance(a, b) {
+  return Math.hypot(a.x - b.x, a.y - b.y);
+}
+
+/**
+ * So sánh hai điểm với sai số epsilon để tránh lỗi do số thực.
+ *
+ * @param {{x: number, y: number}} p1
+ * @param {{x: number, y: number}} p2
+ * @param {number} [epsilon=0.1] - Sai số cho phép
+ * @returns {boolean}
+ */
+export function pointsEqual(p1, p2, epsilon = 0.1) {
+  return (
+    Math.abs(p1.x - p2.x) < epsilon &&
+    Math.abs(p1.y - p2.y) < epsilon
+  );
+}
+
+// Utils.js
+
+/**
+ * Tính khoảng cách từ một điểm đến một đoạn thẳng
+ * @param {Object} point - Điểm cần kiểm tra {x, y}
+ * @param {Object} line - Đoạn thẳng, có dạng {x1, y1, x2, y2}
+ * @returns {number} - Khoảng cách từ điểm đến đoạn thẳng
+ */
+export function distancePointToLine(point, line) {
+  const { x1, y1, x2, y2 } = line;
+  const numerator = Math.abs((y2 - y1) * point.x - (x2 - x1) * point.y + x2 * y1 - y2 * x1);
+  const denominator = Math.sqrt(Math.pow(y2 - y1, 2) + Math.pow(x2 - x1, 2));
+  return numerator / denominator;
+}

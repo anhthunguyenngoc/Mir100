@@ -252,7 +252,7 @@ export const ThreePointArc = ({
 }) => {
   const [hovered, setHovered] = useState(false);
 
-  console.log(strokeWidth)
+  console.log(strokeWidth);
 
   useEffect(() => {
     if (points.length < 3) return;
@@ -340,7 +340,7 @@ export const ThreePointArc = ({
               console.log(start, center, end);
 
               // Gửi tọa độ cập nhật lên state
-              onUpdateShape({points: [start, center, end]});
+              onUpdateShape({ points: [start, center, end] });
 
               // Giữ vị trí của Arc về (0,0) để tránh lỗi kéo thả
               // arc.position({ x: 0, y: 0 });

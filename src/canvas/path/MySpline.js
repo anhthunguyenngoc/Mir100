@@ -171,7 +171,11 @@ export const sampleBSplineByDistance = (
  * @param {number} samplesPerSegment - Số điểm nội suy mỗi đoạn
  * @returns {number[]} - [x1, y1, x2, y2, ...]
  */
-export function samplePSplineByDistance(flatPoints, distance = 10, samplesPerSegment = 100) {
+export function samplePSplineByDistance(
+  flatPoints,
+  distance = 10,
+  samplesPerSegment = 100
+) {
   if (flatPoints.length < 4) return flatPoints;
 
   // 1. Chuyển về mảng point [{x, y}]
@@ -194,13 +198,13 @@ export function samplePSplineByDistance(flatPoints, distance = 10, samplesPerSeg
 
       const x =
         0.5 *
-        ((2 * p1.x) +
+        (2 * p1.x +
           (-p0.x + p2.x) * t +
           (2 * p0.x - 5 * p1.x + 4 * p2.x - p3.x) * t2 +
           (-p0.x + 3 * p1.x - 3 * p2.x + p3.x) * t3);
       const y =
         0.5 *
-        ((2 * p1.y) +
+        (2 * p1.y +
           (-p0.y + p2.y) * t +
           (2 * p0.y - 5 * p1.y + 4 * p2.y - p3.y) * t2 +
           (-p0.y + 3 * p1.y - 3 * p2.y + p3.y) * t3);
@@ -224,7 +228,8 @@ export function samplePSplineByDistance(flatPoints, distance = 10, samplesPerSeg
 
   while (currentTarget <= totalLength) {
     // Tìm chỉ số gần nhất theo cung
-    let low = 0, high = arcLengths.length - 1;
+    let low = 0,
+      high = arcLengths.length - 1;
     while (low < high) {
       const mid = Math.floor((low + high) / 2);
       if (arcLengths[mid] < currentTarget) low = mid + 1;
@@ -261,10 +266,10 @@ function computePSpline(flatPoints, numSamples = 20, alpha = 0.0) {
 
   // Bước 2: Lặp qua các đoạn Catmull-Rom
   for (let i = 0; i < points.length - 1; i++) {
-    const p0 = points[i - 1] || points[i];       // Nếu không có thì lặp lại
+    const p0 = points[i - 1] || points[i]; // Nếu không có thì lặp lại
     const p1 = points[i];
     const p2 = points[i + 1];
-    const p3 = points[i + 2] || points[i + 1];   // Nếu không có thì lặp lại
+    const p3 = points[i + 2] || points[i + 1]; // Nếu không có thì lặp lại
 
     for (let j = 0; j <= numSamples; j++) {
       const t = j / numSamples;
@@ -277,21 +282,51 @@ function computePSpline(flatPoints, numSamples = 20, alpha = 0.0) {
 
       const tt = t1 + (t2 - t1) * t;
 
-      const A1 = interpolate(p0, p1, (t1 - tt) / (t1 - t0), (tt - t0) / (t1 - t0));
-      const A2 = interpolate(p1, p2, (t2 - tt) / (t2 - t1), (tt - t1) / (t2 - t1));
-      const A3 = interpolate(p2, p3, (t3 - tt) / (t3 - t2), (tt - t2) / (t3 - t2));
+      const A1 = interpolate(
+        p0,
+        p1,
+        (t1 - tt) / (t1 - t0),
+        (tt - t0) / (t1 - t0)
+      );
+      const A2 = interpolate(
+        p1,
+        p2,
+        (t2 - tt) / (t2 - t1),
+        (tt - t1) / (t2 - t1)
+      );
+      const A3 = interpolate(
+        p2,
+        p3,
+        (t3 - tt) / (t3 - t2),
+        (tt - t2) / (t3 - t2)
+      );
 
-      const B1 = interpolate(A1, A2, (t2 - tt) / (t2 - t0), (tt - t0) / (t2 - t0));
-      const B2 = interpolate(A2, A3, (t3 - tt) / (t3 - t1), (tt - t1) / (t3 - t1));
+      const B1 = interpolate(
+        A1,
+        A2,
+        (t2 - tt) / (t2 - t0),
+        (tt - t0) / (t2 - t0)
+      );
+      const B2 = interpolate(
+        A2,
+        A3,
+        (t3 - tt) / (t3 - t1),
+        (tt - t1) / (t3 - t1)
+      );
 
-      const C = interpolate(B1, B2, (t2 - tt) / (t2 - t1), (tt - t1) / (t2 - t1));
+      const C = interpolate(
+        B1,
+        B2,
+        (t2 - tt) / (t2 - t1),
+        (tt - t1) / (t2 - t1)
+      );
 
       curvePoints.push(C.x, C.y);
     }
   }
 
   return curvePoints;
-};
+}
 
 function getT(ti, p0, p1, alpha) {
   const dx = p1.x - p0.x;
@@ -372,7 +407,7 @@ export const MySpline = ({
             index % 2 === 0 ? point + absPos.x : point + absPos.y
           );
 
-          onUpdateShape({points: newPoints});
+          onUpdateShape({ points: newPoints });
           spline.position({ x: 0, y: 0 });
         }}
         onMouseEnter={(e) => {

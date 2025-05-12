@@ -5,3 +5,5 @@ export * from './HorizonLine';
 export * from './SelectionDropdown';
 export * from './ToggleSwitch';
 export * from './confirm-dialog';
+export * from './PositionTooltip';
+export * from './Tooltip';

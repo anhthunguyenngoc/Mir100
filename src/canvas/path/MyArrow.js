@@ -31,11 +31,15 @@ export const MyArrow = ({
   const [hovered, setHovered] = useState(false);
 
   useEffect(() => {
+    if (!startP || !endP) return;
+
     onUpdateShape({
       width: Math.abs(endP.x - startP.x),
       height: Math.abs(endP.y - startP.y),
     });
   }, [startP, endP]);
+
+  if (!startP || !endP) return;
 
   return (
     <Group ref={(node) => ref?.(node)}>

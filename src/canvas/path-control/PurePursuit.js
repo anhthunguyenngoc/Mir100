@@ -22,23 +22,46 @@ export function getNextVelocity(
   angularBase,
   forbiddenZones = [],
   obstacles = [],
-  walls = []
+  walls = [],
+  lookAheadDist = 0.3
 ) {
   const K_linear = 1.0;
   const K_angular = 2.0;
 
-  if (!originalPath.length) return null;
+  if (!originalPath || !originalPath.length) return null;
 
-  const path = originalPath;
+  const path = [...originalPath];
 
-  // Xoá các điểm quá gần
-  while (path.length > 0) {
-    const dx = path[0].x - robotPos.x;
-    const dy = path[0].y - robotPos.y;
-    if (Math.hypot(dx, dy) < 0.1) {
-      path.shift();
+  // --- CHỈ XÓA ĐIỂM ĐÃ VƯỢT QUA ---
+  // Khác với getNextVelocity, chúng ta không xóa điểm chỉ vì robot ở gần
+  while (path.length > 1) {
+    // Luôn giữ lại ít nhất 1 điểm
+    // Kiểm tra xem robot đã vượt qua điểm chưa bằng phép chiếu vector
+    const dx = path[1].x - path[0].x;
+    const dy = path[1].y - path[0].y;
+    const segmentLength = Math.hypot(dx, dy);
+
+    if (segmentLength === 0) {
+      path.shift(); // Loại bỏ điểm trùng
+      continue;
+    }
+
+    // Vector hướng đoạn đường
+    const ux = dx / segmentLength;
+    const uy = dy / segmentLength;
+
+    // Vector từ điểm đầu đến robot
+    const rx = robotPos.x - path[0].x;
+    const ry = robotPos.y - path[0].y;
+
+    // Chiếu robot lên đoạn đường
+    const projection = rx * ux + ry * uy;
+
+    // Nếu chiếu dương và vượt qua độ dài đoạn đường, tức là đã vượt qua điểm tiếp theo
+    if (projection > segmentLength) {
+      path.shift(); // Xóa điểm đầu tiên vì đã đi qua
     } else {
-      break;
+      break; // Chưa vượt qua điểm tiếp theo
     }
   }
 
@@ -46,67 +69,166 @@ export function getNextVelocity(
     return { linear: 0, angular: 0, path };
   }
 
-  // Tìm điểm target hợp lệ
-  let target = null;
-  for (let i = 0; i < path.length; i++) {
-    const p = path[i];
-    const dist = Math.hypot(p.x - robotPos.x, p.y - robotPos.y);
+  // --- TÌM ĐIỂM "LOOK-AHEAD" TRÊN ĐƯỜNG ĐI ---
+  let targetPoint = null;
+  let remainingDistance = lookAheadDist;
+  let currentPos = { x: robotPos.x, y: robotPos.y };
 
+  for (let i = 0; i < path.length - 1; i++) {
+    const start = path[i];
+    const end = path[i + 1];
+
+    const dx = end.x - start.x;
+    const dy = end.y - start.y;
+    const segmentLength = Math.hypot(dx, dy);
+
+    if (segmentLength === 0) continue; // Bỏ qua đoạn không có độ dài
+
+    // Vector hướng đoạn đường
+    const ux = dx / segmentLength;
+    const uy = dy / segmentLength;
+
+    // Tìm điểm chiếu của robot lên đoạn đường
+    const rx = currentPos.x - start.x;
+    const ry = currentPos.y - start.y;
+    const projection = rx * ux + ry * uy;
+    const clampedProj = Math.max(0, Math.min(segmentLength, projection));
+
+    // Điểm gần nhất trên đoạn đường
+    const nearestPoint = {
+      x: start.x + ux * clampedProj,
+      y: start.y + uy * clampedProj,
+    };
+
+    // Khoảng cách từ robot đến điểm gần nhất
+    const distToSegment = Math.hypot(
+      currentPos.x - nearestPoint.x,
+      currentPos.y - nearestPoint.y
+    );
+
+    // Nếu chúng ta quá xa đoạn đường, hãy nhắm vào điểm gần nhất
+    if (distToSegment > 0.2) {
+      targetPoint = nearestPoint;
+      break;
+    }
+
+    // Khoảng cách còn lại trên đoạn đường từ điểm chiếu
+    const distRemaining = segmentLength - clampedProj;
+
+    if (distRemaining >= remainingDistance) {
+      // Đủ khoảng cách trên đoạn này, tìm điểm look-ahead
+      targetPoint = {
+        x: nearestPoint.x + ux * remainingDistance,
+        y: nearestPoint.y + uy * remainingDistance,
+      };
+      break;
+    } else {
+      // Không đủ khoảng cách, di chuyển sang đoạn tiếp theo
+      remainingDistance -= distRemaining;
+      currentPos = { x: end.x, y: end.y };
+    }
+  }
+
+  // Nếu không tìm được điểm look-ahead, sử dụng điểm cuối cùng
+  if (!targetPoint && path.length > 0) {
+    targetPoint = path[path.length - 1];
+  }
+
+  // --- KIỂM TRA VẬT CẢN ---
+  if (targetPoint) {
     if (
-      isInForbiddenZone(p, forbiddenZones) ||
-      Utils.pathCrossesWall(robotPos, p, walls)
+      isInForbiddenZone(targetPoint, forbiddenZones) ||
+      Utils.pathCrossesWall(robotPos, targetPoint, walls)
     ) {
-      console.log('Forbidden Zone or Crosses Wall');
-      return { linear: 0, angular: 0, path };
+      console.log('Target in Forbidden Zone or Crosses Wall');
+
+      // Tìm điểm an toàn đầu tiên trên đường đi
+      for (const p of path) {
+        if (
+          !isInForbiddenZone(p, forbiddenZones) &&
+          !Utils.pathCrossesWall(robotPos, p, walls)
+        ) {
+          targetPoint = p;
+          break;
+        }
+      }
+
+      if (
+        isInForbiddenZone(targetPoint, forbiddenZones) ||
+        Utils.pathCrossesWall(robotPos, targetPoint, walls)
+      ) {
+        return { linear: 0, angular: 0, path };
+      }
     }
 
-    if (pathCrossesObstacle(robotPos, p, obstacles, 1)) {
-      console.log('Crosses Obstacle');
-      target = adjustTargetNearObstacle(robotPos, p, obstacles, 1);
-      break;
-    }
-
-    if (dist > 0.1) {
-      target = p;
-      break;
+    if (pathCrossesObstacle(robotPos, targetPoint, obstacles, 0.5)) {
+      console.log('Path Crosses Obstacle');
+      targetPoint = adjustTargetNearObstacle(
+        robotPos,
+        targetPoint,
+        obstacles,
+        0.5
+      );
     }
   }
 
-  if (!target) {
-    target = path[path.length - 1];
+  if (!targetPoint) {
+    return { linear: 0, angular: 0, path };
   }
 
-  const dx = target.x - robotPos.x;
-  const dy = target.y - robotPos.y;
+  // --- TÍNH TOÁN VẬN TỐC ---
+  const dx = targetPoint.x - robotPos.x;
+  const dy = targetPoint.y - robotPos.y;
   const angleToTarget = Math.atan2(dy, dx);
   let angleDiff = angleToTarget - robotPos.orientation;
   angleDiff = Math.atan2(Math.sin(angleDiff), Math.cos(angleDiff));
 
   const distance = Math.hypot(dx, dy);
 
-  // --- Giảm tốc nếu góc lệch lớn ---
-  const anglePenalty = Math.max(0.2, 1 - Math.abs(angleDiff) / Math.PI);
-  const isSharpTurn = Math.abs(angleDiff) > Math.PI / 6;
-  const turnPenalty = isSharpTurn ? 0.5 : 1;
-  const angularPenalty = isSharpTurn ? 0.5 : 1;
+  // Kiểm tra xem đã đến đích chưa (chỉ khi điểm đích là điểm cuối cùng)
+  const isLastPoint = targetPoint === path[path.length - 1];
+  const isNearGoal = isLastPoint && distance < 0.1;
+
+  if (isNearGoal) {
+    // Đã đến đích, dừng lại
+    return { linear: 0, angular: 0, path: [] };
+  }
+
+  // --- GIẢM TỐC KHI GÓC LỆCH LỚN ---
+  const anglePenalty = Math.max(0.3, 1 - Math.abs(angleDiff) / Math.PI);
+  const isSharpTurn = Math.abs(angleDiff) > Math.PI / 8;
+
+  // Tính hệ số giảm tốc dựa trên góc lệch (càng lệch càng giảm)
+  const turnPenalty = isSharpTurn
+    ? Math.max(0.3, 1 - (Math.abs(angleDiff) - Math.PI / 8) / (Math.PI / 4))
+    : 1;
 
   let linear = 0;
-  if (Math.abs(angleDiff) < Math.PI / 12) {
+
+  // Điều chỉnh vận tốc tuyến tính dựa trên góc lệch
+  if (Math.abs(angleDiff) < Math.PI / 6) {
+    // Góc lệch nhỏ, có thể di chuyển và xoay đồng thời
     linear = clamp(
       K_linear * distance * anglePenalty * turnPenalty,
-      -linearBase,
+      0, // Không đi lùi
       linearBase
     );
+  } else if (Math.abs(angleDiff) < Math.PI / 3) {
+    // Góc lệch trung bình, giảm tốc mạnh
+    linear = clamp(
+      K_linear * distance * 0.3 * turnPenalty,
+      0,
+      linearBase * 0.5
+    );
   } else {
-    // Góc quá lớn, chỉ xoay tại chỗ
+    // Góc lệch lớn, chỉ xoay tại chỗ
     linear = 0;
   }
 
-  const angular = clamp(
-    K_angular * angleDiff * angularPenalty,
-    -angularBase,
-    angularBase
-  );
+  // Điều chỉnh hệ số góc dựa trên tốc độ tiến
+  const angularGain = linear > 0 ? K_angular : K_angular * 1.5;
+
+  const angular = clamp(angularGain * angleDiff, -angularBase, angularBase);
 
   return {
     linear,

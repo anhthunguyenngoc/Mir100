@@ -8,3 +8,4 @@ export * from './PositionDialog';
 export * from './MarkerCreate';
 export * from './PositionCreate';
 export * from './joystick';
+export * from './CreatePath';

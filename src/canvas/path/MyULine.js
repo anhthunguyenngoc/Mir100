@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Path, Group, Arrow } from 'react-konva';
 import { MyCircle } from './MyCircle';
 import { LineDirection } from '../../constant';
+import { normalizeAbsolutePosition } from 'canvas/utils';
 
 export const getUlinePathData = (start, bottom, ry) => {
   const end = { x: 2 * bottom.x - start.x, y: start.y };
@@ -84,6 +85,8 @@ export const MyULine = ({
 }) => {
   const [hovered, setHovered] = useState(false);
 
+  if (!startP || !bottomP) return;
+
   const uline = getULine(startP, bottomP, ry);
 
   return (
@@ -100,7 +103,7 @@ export const MyULine = ({
         draggable={draggable}
         onDragEnd={(e) => {
           const uline = e.target;
-          const absPos = uline.getAbsolutePosition();
+          const absPos = normalizeAbsolutePosition(uline.getAbsolutePosition());
 
           const newPoints = [startP, bottomP, endP].map((point) => ({
             x: point.x + absPos.x,

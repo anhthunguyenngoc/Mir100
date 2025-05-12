@@ -65,6 +65,9 @@ export const ImageSrc = {
   letterW: '/images/letter-W.svg',
   letterX: '/images/letter-X.svg',
   letterY: '/images/letter-Y.svg',
+  letterA: '/images/letter-A.svg',
+  letterB: '/images/letter-B.svg',
+  letterL: '/images/letter-L.svg',
   robot: '/images/robot.svg',
   save: '/images/save.svg',
   undo: '/images/undo.svg',
@@ -83,4 +86,7 @@ export const ImageSrc = {
   addMarker: '/images/addmarker.svg',
   addPos: '/images/addpos.svg',
   marker: '/images/marker.svg',
+  cancel: '/images/x.svg',
+  createPath: '/images/create-path.svg',
+  goTo: '/images/go-to.svg',
 };

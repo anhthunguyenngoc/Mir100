@@ -65,7 +65,8 @@ function prunePath(path, obstacles, threshold) {
       if (
         lineCrossesObstacle(p1, p2, obstacles) ||
         isEdgeTooCloseToObstacle(p1, p2, obstacles, threshold)
-      ) break;
+      )
+        break;
       nextIdx++;
     }
     i = nextIdx - 1;
@@ -85,22 +86,33 @@ function adjustPointToObstacle(p1, p2, obstacles, threshold) {
   let bestPoint = p2;
   let minDist = Infinity;
 
-  for (let angle = 0; angle < 2 * Math.PI; angle += (2 * Math.PI) / directions) {
+  for (
+    let angle = 0;
+    angle < 2 * Math.PI;
+    angle += (2 * Math.PI) / directions
+  ) {
     for (let r = 0; r <= radius; r += step) {
       const candidate = {
         x: p2.x + r * Math.cos(angle),
-        y: p2.y + r * Math.sin(angle)
+        y: p2.y + r * Math.sin(angle),
       };
 
       let minObstacleDist = Infinity;
       for (const poly of obstacles[0]) {
-        minObstacleDist = Math.min(minObstacleDist, Utils.distancePointToPolygon(candidate, poly.polygon));
+        minObstacleDist = Math.min(
+          minObstacleDist,
+          Utils.distancePointToPolygon(candidate, poly.polygon)
+        );
       }
 
       for (const wall of obstacles[1]) {
         minObstacleDist = Math.min(
           minObstacleDist,
-          Utils.distancePointToLineSegment(candidate, wall.polygon[0], wall.polygon[1])
+          Utils.distancePointToLineSegment(
+            candidate,
+            wall.polygon[0],
+            wall.polygon[1]
+          )
         );
       }
 
@@ -126,7 +138,8 @@ function isEdgeTooCloseToObstacle(p1, p2, obstacles, threshold) {
     const point = { x, y };
 
     for (const poly of obstacles[0]) {
-      if (Utils.distancePointToPolygon(point, poly.polygon) < threshold) return true;
+      if (Utils.distancePointToPolygon(point, poly.polygon) < threshold)
+        return true;
     }
 
     if (Utils.pointNearLine(point, obstacles[1], threshold)) return true;

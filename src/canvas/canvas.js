@@ -8,6 +8,7 @@ import * as Const from '../constant';
 import * as Utils from './utils';
 import * as ShapeComp from '../canvas/path';
 import * as Context from '../context';
+import * as Comp from '../components';
 
 //Api
 import * as api from '../api';
@@ -26,6 +27,8 @@ const Canvas = () => {
     setDrawingMode,
     drawingMode,
     mapPositions,
+    actionList,
+    pathPoints,
   } = Context.useCanvasContext();
 
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -55,12 +58,9 @@ const Canvas = () => {
   const [clipboard, setClipboard] = useState([]);
 
   const [newLine, setNewLine] = useState(null);
-  const [newArc, setNewArc] = useState(null);
-  const [newZigzag, setNewZigzag] = useState(null);
-  const [newTangent, setNewTangent] = useState(null);
-  const [newULine, setNewULine] = useState(null);
-  const [newSpline, setNewSpline] = useState(null);
-  const [newPath, setNewPath] = useState(null);
+  const [newPath, setNewPath] = useState([]);
+  const [isContinuosLineFlag, setIsContinuosLineFlag] = useState(false);
+  const [sharedPoints, setSharedPoints] = useState(new Map());
 
   const [newCircle, setNewCircle] = useState(null);
   const [newRectangle, setNewRectangle] = useState(null);
@@ -101,11 +101,24 @@ const Canvas = () => {
     return layers.find((layer) => layer.selected) || null;
   }, [layers]);
 
-  //Lấy ra danh sách shape được chọn
+  // Lấy ra tất cả shape (bao gồm cả trong group) được chọn
   const selectedShapes = useMemo(() => {
-    return selectedLayer.shapes.filter((line) => line.selected);
+    const flattenSelectedShapes = (shapes) => {
+      return shapes.flatMap((shape) => {
+        if (
+          shape.name === Const.ShapeName.GROUP &&
+          Array.isArray(shape.shapes)
+        ) {
+          return flattenSelectedShapes(shape.shapes); // đệ quy vào group con
+        }
+        return shape.selected ? [shape] : [];
+      });
+    };
+
+    return flattenSelectedShapes(selectedLayer.shapes);
   }, [selectedLayer.shapes]);
 
+  // Nếu chỉ có đúng 1 shape được chọn, lấy ra shape đó
   const selectedShape = useMemo(() => {
     return selectedShapes.length === 1 ? selectedShapes[0] : null;
   }, [selectedShapes]);
@@ -116,7 +129,7 @@ const Canvas = () => {
 
     const observer = new ResizeObserver(() => {
       const { offsetWidth } = container;
-      // Đặt chiều cao là 90vh
+      // Đặt chiều cao là 80vh
       const height = window.innerHeight * 0.8;
       setDimensions({ width: offsetWidth, height });
     });
@@ -155,101 +168,138 @@ const Canvas = () => {
     );
   };
 
-  const removeShapeFromLayer = (layerId, selectedShapes) => {
+  const removeShapeFromLayer = (layerId) => {
     saveState();
 
-    const selectedShapeIds = selectedShapes.map((shape) => shape.id);
-
     setLayers((prevLayers) =>
-      prevLayers.map((layer) =>
-        layer.id === layerId
-          ? {
-              ...layer,
-              shapes: layer.shapes.filter(
-                (shape) => !selectedShapeIds.includes(shape.id)
-              ),
-            }
-          : layer
-      )
+      prevLayers.map((layer) => {
+        if (layer.id !== layerId) return layer;
+
+        const newShapes = layer.shapes
+          .map(removeSelectedShapesRecursive)
+          .filter(Boolean); // loại bỏ null
+
+        return {
+          ...layer,
+          shapes: newShapes,
+        };
+      })
     );
+  };
+
+  const removeSelectedShapesRecursive = (shape) => {
+    // Trường hợp shape thường
+    if (!shape.name || shape.name !== Const.ShapeName.GROUP) {
+      return shape.selected ? null : shape;
+    }
+
+    // Trường hợp là group
+    if (Array.isArray(shape.shapes)) {
+      const filteredInnerShapes = shape.shapes
+        .map(removeSelectedShapesRecursive)
+        .filter(Boolean); // loại bỏ null
+
+      // Nếu không còn shape con nào, xóa cả group
+      if (filteredInnerShapes.length === 0) return null;
+
+      return { ...shape, shapes: filteredInnerShapes };
+    }
+
+    return shape;
   };
 
   const handleUpdateShape = (layerId, shapeId, newProps) => {
     setLayers((prevLayers) =>
-      prevLayers.map((layer) =>
-        layer.id === layerId
-          ? {
-              ...layer,
-              shapes: layer.shapes.map((shape) =>
-                shape.id === shapeId ? { ...shape, ...newProps } : shape
-              ),
-            }
-          : layer
-      )
+      prevLayers.map((layer) => {
+        if (layer.id !== layerId) return layer;
+
+        const updateShapeRecursive = (shape) => {
+          // Nếu là shape thường và khớp id, cập nhật
+          if (shape.id === shapeId) {
+            return { ...shape, ...newProps };
+          }
+
+          // Nếu là group, xử lý đệ quy các shape con
+          if (
+            shape.name === Const.ShapeName.GROUP &&
+            Array.isArray(shape.shapes)
+          ) {
+            const updatedShapes = shape.shapes.map(updateShapeRecursive);
+            return { ...shape, shapes: updatedShapes };
+          }
+
+          // Trường hợp không thay đổi
+          return shape;
+        };
+
+        return {
+          ...layer,
+          shapes: layer.shapes.map(updateShapeRecursive),
+        };
+      })
     );
   };
 
-  const renderShape = (array) => {
+  const renderShapes = (array) => {
     return array.map((line) => {
-      switch (line.name) {
-        case Const.ShapeName.LINE:
-          return <ShapeComp.MyArrow {...shapeProps(line)} />;
-
-        case Const.ShapeName.ARC:
-          return <ShapeComp.ThreePointArc {...shapeProps(line)} />;
-
-        case Const.ShapeName.ZIGZAG:
-          return <ShapeComp.MyZigzag {...shapeProps(line)} />;
-
-        case Const.ShapeName.TANGENT:
-          return <ShapeComp.MyTangent {...shapeProps(line)} />;
-
-        case Const.ShapeName.ULINE:
-          return <ShapeComp.MyULine {...shapeProps(line)} />;
-
-        case Const.ShapeName.SPLINE:
-          return <ShapeComp.MySpline {...shapeProps(line)} />;
-
-        case Const.ShapeName.RECTANGLE:
-          return <ShapeComp.MyRectangle {...shapeProps(line)} />;
-
-        case Const.ShapeName.CIRCLE:
-          return (
-            <ShapeComp.MyCircle
-              {...shapeProps(line)}
-              isVisible={true}
-              hitboxVisible={false}
-            />
-          );
-
-        case Const.ShapeName.POLYGON:
-          return (
-            <ShapeComp.MyPolygon
-              {...shapeProps(line)}
-              isComplete={line.isComplete}
-            />
-          );
-
-        case Const.ShapeName.ELLIPSE:
-          return <ShapeComp.MyElip {...shapeProps(line)} />;
-
-        case 'freeShape':
-          return <ShapeComp.MySpline {...shapeProps(line)} />;
-
-        case Const.ShapeName.GROUP:
-          return (
-            <ShapeComp.MyGroup
-              id={line.id}
-              ref={(node) => (groupRefs.current[line.id] = node)}
-              children={renderShape(line.shapes)}
-              points={line.points}
-            />
-          );
-
-        default:
-          return null;
-      }
+      return renderShape(line);
     });
+  };
+
+  const renderShape = (line) => {
+    if (!line) return;
+
+    switch (line.name) {
+      case Const.ShapeName.LINE:
+        return <ShapeComp.MyArrow {...shapeProps(line)} />;
+
+      case Const.ShapeName.ARC:
+        return <ShapeComp.ThreePointArc {...shapeProps(line)} />;
+
+      case Const.ShapeName.ZIGZAG:
+        return <ShapeComp.MyZigzag {...shapeProps(line)} />;
+
+      case Const.ShapeName.TANGENT:
+        return <ShapeComp.MyTangent {...shapeProps(line)} />;
+
+      case Const.ShapeName.ULINE:
+        return <ShapeComp.MyULine {...shapeProps(line)} />;
+
+      case Const.ShapeName.SPLINE:
+        return <ShapeComp.MySpline {...shapeProps(line)} />;
+
+      case Const.ShapeName.RECTANGLE:
+        return <ShapeComp.MyRectangle {...shapeProps(line)} />;
+
+      case Const.ShapeName.CIRCLE:
+        return (
+          <ShapeComp.MyCircle
+            {...shapeProps(line)}
+            isVisible={true}
+            hitboxVisible={false}
+          />
+        );
+
+      case Const.ShapeName.POLYGON:
+        return (
+          <ShapeComp.MyPolygon
+            {...shapeProps(line)}
+            isComplete={line.isComplete}
+          />
+        );
+
+      case Const.ShapeName.ELLIPSE:
+        return <ShapeComp.MyElip {...shapeProps(line)} />;
+
+      case 'freeShape':
+        return <ShapeComp.MySpline {...shapeProps(line)} />;
+
+      case Const.ShapeName.GROUP:
+        return <ShapeComp.MyGroup {...shapeProps(line)} />;
+
+      default:
+        return null;
+    }
   };
 
   const renderMetadata = () => {
@@ -277,7 +327,7 @@ const Canvas = () => {
     }
 
     //$$$Test */
-    // Object.entries(metadata).forEach(([key, zones]) => {
+    // Object.entries(Const.metadata).forEach(([key, zones]) => {
     //   zones.forEach((zone) => {
     //     lines.push(
     //       <Line
@@ -295,7 +345,43 @@ const Canvas = () => {
     return lines;
   };
 
+  const fakeMapPositions = [
+    {
+      pos_x: 10,
+      pos_y: 15,
+      orientation: 0,
+      type_id: 'dock',
+      name: 'Docking Station A',
+      guid: 'guid-001',
+    },
+    {
+      pos_x: 20,
+      pos_y: 25,
+      orientation: 90,
+      type_id: 'charging',
+      name: 'Charging Point B',
+      guid: 'guid-002',
+    },
+    {
+      pos_x: 30,
+      pos_y: 10,
+      orientation: 180,
+      type_id: 'checkpoint',
+      name: 'Checkpoint C',
+      guid: 'guid-003',
+    },
+    {
+      pos_x: 40,
+      pos_y: 30,
+      orientation: 270,
+      type_id: 'inspection',
+      name: 'Inspection Zone D',
+      guid: 'guid-004',
+    },
+  ];
+
   const renderPositions = () => {
+    //!!!
     if (!mapPositions) return;
 
     return mapPositions.map((position) => {
@@ -308,17 +394,165 @@ const Canvas = () => {
           imageSrc={Const.getPositionImage(position.type_id)}
           width={20}
           height={20}
-          onClick={() =>
+          onDblClick={(e, x, y) => {
             setPositionDialog({
               isVisible: true,
               name: position.name,
               type_id: position.type_id,
               id: position.guid,
-            })
-          }
+            });
+            setIsClickVisible(false);
+          }}
+          onClick={(e, x, y) => {
+            setPositionDialog({
+              isVisible: false,
+              name: position.name,
+              type_id: position.type_id,
+              id: position.guid,
+            });
+            handlePositionClick(e, x, y);
+            setTooltipContent(
+              <div className="flex row" style={{ gap: '2px' }}>
+                {[
+                  actionList.GOTO,
+                  actionList.CREATE_PATH,
+                  actionList.MOVE,
+                  actionList.EDIT,
+                  actionList.DELETE,
+                ].map((action, index) => {
+                  return (
+                    <Comp.Tooltip hoverContent={action.alt}>
+                      <Comp.SmallToolButton
+                        imageSrc={action.imageSrc}
+                        showExpand={false}
+                        alt={action.alt}
+                        onClick={() => action?.onClick(position.guid)}
+                        buttonStyle={{
+                          borderRadius: '0',
+                          ...(index === 0 && {
+                            borderTopLeftRadius: '5px',
+                            borderBottomLeftRadius: '5px',
+                          }),
+                          ...(index === 4 && {
+                            borderTopRightRadius: '5px',
+                            borderBottomRightRadius: '5px',
+                          }),
+                        }}
+                      />
+                    </Comp.Tooltip>
+                  );
+                })}
+              </div>
+            );
+          }}
+          onMouseEnter={(e, x, y) => {
+            handlePositionHover(e, x, y);
+            setTooltipContent(
+              <div
+                className="radius-5px"
+                style={{
+                  padding: '5px 10px',
+                  backgroundColor: Const.Color.BUTTON,
+                }}
+              >
+                {position.name}
+              </div>
+            );
+          }}
+          onMouseLeave={() => {
+            setIsHoverVisible(false);
+          }}
         />
       );
     });
+
+    // return fakeMapPositions.map((position) => {
+    //   const p = Utils.getCanvasPosition(position.pos_x, position.pos_y, {
+    //     metadata: { height: 568 },
+    //     resolution: 0.05,
+    //     origin_x: 0,
+    //     origin_y: 0,
+    //   });
+    //   return (
+    //     <ShapeComp.MyImage
+    //       ref={imageRef}
+    //       x={p.x}
+    //       y={p.y}
+    //       rotation={position.orientation}
+    //       imageSrc={Const.getPositionImage(position.type_id)}
+    //       width={20}
+    //       height={20}
+    //       onDblClick={(e, x, y) => {
+    //         setPositionDialog({
+    //           isVisible: true,
+    //           name: position.name,
+    //           type_id: position.type_id,
+    //           id: position.guid,
+    //         });
+    //         setIsClickVisible(false);
+    //       }}
+    //       onClick={(e, x, y) => {
+    //         handlePositionClick(e, x, y);
+    //         setPositionDialog({
+    //           isVisible: false,
+    //           name: position.name,
+    //           type_id: position.type_id,
+    //           id: position.guid,
+    //         });
+    //         setTooltipContent(
+    //           <div className="flex row" style={{ gap: '2px' }}>
+    //             {[
+    //               actionList.GOTO,
+    //               actionList.CREATE_PATH,
+    //               actionList.MOVE,
+    //               actionList.EDIT,
+    //               actionList.DELETE,
+    //             ].map((action, index) => {
+    //               return (
+    //                 <Comp.Tooltip hoverContent={action.alt}>
+    //                   <Comp.SmallToolButton
+    //                     imageSrc={action.imageSrc}
+    //                     showExpand={false}
+    //                     alt={action.alt}
+    //                     onClick={action?.onClick}
+    //                     buttonStyle={{
+    //                       borderRadius: '0',
+    //                       ...(index === 0 && {
+    //                         borderTopLeftRadius: '5px',
+    //                         borderBottomLeftRadius: '5px',
+    //                       }),
+    //                       ...(index === 2 && {
+    //                         borderTopRightRadius: '5px',
+    //                         borderBottomRightRadius: '5px',
+    //                       }),
+    //                     }}
+    //                   />
+    //                 </Comp.Tooltip>
+    //               );
+    //             })}
+    //           </div>
+    //         );
+    //       }}
+    //       onMouseEnter={(e, x, y) => {
+    //         handlePositionHover(e, x, y);
+    //         setTooltipContent(
+    //           <div
+    //             className="radius-5px"
+    //             style={{
+    //               padding: '5px 10px',
+    //               backgroundColor: Const.Color.BUTTON,
+    //             }}
+    //           >
+    //             {position.name}
+    //           </div>
+    //         );
+    //       }}
+    //       onMouseLeave={() => {
+    //         setIsHoverVisible(false);
+    //       }}
+    //     />
+    //   );
+    // });
   };
 
   const renderCreatePosition = () => {
@@ -375,75 +609,34 @@ const Canvas = () => {
     });
   };
 
-  const drawShape = () => {
-    if (newLine) {
-      return <ShapeComp.MyArrow {...shapeProps(newLine)} />;
+  const getLineComponent = (line) => {
+    switch (line.name) {
+      case Const.ShapeName.LINE:
+        return <ShapeComp.MyArrow {...shapeProps(line)} />;
+
+      case Const.ShapeName.ARC:
+        return <ShapeComp.ThreePointArc {...shapeProps(line)} />;
+
+      case Const.ShapeName.ZIGZAG:
+        return <ShapeComp.MyZigzag {...shapeProps(line)} />;
+
+      case Const.ShapeName.TANGENT:
+        return <ShapeComp.MyTangent {...shapeProps(line)} />;
+
+      case Const.ShapeName.ULINE:
+        return <ShapeComp.MyULine {...shapeProps(line)} />;
+
+      case Const.ShapeName.SPLINE:
+        return <ShapeComp.MySpline {...shapeProps(line)} />;
     }
+  };
 
-    if (newArc) {
-      return (
-        <>
-          <ShapeComp.ThreePointArc {...shapeProps(newArc)} />
+  const renderNewPath = () => {
+    if (!newPath) return;
 
-          <Text
-            text={`Angle: ${Math.round(newArc.angle * 100) / 100}°`}
-            x={newArc.points[0].x + 10}
-            y={newArc.points[0].y}
-            fontSize={14}
-            fill="red"
-          />
-        </>
-      );
-    }
-
-    if (newZigzag) {
-      return <ShapeComp.MyZigzag {...shapeProps(newZigzag)} />;
-    }
-
-    if (newTangent) {
-      return <ShapeComp.MyTangent {...shapeProps(newTangent)} />;
-    }
-
-    if (newULine && newULine.startP && newULine.bottomP) {
-      return <ShapeComp.MyULine {...shapeProps(newULine)} />;
-    }
-
-    if (newSpline) {
-      return <ShapeComp.MySpline {...shapeProps(newSpline)} />;
-    }
-
-    if (newCircle) {
-      return (
-        <ShapeComp.MyCircle
-          {...shapeProps(newCircle)}
-          isVisible={true}
-          hitboxVisible={false}
-        />
-      );
-    }
-
-    if (newRectangle && newRectangle.startP && newRectangle.endP) {
-      return <ShapeComp.MyRectangle {...shapeProps(newRectangle)} />;
-    }
-
-    if (newElip) {
-      return <ShapeComp.MyElip {...shapeProps(newElip)} />;
-    }
-
-    if (newPolygon) {
-      return (
-        <ShapeComp.MyPolygon
-          {...shapeProps(newPolygon)}
-          isComplete={newPolygon.isComplete}
-        />
-      );
-    }
-
-    if (newFreeShape) {
-      return <ShapeComp.MySpline {...shapeProps(newFreeShape)} />;
-    }
-
-    return null; // Nếu không có shape nào phù hợp, return null
+    return newPath.map((line) => {
+      return getLineComponent(line);
+    });
   };
 
   const drawSelection = () => {
@@ -474,11 +667,6 @@ const Canvas = () => {
 
   const resetAllShapes = () => {
     setNewLine(null);
-    setNewArc(null);
-    setNewZigzag(null);
-    setNewTangent(null);
-    setNewULine(null);
-    setNewSpline(null);
 
     setNewCircle(null);
     setNewRectangle(null);
@@ -492,8 +680,87 @@ const Canvas = () => {
 
   const toggleDrawingMode = (mode) => {
     setDrawingMode(drawingMode === mode ? null : mode);
-    resetAllShapes();
   };
+
+  const initLine = (startP) => {
+    switch (true) {
+      case drawingMode === 'line':
+        setNewLine({
+          ...lineProps({
+            type: lineType,
+            name: Const.ShapeName.LINE,
+          }),
+          width: null,
+          height: null,
+          startP: startP,
+          endP: null,
+        });
+        break;
+
+      case drawingMode.includes('arc'):
+        setNewLine({
+          ...lineProps({
+            type: lineType,
+            name: Const.ShapeName.ARC,
+            points: [startP],
+          }),
+          startP: startP,
+          endP: null,
+          centerP: null,
+          midP: null,
+          startAngle: null,
+          endAngle: null,
+          clockwise: null,
+        });
+        break;
+
+      case drawingMode.includes('zigzag'):
+        setNewLine({
+          ...lineProps({
+            type: lineType,
+            name: Const.ShapeName.ZIGZAG,
+          }),
+          radius: 0,
+          direction: Const.LineDirection.START_TO_END,
+          startP: startP,
+        });
+        break;
+
+      case drawingMode === 'tangent':
+        break;
+
+      case drawingMode.includes('uline'):
+        // Chọn điểm bắt đầu
+        setNewLine({
+          ...lineProps({
+            type: lineType,
+            name: Const.ShapeName.ULINE,
+          }),
+          rx: 0.1,
+          ry: 0.1,
+          startP: startP,
+        });
+
+        break;
+
+      case drawingMode.includes('spline'):
+        const { x, y } = startP;
+        setNewLine({
+          ...lineProps({
+            type: lineType,
+            name: Const.ShapeName.SPLINE,
+            points: [x, y],
+          }),
+          startP: startP,
+        });
+        break;
+    }
+  };
+
+  useEffect(() => {
+    if (!newLine || !isContinuosLineFlag) return;
+    initLine(newLine.startP);
+  }, [drawingMode]);
 
   const defaultCursor = () => {
     toggleDrawingMode(null);
@@ -561,25 +828,28 @@ const Canvas = () => {
   };
 
   const selectLine = (id, event) => {
-    const isShiftPressed = event?.shiftKey; // Kiểm tra Shift có được nhấn không
+    const isShiftPressed = event?.shiftKey;
 
-    selectedLayer.shapes.map((shape) => {
-      if (isShiftPressed) {
-        if (shape.id === id) {
-          handleUpdateShape(selectedLayer.id, shape.id, {
-            selected: !shape.selected,
-          });
-        }
-      } else {
-        if (shape.id === id) {
-          handleUpdateShape(selectedLayer.id, shape.id, {
-            selected: !shape.selected,
-          });
+    const updateSelection = (shapes) => {
+      shapes.forEach((shape) => {
+        if (
+          shape.name === Const.ShapeName.GROUP &&
+          Array.isArray(shape.shapes)
+        ) {
+          updateSelection(shape.shapes); // đệ quy với group
         } else {
-          handleUpdateShape(selectedLayer.id, shape.id, { selected: false });
+          if (shape.id === id) {
+            handleUpdateShape(selectedLayer.id, shape.id, {
+              selected: !shape.selected,
+            });
+          } else if (!isShiftPressed) {
+            handleUpdateShape(selectedLayer.id, shape.id, { selected: false });
+          }
         }
-      }
-    });
+      });
+    };
+
+    updateSelection(selectedLayer.shapes);
   };
 
   const replaceShapesInLayer = (layerId, newShapes) => {
@@ -631,7 +901,7 @@ const Canvas = () => {
     name: line.name,
     type: line.type,
     groupName: line.name,
-    points: line.points,
+    points: line.points ? line.points : [line.startP, line.endP],
     pointerLength: 4,
     pointerWidth: 4,
     pointRadius: 2,
@@ -659,6 +929,7 @@ const Canvas = () => {
     onUpdateShape: (newProps) =>
       handleUpdateShape(selectedLayer.id, line.id, newProps),
     saveState: () => saveState(),
+    isNew: true,
   });
 
   const shapeProps = (line) => {
@@ -666,8 +937,8 @@ const Canvas = () => {
       case Const.ShapeName.LINE:
         return {
           ...baseShapeProps(line),
-          getShapePoints: () => {
-            return Utils.getPointsAlongLine(line.startP, line.endP, 10);
+          getShapePoints: (l) => {
+            return Utils.getPointsAlongLine(l.startP, l.endP, 10);
           },
         };
       case Const.ShapeName.ARC:
@@ -686,10 +957,10 @@ const Canvas = () => {
           ...baseShapeProps(line),
           radius: line.radius,
           midP: line.midP,
-          getShapePoints: () => {
+          getShapePoints: (l) => {
             const pathData = ShapeComp.getZigzagPathData(
-              [line.startP, line.midP, line.endP],
-              line.radius
+              [l.startP, l.midP, l.endP],
+              l.radius
             );
             return Utils.getPointsOnPath(pathData, 10);
           },
@@ -698,24 +969,18 @@ const Canvas = () => {
         return {
           ...baseShapeProps(line),
           isComplete: line.isComplete,
-          getShapePoints: () => {
+          getShapePoints: (l) => {
             let pointPairs = [];
 
-            if (line.mode.includes('p-')) {
+            if (l.mode.includes('p-')) {
               // Dữ liệu gốc, không dùng spline
-              const sampled = ShapeComp.samplePSplineByDistance(
-                line.points,
-                10
-              );
+              const sampled = ShapeComp.samplePSplineByDistance(l.points, 10);
               for (let i = 0; i < sampled.length; i += 2) {
                 pointPairs.push({ x: sampled[i], y: sampled[i + 1] });
               }
-            } else if (line.mode.includes('cv-')) {
+            } else if (l.mode.includes('cv-')) {
               // Dữ liệu spline được lấy mẫu đều
-              const sampled = ShapeComp.sampleBSplineByDistance(
-                line.points,
-                10
-              );
+              const sampled = ShapeComp.sampleBSplineByDistance(l.points, 10);
               for (let i = 0; i < sampled.length; i += 2) {
                 pointPairs.push({ x: sampled[i], y: sampled[i + 1] });
               }
@@ -730,11 +995,11 @@ const Canvas = () => {
           rx: line.rx,
           ry: line.ry,
           bottomP: line.bottomP,
-          getShapePoints: () => {
+          getShapePoints: (l) => {
             const pathData = ShapeComp.getUlinePathData(
-              line.startP,
-              line.bottomP,
-              line.ry
+              l.startP,
+              l.bottomP,
+              l.ry
             );
 
             return Utils.getPointsOnPath(pathData, 10);
@@ -773,13 +1038,301 @@ const Canvas = () => {
           ...baseShapeProps(line),
           direction: Const.LineDirection.NONE,
         };
+
+      case Const.ShapeName.GROUP:
+        return {
+          ...baseShapeProps(line),
+          getShapePoints: (l) => {
+            return l.shapes.flatMap((shape) => {
+              return shape.getShapePoints(shape);
+            });
+          },
+          shapes: line.shapes,
+          sharedPoints: line.sharedPoints,
+          renderShape: (s) => renderShape(s),
+        };
     }
   };
 
   const addLineToPath = (line) => {
-    setNewPath(prev => ({
-      lines: [...prev.lines, line]
-    }));
+    setNewPath((prev) => [...prev, line]);
+
+    const { id, startP, endP } = line;
+
+    const entries = [
+      { point: startP, key: 'startP' },
+      { point: endP, key: 'endP' },
+    ];
+
+    for (const { point, key } of entries) {
+      const posKey = Utils.toPosKey(point);
+
+      if (!sharedPoints.has(posKey)) {
+        sharedPoints.set(posKey, []);
+      }
+
+      const refs = sharedPoints.get(posKey);
+
+      // Tránh trùng lặp id-key
+      const exists = refs.some((ref) => ref.id === id && ref.key === key);
+      if (!exists) {
+        refs.push({ id, key });
+      }
+    }
+
+    // Gọi lại setSharedPoints nếu bạn dùng local state để render
+    setSharedPoints(new Map(sharedPoints));
+
+    if (isContinuosLineFlag) {
+      initLine(line.endP);
+    } else {
+      setNewLine(null);
+    }
+  };
+
+  const drawShape = (pointer) => {
+    switch (true) {
+      case drawingMode === 'line':
+        if (!newLine) {
+          setNewLine({
+            ...lineProps({
+              type: lineType,
+              name: Const.ShapeName.LINE,
+            }),
+            width: null,
+            height: null,
+            startP: { x: pointer.x, y: pointer.y },
+            endP: { x: pointer.x, y: pointer.y },
+          });
+        } else {
+          addLineToPath({ ...shapeProps(newLine) });
+          setDrawing(true);
+        }
+        break;
+
+      case drawingMode.includes('arc'):
+        if (!newLine) {
+          setNewLine({
+            ...lineProps({
+              type: lineType,
+              name: Const.ShapeName.ARC,
+              points: [pointer],
+            }),
+            startP: pointer,
+            endP: null,
+            centerP: null,
+            midP: null,
+            startAngle: null,
+            endAngle: null,
+            clockwise: null,
+          });
+          setDrawing(true);
+        } else if (newLine.points.length < 2) {
+          setNewLine({
+            ...newLine,
+            points: [...newLine.points, pointer],
+            endP: pointer,
+          });
+        } else {
+          addLineToPath({ ...shapeProps(newLine) });
+        }
+        break;
+
+      case drawingMode.includes('zigzag'):
+        if (!newLine) {
+          // Lưu điểm đầu tiên
+          setNewLine({
+            ...lineProps({
+              type: lineType,
+              name: Const.ShapeName.ZIGZAG,
+            }),
+            radius: 0,
+            direction: Const.LineDirection.START_TO_END,
+            startP: pointer,
+          });
+        } else if (newLine.startP && !adjustingRadius) {
+          if (drawingMode === 'sm-zigzag') {
+            const start = newLine.startP;
+            const mid = pointer;
+            setNewLine({
+              ...newLine,
+              midP: mid,
+              endP: ShapeComp.calculateEndPoint(start, mid),
+              radius: newLine.radius,
+            });
+          } else if (drawingMode === 'se-zigzag') {
+            const start = newLine.startP;
+            const end = pointer;
+            setNewLine({
+              ...newLine,
+              midP: ShapeComp.calculateMidPoint(start, end),
+              endP: end,
+              radius: newLine.radius,
+            });
+          }
+          setAdjustingRadius(true); // Cho phép điều chỉnh radius sau khi chọn trung điểm
+        } else if (
+          newLine.startP &&
+          newLine.midP &&
+          newLine.endP &&
+          adjustingRadius
+        ) {
+          addLineToPath({ ...shapeProps(newLine) });
+          setAdjustingRadius(false); // Ngừng điều chỉnh radius
+        }
+        break;
+
+      case drawingMode === 'tangent':
+        if (newLine) {
+          addLineToPath({ ...shapeProps(newLine) });
+        }
+        break;
+
+      case drawingMode.includes('uline'):
+        if (!newLine) {
+          // Chọn điểm bắt đầu
+          setNewLine({
+            ...lineProps({
+              type: lineType,
+              name: Const.ShapeName.ULINE,
+            }),
+            rx: 0.1,
+            ry: 0.1,
+            startP: pointer,
+          });
+        } else if (newLine.startP && !adjustingRadius) {
+          // Chọn điểm bottom
+          setNewLine({
+            ...newLine,
+            bottomP: pointer,
+            endP: Utils.calculateUlineEndPoint(newLine.startP, pointer),
+          });
+          setAdjustingRadius(true);
+        } else {
+          // Khi click lần thứ 3, lưu đường U vào danh sách
+          addLineToPath({ ...shapeProps(newLine) });
+          setAdjustingRadius(false);
+        }
+        break;
+
+      case drawingMode.includes('spline'):
+        const { x, y } = pointer;
+        if (!newLine) {
+          setNewLine({
+            ...lineProps({
+              type: lineType,
+              name: Const.ShapeName.SPLINE,
+              points: [x, y],
+            }),
+            startP: { x, y },
+          });
+        } else {
+          setNewLine({ ...newLine, points: [...newLine.points, x, y] });
+        }
+        break;
+
+      case drawingMode.includes('circle'):
+        if (!newCircle) {
+          setNewCircle({
+            ...lineProps({
+              type: zoneType,
+              name: Const.ShapeName.CIRCLE,
+              points: [pointer],
+            }),
+          });
+        } else if (newCircle.points.length === 2) {
+          if (
+            drawingMode === 'cr-circle' ||
+            drawingMode === 'cd-circle' ||
+            drawingMode === '2p-circle'
+          ) {
+            addShapeToLayer(selectedLayer.id, { ...shapeProps(newCircle) });
+            setNewCircle(null);
+          }
+        } else if (newCircle.points.length === 3) {
+          if (drawingMode === '3p-circle') {
+            addShapeToLayer(selectedLayer.id, { ...shapeProps(newCircle) });
+            setNewCircle(null);
+          }
+        }
+        break;
+
+      case drawingMode.includes('rectangle'):
+        if (!newRectangle) {
+          setNewRectangle({
+            ...lineProps({
+              type: zoneType,
+              name: Const.ShapeName.RECTANGLE,
+            }),
+            startP: pointer,
+          });
+        } else if (newRectangle.startP && newRectangle.endP) {
+          addShapeToLayer(selectedLayer.id, { ...shapeProps(newRectangle) });
+          setNewRectangle(null);
+        }
+        break;
+
+      case drawingMode.includes('elip'):
+        if (!newElip) {
+          setNewElip({
+            ...lineProps({
+              type: zoneType,
+              name: Const.ShapeName.ELLIPSE,
+              points: [pointer],
+            }),
+            clicked: false,
+          });
+        } else if (newElip.points.length === 2) {
+          if (drawingMode === 'cr-elip') {
+            addShapeToLayer(selectedLayer.id, { ...shapeProps(newElip) });
+            setNewElip(null);
+          } else if (drawingMode === 'r-elip') {
+            setNewElip({ ...newElip, clicked: true });
+          }
+        } else if (newElip.points.length === 3) {
+          if (drawingMode === 'r-elip') {
+            addShapeToLayer(selectedLayer.id, { ...shapeProps(newElip) });
+            setNewElip(null);
+          }
+        }
+        break;
+
+      case drawingMode.includes('polygon'):
+        if (!newPolygon) {
+          setNewPolygon({
+            ...lineProps({
+              type: zoneType,
+              name: Const.ShapeName.POLYGON,
+              points: [pointer],
+            }),
+            isComplete: true,
+          });
+        } else {
+          setNewPolygon({
+            ...newPolygon,
+            points: [...newPolygon.points, pointer],
+          });
+        }
+        break;
+
+      case drawingMode.includes('freeShape'):
+        if (!newFreeShape) {
+          setNewFreeShape({
+            ...lineProps({
+              type: zoneType,
+              name: Const.ShapeName.FREESHAPE,
+              points: [pointer.x, pointer.y],
+            }),
+            isComplete: true,
+          });
+        } else {
+          setNewFreeShape({
+            ...newFreeShape,
+            points: [...newFreeShape.points, pointer.x, pointer.y],
+          });
+        }
+        break;
+    }
   };
 
   const handleStageLeftClick = (e) => {
@@ -799,7 +1352,7 @@ const Canvas = () => {
       Utils.adjustPointerForZoom(zoom, p)
     );
 
-    //Selection
+    // Selection bắt đầu
     if (drawingMode === 'rect-selection' && !selectionBox) {
       setStartPoint(pointer);
       setSelectionBox({ x: pointer.x, y: pointer.y, width: 0, height: 0 });
@@ -807,261 +1360,52 @@ const Canvas = () => {
       setSelectionPoints([pointer.x, pointer.y]);
     }
 
-    //2nd click
+    // Click thứ 2 - xác nhận vùng chọn
     if (drawingMode === 'rect-selection' && selectionBox) {
-      const newLines = selectedLayer.shapes.map((line) => {
-        const groupNode = groupRefs.current[line.id];
-        if (!groupNode) return line;
+      // Hàm đệ quy để kiểm tra selected cho shape và group lồng nhau
+      const updateShapeSelection = (shape) => {
+        const node = groupRefs.current[shape.id];
+        if (!node) return shape;
 
-        if (line.name === Const.ShapeName.GROUP) {
-          // Kiểm tra từng shape trong group
-          const newShapes = line.shapes.map((shape) => {
-            const shapeNode = groupRefs.current[shape.id];
-            if (!shapeNode) return shape;
-
-            const isSelected = isGroupInSelection(shapeNode, selectionBox);
-            return { ...shape, selected: isSelected };
-          });
-
-          // Nếu có ít nhất 1 shape được chọn, group cũng được chọn
-          const isGroupSelected = newShapes.some((shape) => shape.selected);
-
-          return { ...line, shapes: newShapes, selected: isGroupSelected };
-        } else {
-          const isSelected = isGroupInSelection(groupNode, selectionBox);
-          return { ...line, selected: isSelected };
+        if (
+          shape.name === Const.ShapeName.GROUP &&
+          Array.isArray(shape.shapes)
+        ) {
+          const updatedChildren = shape.shapes.map(updateShapeSelection);
+          const isGroupSelected = updatedChildren.some((s) => s.selected);
+          return {
+            ...shape,
+            shapes: updatedChildren,
+            selected: isGroupSelected,
+          };
         }
-      });
 
-      replaceShapesInLayer(selectedLayer.id, newLines);
+        const isSelected = isGroupInSelection(node, selectionBox);
+        return {
+          ...shape,
+          selected: isSelected,
+        };
+      };
+
+      // Cập nhật toàn bộ shapes của layer
+      const updatedShapes = selectedLayer.shapes.map(updateShapeSelection);
+
+      // Cập nhật layer
+      replaceShapesInLayer(selectedLayer.id, updatedShapes);
       setSelectionBox(null);
     } else if (drawingMode === 'free-selection' && selectionPoints) {
       setSelectionPoints([]);
     }
+
     //
 
     if (!drawingMode) return;
-    if (drawingMode === 'line') {
-      if (!newLine) {
-        setNewLine({
-          ...lineProps({
-            type: lineType,
-            name: Const.ShapeName.LINE,
-          }),
-          width: null,
-          height: null,
-          startP: { x: pointer.x, y: pointer.y },
-          endP: { x: pointer.x, y: pointer.y },
-        });
-      } else {
 
-        addShapeToLayer(selectedLayer.id, { ...shapeProps(newLine) });
-        setNewLine(null);
-        setDrawing(true);
-      }
-    } else if (drawingMode.includes('arc')) {
-      if (!newArc) {
-        setNewArc({
-          ...lineProps({
-            type: lineType,
-            name: Const.ShapeName.ARC,
-            points: [pointer],
-          }),
-          startP: pointer,
-          endP: null,
-          centerP: null,
-          midP: null,
-          startAngle: null,
-          endAngle: null,
-          clockwise: null,
-        });
-        setDrawing(true);
-      } else if (newArc.points.length < 2) {
-        setNewArc({ ...newArc, points: [...newArc.points, pointer] });
-      } else {
-        addShapeToLayer(selectedLayer.id, { ...shapeProps(newArc) });
-        setNewArc(null);
-      }
-    } else if (drawingMode.includes('zigzag')) {
-      if (!newZigzag) {
-        // Lưu điểm đầu tiên
-        setNewZigzag({
-          ...lineProps({
-            type: lineType,
-            name: Const.ShapeName.ZIGZAG,
-          }),
-          radius: 0,
-          direction: Const.LineDirection.START_TO_END,
-          startP: pointer,
-        });
-      } else if (newZigzag.startP && !adjustingRadius) {
-        if (drawingMode === 'sm-zigzag') {
-          const start = newZigzag.startP;
-          const mid = pointer;
-          setNewZigzag({
-            ...newZigzag,
-            midP: mid,
-            endP: ShapeComp.calculateEndPoint(start, mid),
-            radius: newZigzag.radius,
-          });
-        } else if (drawingMode === 'se-zigzag') {
-          const start = newZigzag.startP;
-          const end = pointer;
-          setNewZigzag({
-            ...newZigzag,
-            midP: ShapeComp.calculateMidPoint(start, end),
-            endP: end,
-            radius: newZigzag.radius,
-          });
-        }
-        setAdjustingRadius(true); // Cho phép điều chỉnh radius sau khi chọn trung điểm
-      } else if (
-        newZigzag.startP &&
-        newZigzag.midP &&
-        newZigzag.endP &&
-        adjustingRadius
-      ) {
-        addShapeToLayer(selectedLayer.id, { ...shapeProps(newZigzag) });
-        setNewZigzag(null);
-        setAdjustingRadius(false); // Ngừng điều chỉnh radius
-      }
-    } else if (drawingMode === 'tangent') {
-      if (newTangent) {
-        addShapeToLayer(selectedLayer.id, { ...shapeProps(newTangent) });
-        setNewTangent(null);
-      }
-    } else if (drawingMode.includes('uline')) {
-      if (!newULine) {
-        // Chọn điểm bắt đầu
-        setNewULine({
-          ...lineProps({
-            type: lineType,
-            name: Const.ShapeName.ULINE,
-          }),
-          rx: 0.1,
-          ry: 0.1,
-          startP: pointer,
-        });
-      } else if (newULine.startP && !adjustingRadius) {
-        // Chọn điểm bottom
-        setNewULine({
-          ...newULine,
-          bottomP: pointer,
-          endP: Utils.calculateUlineEndPoint(newULine.startP, pointer),
-        });
-        setAdjustingRadius(true);
-      } else {
-        // Khi click lần thứ 3, lưu đường U vào danh sách
-        addShapeToLayer(selectedLayer.id, { ...shapeProps(newULine) });
-        setNewULine(null); // Reset để vẽ đường mới
-        setAdjustingRadius(false);
-      }
-    } else if (drawingMode.includes('spline')) {
-      const { x, y } = pointer;
-      if (!newSpline) {
-        setNewSpline({
-          ...lineProps({
-            type: lineType,
-            name: Const.ShapeName.SPLINE,
-            points: [x, y],
-          }),
-        });
-      } else {
-        setNewSpline({ ...newSpline, points: [...newSpline.points, x, y] });
-      }
-    } else if (drawingMode.includes('circle')) {
-      if (!newCircle) {
-        setNewCircle({
-          ...lineProps({
-            type: zoneType,
-            name: Const.ShapeName.CIRCLE,
-            points: [pointer],
-          }),
-        });
-      } else if (newCircle.points.length === 2) {
-        if (
-          drawingMode === 'cr-circle' ||
-          drawingMode === 'cd-circle' ||
-          drawingMode === '2p-circle'
-        ) {
-          addShapeToLayer(selectedLayer.id, { ...shapeProps(newCircle) });
-          setNewCircle(null);
-        }
-      } else if (newCircle.points.length === 3) {
-        if (drawingMode === '3p-circle') {
-          addShapeToLayer(selectedLayer.id, { ...shapeProps(newCircle) });
-          setNewCircle(null);
-        }
-      }
-    } else if (drawingMode.includes('rectangle')) {
-      if (!newRectangle) {
-        setNewRectangle({
-          ...lineProps({
-            type: zoneType,
-            name: Const.ShapeName.RECTANGLE,
-          }),
-          startP: pointer,
-        });
-      } else if (newRectangle.startP && newRectangle.endP) {
-        addShapeToLayer(selectedLayer.id, { ...shapeProps(newRectangle) });
-        setNewRectangle(null);
-      }
-    } else if (drawingMode.includes('elip')) {
-      if (!newElip) {
-        setNewElip({
-          ...lineProps({
-            type: zoneType,
-            name: Const.ShapeName.ELLIPSE,
-            points: [pointer],
-          }),
-          clicked: false,
-        });
-      } else if (newElip.points.length === 2) {
-        if (drawingMode === 'cr-elip') {
-          addShapeToLayer(selectedLayer.id, { ...shapeProps(newElip) });
-          setNewElip(null);
-        } else if (drawingMode === 'r-elip') {
-          setNewElip({ ...newElip, clicked: true });
-        }
-      } else if (newElip.points.length === 3) {
-        if (drawingMode === 'r-elip') {
-          addShapeToLayer(selectedLayer.id, { ...shapeProps(newElip) });
-          setNewElip(null);
-        }
-      }
-    } else if (drawingMode.includes('polygon')) {
-      if (!newPolygon) {
-        setNewPolygon({
-          ...lineProps({
-            type: zoneType,
-            name: Const.ShapeName.POLYGON,
-            points: [pointer],
-          }),
-          isComplete: true,
-        });
-      } else {
-        setNewPolygon({
-          ...newPolygon,
-          points: [...newPolygon.points, pointer],
-        });
-      }
-    } else if (drawingMode.includes('freeShape')) {
-      if (!newFreeShape) {
-        setNewFreeShape({
-          ...lineProps({
-            type: zoneType,
-            name: Const.ShapeName.FREESHAPE,
-            points: [pointer.x, pointer.y],
-          }),
-          isComplete: true,
-        });
-      } else {
-        setNewFreeShape({
-          ...newFreeShape,
-          points: [...newFreeShape.points, pointer.x, pointer.y],
-        });
-      }
+    if (!isContinuosLineFlag) {
+      setIsContinuosLineFlag(true);
     }
+
+    drawShape(pointer);
 
     //Thêm position
     if (drawingMode === 'add-pos') {
@@ -1160,7 +1504,7 @@ const Canvas = () => {
     //
 
     //Vẽ đường thẳng
-    if (drawing && newLine) {
+    if (drawing && newLine && drawingMode === 'line') {
       setNewLine({
         ...newLine,
         endP: { x: pointer.x, y: pointer.y },
@@ -1168,91 +1512,94 @@ const Canvas = () => {
     }
 
     //Vẽ đường arc
-    if (newArc && newArc.points.length >= 2) {
-      if (drawingMode.includes('3p')) {
-        setNewArc({
-          ...newArc,
-          points: [...newArc.points.slice(0, 2), pointer],
-        });
-      } else if (drawingMode === 'sca-arc' || drawingMode === 'csa-arc') {
-        const angle = ShapeComp.arcCalculateAngle(newArc.points[1], pointer);
-        setNewArc({
-          ...newArc,
-          angle: angle,
-          points: [...newArc.points.slice(0, 2), pointer],
-        });
-      } else if (drawingMode === 'sea-arc') {
-        const angle = ShapeComp.arcCalculateAngle(newArc.points[0], pointer);
-        setNewArc({
-          ...newArc,
-          angle: angle,
-          points: [...newArc.points.slice(0, 2), pointer],
-        }); //start, end
-      } else if (drawingMode === 'ser-arc') {
-        const radius = ShapeComp.calculateDistance(newArc.points[1], pointer);
-        setNewArc({
-          ...newArc,
-          radius: radius,
-          points: [...newArc.points.slice(0, 2), pointer],
-        }); //start, end
+    if (drawingMode && drawingMode.includes('arc')) {
+      if (newLine && newLine.points.length >= 2) {
+        if (drawingMode.includes('3p')) {
+          setNewLine({
+            ...newLine,
+            points: [...newLine.points.slice(0, 2), pointer],
+          });
+        } else if (drawingMode === 'sca-arc' || drawingMode === 'csa-arc') {
+          const angle = ShapeComp.arcCalculateAngle(newLine.points[1], pointer);
+          setNewLine({
+            ...newLine,
+            angle: angle,
+            points: [...newLine.points.slice(0, 2), pointer],
+          });
+        } else if (drawingMode === 'sea-arc') {
+          const angle = ShapeComp.arcCalculateAngle(newLine.points[0], pointer);
+          setNewLine({
+            ...newLine,
+            angle: angle,
+            points: [...newLine.points.slice(0, 2), pointer],
+          }); //start, end
+        } else if (drawingMode === 'ser-arc') {
+          const radius = ShapeComp.calculateDistance(
+            newLine.points[1],
+            pointer
+          );
+          setNewLine({
+            ...newLine,
+            radius: radius,
+            points: [...newLine.points.slice(0, 2), pointer],
+          }); //start, end
+        }
       }
     }
 
-    //Vẽ đường zigzag
-    if (newZigzag && newZigzag.startP && !adjustingRadius) {
-      if (drawingMode === 'sm-zigzag') {
-        const start = newZigzag.startP;
-        const mid = pointer;
-        setNewZigzag({
-          ...newZigzag,
-          midP: mid,
-          endP: ShapeComp.calculateEndPoint(start, mid),
-          radius: newZigzag.radius,
-        });
-      } else if (drawingMode === 'se-zigzag') {
-        const start = newZigzag.startP;
-        const end = pointer;
-        setNewZigzag({
-          ...newZigzag,
-          midP: ShapeComp.calculateMidPoint(start, end),
-          endP: end,
-          radius: newZigzag.radius,
-        });
-      }
-    } else if (adjustingRadius && newZigzag) {
-      const radius = newZigzag.radius;
-      const [tp0, tp1, tp2] = [
-        newZigzag.startP,
-        newZigzag.midP,
-        newZigzag.endP,
-      ];
-      const p0 = tp1.x + (tp0.x > tp2.x ? radius : -radius);
-      const p1 = tp0.y + (tp0.y < tp2.y ? radius : -radius);
+    if (drawingMode && drawingMode.includes('zigzag')) {
+      //Vẽ đường zigzag
+      if (newLine && newLine.startP && !adjustingRadius) {
+        if (drawingMode === 'sm-zigzag') {
+          const start = newLine.startP;
+          const mid = pointer;
+          setNewLine({
+            ...newLine,
+            midP: mid,
+            endP: ShapeComp.calculateEndPoint(start, mid),
+            radius: newLine.radius,
+          });
+        } else if (drawingMode === 'se-zigzag') {
+          const start = newLine.startP;
+          const end = pointer;
+          setNewLine({
+            ...newLine,
+            midP: ShapeComp.calculateMidPoint(start, end),
+            endP: end,
+            radius: newLine.radius,
+          });
+        }
+      } else if (adjustingRadius && newLine) {
+        const radius = newLine.radius;
+        const [tp0, tp1, tp2] = [newLine.startP, newLine.midP, newLine.endP];
+        const p0 = tp1.x + (tp0.x > tp2.x ? radius : -radius);
+        const p1 = tp0.y + (tp0.y < tp2.y ? radius : -radius);
 
-      const deltaX = pointer.x - tp1.x;
+        const deltaX = pointer.x - tp1.x;
 
-      // Xác định vị trí của start (tp0) so với mid (tp1)
-      const isLeft = tp0.x < p0; // start nằm bên trái mid
-      const isRight = tp0.x > p0; // start nằm bên phải mid
+        // Xác định vị trí của start (tp0) so với mid (tp1)
+        const isLeft = tp0.x < p0; // start nằm bên trái mid
+        const isRight = tp0.x > p0; // start nằm bên phải mid
 
-      // Điều chỉnh radius dựa trên vị trí start
-      if (
-        (isLeft && tp1.y < p1) ||
-        (isLeft && tp1.y > p1) ||
-        (isRight && tp1.y < p1) ||
-        (isRight && tp1.y > p1)
-      ) {
-        const newRadius = Math.max(0, newZigzag.radius + (deltaX > 0 ? 1 : -1));
-        setNewZigzag({
-          ...newZigzag,
-          radius: newRadius,
-        });
-      } else if (tp1.y === p1 || tp0.x === p0) {
-        const newRadius = Math.max(0, newZigzag.radius - 1);
-        setNewZigzag({
-          ...newZigzag,
-          radius: newRadius,
-        });
+        // Điều chỉnh radius dựa trên vị trí start
+        if (
+          (isLeft && tp1.y < p1) ||
+          (isLeft && tp1.y > p1) ||
+          (isRight && tp1.y < p1) ||
+          (isRight && tp1.y > p1)
+        ) {
+          const newRadius = Math.max(0, newLine.radius + (deltaX > 0 ? 1 : -1));
+          setNewLine({
+            ...newLine,
+            radius: newRadius,
+          });
+        } else if (tp1.y === p1 || tp0.x === p0) {
+          const newRadius = Math.max(0, newLine.radius - 1);
+          setNewLine({
+            ...newLine,
+            radius: newRadius,
+          });
+        }
       }
     }
 
@@ -1268,7 +1615,7 @@ const Canvas = () => {
         const distance = Math.sqrt(dx * dx + dy * dy);
 
         if (Math.abs(distance - radius) <= 5) {
-          setNewTangent({
+          setNewLine({
             ...lineProps({
               type: lineType,
               name: Const.ShapeName.TANGENT,
@@ -1277,38 +1624,38 @@ const Canvas = () => {
             contactPoint: pointer,
             arc: { center, radius },
           });
-        } else {
-          setNewTangent(null);
         }
       }
     }
 
     //Vẽ đường chữ U
-    if (newULine && newULine.startP && !adjustingRadius) {
-      setNewULine({
-        ...newULine,
-        bottomP: pointer,
-        endP: Utils.calculateUlineEndPoint(newULine.startP, pointer),
-      }); // Giới hạn ry ≥ 0.1
-    } else if (
-      newULine &&
-      newULine.startP &&
-      newULine.bottomP &&
-      adjustingRadius
-    ) {
-      const deltaX = pointer.x - newULine.bottomP.x; // Khoảng cách di chuột
-      setNewULine({ ...newULine, ry: Math.max(0.1, deltaX) }); // Giới hạn ry ≥ 0.1
+    if (drawingMode && drawingMode.includes('uline')) {
+      if (newLine && newLine.startP && !adjustingRadius) {
+        setNewLine({
+          ...newLine,
+          bottomP: pointer,
+          endP: Utils.calculateUlineEndPoint(newLine.startP, pointer),
+        }); // Giới hạn ry ≥ 0.1
+      } else if (
+        newLine &&
+        newLine.startP &&
+        newLine.bottomP &&
+        adjustingRadius
+      ) {
+        const deltaX = pointer.x - newLine.bottomP.x; // Khoảng cách di chuột
+        setNewLine({ ...newLine, ry: Math.max(0.1, deltaX) }); // Giới hạn ry ≥ 0.1
+      }
     }
 
     //Vẽ đường chữ Spline
     if (drawingMode && drawingMode.includes('spline')) {
       const { x, y } = pointer;
-      if (newSpline && newSpline.points.length === 2) {
-        setNewSpline({ ...newSpline, points: [...newSpline.points, x, y] });
-      } else if (newSpline && newSpline.points.length >= 4) {
-        setNewSpline({
-          ...newSpline,
-          points: [...newSpline.points.slice(0, -2), x, y],
+      if (newLine && newLine.points.length === 2) {
+        setNewLine({ ...newLine, points: [...newLine.points, x, y] });
+      } else if (newLine && newLine.points.length >= 4) {
+        setNewLine({
+          ...newLine,
+          points: [...newLine.points.slice(0, -2), x, y],
         });
       }
     }
@@ -1413,6 +1760,27 @@ const Canvas = () => {
     }
   };
 
+  const handleRightClick = (e) => {
+    e.preventDefault();
+  };
+
+  const handleStageDblClick = (e) => {
+    if (newLine && drawingMode.includes('spline')) {
+      if (newLine) {
+        const points = newLine.points;
+        const len = points.length;
+        const endP = { x: points[len - 2], y: points[len - 1] };
+
+        addLineToPath({
+          ...shapeProps({
+            ...newLine,
+            endP,
+          }),
+        });
+      }
+    }
+  };
+
   const handleStageRightClick = (e) => {
     const target = e.target;
     const stage = target.getStage();
@@ -1425,12 +1793,7 @@ const Canvas = () => {
       Utils.adjustPointerForZoom(zoom, p)
     );
 
-    if (newSpline && drawingMode.includes('spline')) {
-      if (newSpline) {
-        addShapeToLayer(selectedLayer.id, { ...shapeProps(newSpline) });
-        setNewSpline(null);
-      }
-    } else if (newPolygon && drawingMode === 'polygon') {
+    if (newPolygon && drawingMode === 'polygon') {
       setNewPolygon({ ...newPolygon, isComplete: true });
       addShapeToLayer(selectedLayer.id, { ...shapeProps(newPolygon) });
       setNewPolygon(null);
@@ -1438,6 +1801,25 @@ const Canvas = () => {
       setNewFreeShape({ ...newFreeShape, isComplete: true });
       addShapeToLayer(selectedLayer.id, { ...shapeProps(newFreeShape) });
       setNewFreeShape(null);
+    }
+
+    if (newPath && newPath.length > 0) {
+      setIsContinuosLineFlag(false);
+
+      const newGroup = {
+        ...lineProps({
+          type: 'path',
+          name: Const.ShapeName.GROUP,
+          points: newPath.flatMap((shape) => shape.points),
+        }),
+        shapes: newPath,
+        sharedPoints: sharedPoints,
+      };
+      addShapeToLayer(selectedLayer.id, { ...shapeProps(newGroup) });
+
+      setNewPath([]);
+      setSharedPoints(new Map());
+      resetAllShapes();
     }
   };
 
@@ -1451,8 +1833,6 @@ const Canvas = () => {
       box.y + box.height <= selectionBox.y + selectionBox.height
     );
   };
-  const [tP, setTP] = useState([]);
-  const [sps, setSps] = useState([]);
 
   const saveState = () => {
     const snapshot = JSON.parse(JSON.stringify(layers));
@@ -1484,8 +1864,6 @@ const Canvas = () => {
     setLayers(redoStack.pop());
   };
 
-  const [pathPoints, setPathPoints] = useState([]);
-
   const renderPathPoints = () => {
     if (!pathPoints) return;
 
@@ -1499,11 +1877,43 @@ const Canvas = () => {
       //   origin_x: 0,
       //   origin_y: 0,
       // });
+
       return (
         canvasP && <Circle x={canvasP.x} y={canvasP.y} fill="red" radius={2} />
       );
     });
   };
+
+  const extractAllShapes = (shapes) => {
+  let result = [];
+
+  shapes.forEach(shape => {
+    if (shape.type === 'group' && Array.isArray(shape.shapes)) {
+      // Nếu là group, lấy các shape bên trong (đệ quy)
+      result.push(shape);
+      result = result.concat(extractAllShapes(shape.shapes));
+    } else {
+      // Nếu là shape thường
+      result.push(shape);
+    }
+  });
+
+  return result;
+};
+
+
+  const saveEditMap = async () => {
+    const allShapes = layers.flatMap(layer => extractAllShapes(layer.shapes));
+    const converted = allShapes.map((shape) => {
+      return Utils.convertShapeForMetadata(shape);
+    })
+    console.log(allShapes, converted);
+    console.log({metadata: {...map?.metadata, layers: {...Utils.generateMetadataLayersFromShapes(converted)}}})
+
+    // api.postAreaEvents({map_id: mapId, polygon: {}, type_id: })
+    // const a = await api.putMap(mapId, {metadata: btoa(JSON.stringify(map?.metadata))});
+    // console.log(a);
+  }
 
   //===========================================CALL API============================================
 
@@ -1539,8 +1949,8 @@ const Canvas = () => {
 
   //======Test
   const [simPose, setSimPose] = useState({
-    y: 12.866586685180664,
-    x: 16.529640197753906,
+    y: 13,
+    x: 17,
     orientation: -171,
   });
 
@@ -1548,25 +1958,44 @@ const Canvas = () => {
     console.log(pathPoints);
   }, [pathPoints]);
 
-    const obstacles = [
-      map?.metadata.layers.areaprefs_forbidden.shapes,
-      map?.metadata.layers.walls.shapes
-      
-    ]
+  const obstacles = [
+    map?.metadata.layers.areaprefs_forbidden.shapes,
+    map?.metadata.layers.walls.shapes
+  ]
 
-     const metadata = {
-      walls: map?.metadata.layers.walls.shapes,
-      forbiddenZone: map?.metadata.layers.areaprefs_forbidden.shapes,
-    };
+   const metadata = {
+    walls: map?.metadata.layers.walls.shapes,
+    forbiddenZone: map?.metadata.layers.areaprefs_forbidden.shapes,
+  };
 
-  useEffect(() => {
-    console.log(layers)
-  }, [layers])
+  // const obstacles = Const.obstacles;
+
+  // const metadata = Const.metadata;
+
+  const [isHoverVisible, setIsHoverVisible] = useState(false);
+  const [isClickVisible, setIsClickVisible] = useState(false);
+  const [tooltipContent, setTooltipContent] = useState('');
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const imageRef = useRef(null);
+
+  const handlePositionHover = (e, x, y) => {
+    const realPosX = (zoom * x) / 100 + Const.RULER_SIZE;
+    const realPosY = (zoom * y) / 100 + Const.RULER_SIZE;
+    setTooltipPosition({ x: realPosX, y: realPosY });
+    setTooltipContent('This is an image!'); // Replace with dynamic content
+    setIsHoverVisible(true);
+  };
+
+  const handlePositionClick = (e, x, y) => {
+    const realPosX = (zoom * x) / 100 + Const.RULER_SIZE;
+    const realPosY = (zoom * y) / 100 + Const.RULER_SIZE;
+    setTooltipPosition({ x: realPosX, y: realPosY });
+    setTooltipContent('Image clicked!');
+    setIsClickVisible(true);
+  };
 
   return (
-    <div className="full-height flex col">
-      Linear: {speed.linear} <br />
-      Angular: {speed.angular}
+    <div className="full-height flex col" onContextMenu={handleRightClick}>
       <CanvasToolbar
         toggleMode={toggleDrawingMode}
         defaultCursor={defaultCursor}
@@ -1587,21 +2016,7 @@ const Canvas = () => {
         hasShapeSelected={selectedShapes.length > 0}
         editable={editable}
         setEditable={setEditable}
-        PathControl={
-          <PathControl
-            rosInstance={ros}
-            simPose={simPose}
-            setSimPose={setSimPose}
-            layers={layers}
-            pathPoints={pathPoints}
-            setPathPoints={setPathPoints}
-            metadata={metadata}
-            obstacles={obstacles}
-            setTP={setTP}
-            setSps={setSps}
-            setSpeed={setSpeed}
-          />
-        }
+        saveEditMap={saveEditMap}
       />
       <div className="full-height" style={{ position: 'relative' }}>
         <CanvasComponent.Zoom zoom={zoom} setZoom={setZoom} />
@@ -1615,7 +2030,7 @@ const Canvas = () => {
             }
           />
         )}
-        {editable && (
+        {
           <CanvasComponent.RightSidebar
             shape={selectedShape}
             handleUpdateShape={(id, newProps) =>
@@ -1623,14 +2038,41 @@ const Canvas = () => {
             }
             saveState={saveState}
             sidebarHeight={dimensions.height}
+            editable={editable}
+            speedInfo={{
+              baseSpeed: 0.1,
+              linearSpeed: speed.linear,
+              angularSpeed: speed.angular,
+            }}
+            PathControl={
+              <PathControl
+                rosInstance={ros}
+                simPose={simPose}
+                setSimPose={setSimPose}
+                layers={layers}
+                metadata={metadata}
+                obstacles={obstacles}
+                setSpeed={setSpeed}
+              />
+            }
           />
-        )}
+        }
+        <Comp.PositionTooltip
+          hoverContent={tooltipContent}
+          position="top"
+          clickContent={tooltipContent}
+          isHoverVisible={isHoverVisible}
+          isClickVisible={isClickVisible}
+          tooltipPosition={tooltipPosition}
+          setIsClickVisible={setIsClickVisible}
+        ></Comp.PositionTooltip>
         <Stage
           ref={stageRef}
           width={dimensions.width - 50}
           height={dimensions.height}
           onMouseMove={handleStageMouseMove}
           onClick={handleStageClick}
+          onDblClick={handleStageDblClick}
           className="full-height"
         >
           {/* =============================================Layer chính để vẽ============================================== */}
@@ -1644,21 +2086,23 @@ const Canvas = () => {
               scaleY={zoom / 100}
               opacity={layer.selected ? 1 : 0.6}
             >
-              {renderlidarMapPoints()}
+              {/* {renderlidarMapPoints()} */}
 
               {renderMetadata()}
 
-              {renderMap()}
+              {/* {renderMap()}  */}
 
-              {/* {renderPositions()} */}
+              {renderPositions()}
 
               {renderCreatePosition()}
 
               {renderCreateMarker()}
 
-              {renderShape(layer.shapes)}
+              {renderShapes(layer.shapes)}
 
-              {drawShape()}
+              {renderShape(newLine)}
+
+              {renderNewPath()}
 
               {drawSelection()}
 
@@ -1697,26 +2141,6 @@ const Canvas = () => {
                   height={20}
                 />
               )}
-
-              {
-                <Line
-                  points={tP.flatMap((point) => [point.x, point.y])}
-                  stroke="black"
-                  strokeWidth={1}
-                  fill="black"
-                />
-              }
-              {tP.map((p) => {
-                return <Circle x={p.x} y={p.y} radius={2} fill="red"></Circle>;
-              })}
-              {
-                <Line
-                  points={sps.flatMap((point) => [point.x, point.y])}
-                  stroke="red"
-                  strokeWidth={1}
-                  fill="red"
-                />
-              }
             </Layer>
           ))}
 

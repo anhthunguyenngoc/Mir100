@@ -302,10 +302,7 @@ export function distance(a, b) {
  * @returns {boolean}
  */
 export function pointsEqual(p1, p2, epsilon = 0.1) {
-  return (
-    Math.abs(p1.x - p2.x) < epsilon &&
-    Math.abs(p1.y - p2.y) < epsilon
-  );
+  return Math.abs(p1.x - p2.x) < epsilon && Math.abs(p1.y - p2.y) < epsilon;
 }
 
 // Utils.js
@@ -318,7 +315,47 @@ export function pointsEqual(p1, p2, epsilon = 0.1) {
  */
 export function distancePointToLine(point, line) {
   const { x1, y1, x2, y2 } = line;
-  const numerator = Math.abs((y2 - y1) * point.x - (x2 - x1) * point.y + x2 * y1 - y2 * x1);
+  const numerator = Math.abs(
+    (y2 - y1) * point.x - (x2 - x1) * point.y + x2 * y1 - y2 * x1
+  );
   const denominator = Math.sqrt(Math.pow(y2 - y1, 2) + Math.pow(x2 - x1, 2));
   return numerator / denominator;
+}
+
+export function toPosKey({ x, y }) {
+  return `${x.toFixed(4)},${y.toFixed(4)}`;
+}
+
+export const getPositionTypeName = (positionTypes, positionTypeId) => {
+  const foundType = positionTypes.find((type) => type.id === positionTypeId);
+  return foundType?.name || null;
+};
+
+export function simplifyPathByAngleThreshold(
+  path,
+  angleThreshold = (Math.PI / 180) * 5
+) {
+  if (path.length <= 2) return path;
+
+  const simplified = [path[0]];
+
+  for (let i = 1; i < path.length - 1; i++) {
+    const prev = path[i - 1];
+    const curr = path[i];
+    const next = path[i + 1];
+
+    const angle1 = Math.atan2(curr.y - prev.y, curr.x - prev.x);
+    const angle2 = Math.atan2(next.y - curr.y, next.x - curr.x);
+    const angleDiff = Math.atan2(
+      Math.sin(angle2 - angle1),
+      Math.cos(angle2 - angle1)
+    );
+
+    if (Math.abs(angleDiff) > angleThreshold) {
+      simplified.push(curr);
+    }
+  }
+
+  simplified.push(path[path.length - 1]);
+  return simplified;
 }

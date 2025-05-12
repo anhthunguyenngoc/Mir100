@@ -27,6 +27,13 @@ export const SelectionDropdown = ({
     onChange?.(selected);
   }, [selected]);
 
+  useEffect(() => {
+    if (defaultValue && defaultValue.guid !== selected?.guid) {
+      setSelected(defaultValue);
+    }
+  }, [defaultValue]);
+
+
   return (
     <OutsideClickHandler onOutsideClick={() => setIsOpen(false)}>
       <div

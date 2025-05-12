@@ -10,8 +10,7 @@ import './map.css';
 export const MapEdit = () => {
   const navigate = useNavigate();
   const { guid } = useParams();
-  const containerRef = useRef(null);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
   /** @type {[api.TGetMap, Function]} */
   const [map, setMap] = useState(null);
 
@@ -31,23 +30,9 @@ export const MapEdit = () => {
     fetchMap(guid);
   }, [guid]);
 
-  useEffect(() => {
-    const updateSize = () => {
-      if (containerRef.current) {
-        const { offsetWidth, offsetHeight } = containerRef.current;
-        setDimensions({ width: offsetWidth, height: offsetHeight });
-      }
-    };
-
-    updateSize(); // initial set
-    window.addEventListener('resize', updateSize); // optional: for responsive
-
-    return () => window.removeEventListener('resize', updateSize);
-  }, []);
-
   return (
     <div className="content">
-      <section>
+      <div className="flex col full-width gap-frame">
         <div className="flex row full-width align-center space-between">
           <div className="flex col gap-5px">
             <h1>{map?.name}</h1>
@@ -75,12 +60,10 @@ export const MapEdit = () => {
           </button>
         </div>
 
-        <div className="map">
-          <div ref={containerRef} id="map-canvas">
+          <section id="map-canvas">
             <CanvasView mapId={guid} />
-          </div>
-        </div>
-      </section>
+          </section>
+      </div>
     </div>
   );
 };

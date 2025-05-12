@@ -19,7 +19,7 @@ export function rrtStar(
   const goalRadius = Math.min(50, Math.max(20, stepSize * 2));
 
   // Khởi tạo KD-Tree
-  const kd = new kdTree(tree, distance, ["x", "y"]);
+  const kd = new kdTree(tree, distance, ['x', 'y']);
 
   const goalRegion = {
     x: Math.min(goal.x + goalRadius, mapWidth),
@@ -27,7 +27,17 @@ export function rrtStar(
   };
 
   for (let i = 0; i < maxNodes; i++) {
-    const rand = advancedSample(goal, tree, mapWidth, mapHeight, goalSampleRate, obstacles, threshold, stepSize, goalRegion);
+    const rand = advancedSample(
+      goal,
+      tree,
+      mapWidth,
+      mapHeight,
+      goalSampleRate,
+      obstacles,
+      threshold,
+      stepSize,
+      goalRegion
+    );
     const nearest = kd.nearest(rand, 1)[0][0]; // nearest returns [[node, dist]]
 
     const newNode = stepToward(nearest, rand, stepSize);
@@ -38,7 +48,12 @@ export function rrtStar(
     ) {
       const radius = Math.max(
         30,
-        Math.min(80, stepSize * 2 * Math.sqrt(Math.log(tree.length + 1) / (tree.length + 1)))
+        Math.min(
+          80,
+          stepSize *
+            2 *
+            Math.sqrt(Math.log(tree.length + 1) / (tree.length + 1))
+        )
       );
 
       const nearNodes = tree.filter(
@@ -77,7 +92,11 @@ export function rrtStar(
           !isInObstacle(newNode, goal, obstacles) &&
           !isEdgeTooCloseToObstacle(newNode, goal, obstacles, threshold)
         ) {
-          const goalNode = { ...goal, parent: newNode, cost: newNode.cost + distance(newNode, goal) };
+          const goalNode = {
+            ...goal,
+            parent: newNode,
+            cost: newNode.cost + distance(newNode, goal),
+          };
           goalCandidates.push(goalNode);
         }
       }
@@ -91,7 +110,17 @@ export function rrtStar(
 
 // =================== Lấy mẫu nâng cao ===================
 
-function advancedSample(goal, tree, w, h, goalRate, obstacles, threshold, stepSize, goalRegion) {
+function advancedSample(
+  goal,
+  tree,
+  w,
+  h,
+  goalRate,
+  obstacles,
+  threshold,
+  stepSize,
+  goalRegion
+) {
   const useGoal = Math.random() < goalRate;
   if (useGoal) return { ...goal };
 
@@ -102,7 +131,11 @@ function advancedSample(goal, tree, w, h, goalRate, obstacles, threshold, stepSi
   for (let i = 0; i < 10; i++) {
     const pt = getRandomPoint(w, h, goalRegion); // Giới hạn vùng lấy mẫu gần mục tiêu
     const cellKey = getCellKey(pt, 50);
-    if (exploredDensityMap[cellKey] <= 3 && isSafeSample(pt, obstacles, threshold)) return pt;
+    if (
+      exploredDensityMap[cellKey] <= 3 &&
+      isSafeSample(pt, obstacles, threshold)
+    )
+      return pt;
   }
 
   // Lấy mẫu dọc theo đường nối nearest → goal
@@ -122,8 +155,8 @@ function advancedSample(goal, tree, w, h, goalRate, obstacles, threshold, stepSi
 function getRandomPoint(w, h, goalRegion = null) {
   if (goalRegion) {
     // Lấy mẫu gần mục tiêu trong vùng goalRegion
-    const x = Math.random() * (goalRegion.x);
-    const y = Math.random() * (goalRegion.y);
+    const x = Math.random() * goalRegion.x;
+    const y = Math.random() * goalRegion.y;
     return { x, y };
   } else {
     return { x: Math.random() * w, y: Math.random() * h };

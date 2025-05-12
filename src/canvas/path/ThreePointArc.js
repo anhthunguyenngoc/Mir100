@@ -252,11 +252,10 @@ export const ThreePointArc = ({
 }) => {
   const [hovered, setHovered] = useState(false);
 
-  console.log(strokeWidth);
-
   useEffect(() => {
     if (points.length < 3) return;
     const arc = calculateArc(points, mode, angle, radius);
+    console.log(arc);
     if (arc) {
       onUpdateShape({
         startP: arc.startP,

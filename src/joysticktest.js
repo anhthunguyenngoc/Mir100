@@ -156,167 +156,28 @@ export const DefaultDashboard = () => {
   );
 };
 
-    // const obstacles = [
-    //   // ======= VÙNG CẤM =======
-    //   [
-    //     { polygon: [ { x: 100, y: 100 }, { x: 300, y: 100 }, { x: 300, y: 200 }, { x: 100, y: 200 } ],
-    //     color: '#FFEBEE',
-    //     brushsize: 1,
-    //     type: 'shape' },
-    //     { polygon: [ { x: 100, y: 260 }, { x: 300, y: 260 }, { x: 300, y: 360 }, { x: 100, y: 360 } ],
-    //     color: '#FFEBEE',
-    //     brushsize: 1,
-    //     type: 'shape' },
-    //     { polygon: [ { x: 400, y: 100 }, { x: 440, y: 100 }, { x: 440, y: 140 }, { x: 400, y: 140 } ],
-    //     color: '#FFEBEE',
-    //     brushsize: 1,
-    //     type: 'shape' },
-    //     { polygon: [ { x: 500, y: 250 }, { x: 540, y: 250 }, { x: 540, y: 290 }, { x: 500, y: 290 } ],
-    //     color: '#FFEBEE',
-    //     brushsize: 1,
-    //     type: 'shape' },
-    //     { polygon: [ { x: 300, y: 400 }, { x: 340, y: 400 }, { x: 340, y: 440 }, { x: 300, y: 440 } ],
-    //     color: '#FFEBEE',
-    //     brushsize: 1,
-    //     type: 'shape' },
-    //     { polygon: [ { x: 150, y: 200 }, { x: 180, y: 200 }, { x: 180, y: 230 }, { x: 150, y: 230 } ],
-    //     color: '#FFEBEE',
-    //     brushsize: 1,
-    //     type: 'shape' },
-    //   ],
-    
-    //   // ======= TƯỜNG (BAO QUANH VÙNG CẤM + KHUNG PHÒNG) =======
-    //   [
-    //     // Tường bao quanh vùng cấm (mỗi vùng là 4 đoạn)
-    //     // Vùng 1
-    //     { polygon: [ { x: 100, y: 100 }, { x: 300, y: 100 } ],
-    //     color: '#000000',
-    //     brushsize: 1,
-    //     type: 'line' },
-    //     { polygon: [ { x: 100, y: 100 }, { x: 100, y: 200 } ],
-    //     color: '#000000',
-    //     brushsize: 1,
-    //     type: 'line' },
-    //     { polygon: [ { x: 300, y: 100 }, { x: 300, y: 200 } ],
-    //     color: '#000000',
-    //     brushsize: 1,
-    //     type: 'line' },
-    //     { polygon: [ { x: 100, y: 200 }, { x: 300, y: 200 } ],
-    //     color: '#000000',
-    //     brushsize: 1,
-    //     type: 'line' },
-    
-    //     // Vùng 2
-    //     { polygon: [ { x: 100, y: 260 }, { x: 300, y: 260 } ],
-    //     color: '#000000',
-    //     brushsize: 1,
-    //     type: 'line' },
-    //     { polygon: [ { x: 300, y: 260 }, { x: 300, y: 360 } ],
-    //     color: '#000000',
-    //     brushsize: 1,
-    //     type: 'line' },
-    //     { polygon: [ { x: 300, y: 360 }, { x: 100, y: 360 } ],
-    //     color: '#000000',
-    //     brushsize: 1,
-    //     type: 'line' },
-    //     { polygon: [ { x: 100, y: 260 }, { x: 100, y: 360 } ],
-    //     color: '#000000',
-    //     brushsize: 1,
-    //     type: 'line' },
-    
-    //     // Vùng 3
-    //     { polygon: [ { x: 400, y: 100 }, { x: 440, y: 100 } ],
-    //     color: '#000000',
-    //     brushsize: 1,
-    //     type: 'line' },
-    //     { polygon: [ { x: 440, y: 100 }, { x: 440, y: 140 } ],
-    //     color: '#000000',
-    //     brushsize: 1,
-    //     type: 'line' },
-    //     { polygon: [ { x: 440, y: 140 }, { x: 400, y: 140 } ],
-    //     color: '#000000',
-    //     brushsize: 1,
-    //     type: 'line' },
-    //     { polygon: [ { x: 400, y: 140 }, { x: 400, y: 100 } ],
-    //     color: '#000000',
-    //     brushsize: 1,
-    //     type: 'line' },
-    
-    //     // Vùng 4
-    //     { polygon: [ { x: 500, y: 250 }, { x: 540, y: 250 } ],
-    //     color: '#000000',
-    //     brushsize: 1,
-    //     type: 'line' },
-    //     { polygon: [ { x: 540, y: 250 }, { x: 540, y: 290 } ],
-    //     color: '#000000',
-    //     brushsize: 1,
-    //     type: 'line' },
-    //     { polygon: [ { x: 540, y: 290 }, { x: 500, y: 290 } ],
-    //     color: '#000000',
-    //     brushsize: 1,
-    //     type: 'line' },
-    //     { polygon: [ { x: 500, y: 290 }, { x: 500, y: 250 } ],
-    //     color: '#000000',
-    //     brushsize: 1,
-    //     type: 'line' },
-    
-    //     // Vùng 5
-    //     { polygon: [ { x: 300, y: 400 }, { x: 340, y: 400 } ],
-    //     color: '#000000',
-    //     brushsize: 1,
-    //     type: 'line' },
-    //     { polygon: [ { x: 340, y: 400 }, { x: 340, y: 440 } ],
-    //     color: '#000000',
-    //     brushsize: 1,
-    //     type: 'line' },
-    //     { polygon: [ { x: 340, y: 440 }, { x: 300, y: 440 } ],
-    //     color: '#000000',
-    //     brushsize: 1,
-    //     type: 'line' },
-    //     { polygon: [ { x: 300, y: 440 }, { x: 300, y: 400 } ],
-    //     color: '#000000',
-    //     brushsize: 1,
-    //     type: 'line' },
-    
-    //     // Vùng 6
-    //     { polygon: [ { x: 150, y: 200 }, { x: 180, y: 200 } ],
-    //     color: '#000000',
-    //     brushsize: 1,
-    //     type: 'line' },
-    //     { polygon: [ { x: 180, y: 200 }, { x: 180, y: 230 } ],
-    //     color: '#000000',
-    //     brushsize: 1,
-    //     type: 'line' },
-    //     { polygon: [ { x: 180, y: 230 }, { x: 150, y: 230 } ],
-    //     color: '#000000',
-    //     brushsize: 1,
-    //     type: 'line' },
-    //     { polygon: [ { x: 150, y: 230 }, { x: 150, y: 200 } ],
-    //     color: '#000000',
-    //     brushsize: 1,
-    //     type: 'line' },
-    
-    //     // Tường khung phòng (giả sử phòng rộng 700x500)
-    //     { polygon: [ { x: 50, y: 50 }, { x: 650, y: 50 } ],
-    //     color: '#000000',
-    //     brushsize: 1,
-    //     type: 'line' },
-    //     { polygon: [ { x: 650, y: 50 }, { x: 650, y: 500 } ],
-    //     color: '#000000',
-    //     brushsize: 1,
-    //     type: 'line' },
-    //     { polygon: [ { x: 650, y: 500 }, { x: 50, y: 500 } ],
-    //     color: '#000000',
-    //     brushsize: 1,
-    //     type: 'line' },
-    //     { polygon: [ { x: 50, y: 500 }, { x: 50, y: 50 } ],
-    //     color: '#000000',
-    //     brushsize: 1,
-    //     type: 'line' },
-    //   ],
-    // ];  
-
-    // const metadata = {
-    //   walls: obstacles[1],
-    //   forbiddenZone: obstacles[0],
-    // };
+// setTooltipContent(<>
+//           <div className="flex col gap-10px" style={{backgroundColor: Const.Color.BUTTON, padding: '8px 4px'}}>
+//             {[
+//               actionList.GOTO,
+//               actionList.CREATE_PATH,
+//               actionList.MOVE,
+//               actionList.EDIT,
+//               actionList.DELETE,
+//             ].map((action) => {
+//               return (
+//                   <button
+//                       className="button full-width"
+//                       style={{
+//                         backgroundColor: action.buttonColor,
+//                         color: action.textColor,
+//                         borderColor: action.buttonColor,
+//                       }}
+//                       onClick={() => action?.onClick()}
+//                     >
+//                       {action.buttonText.toUpperCase()}
+//                     </button>
+//               );
+//             })}
+//           </div>
+//       </>);

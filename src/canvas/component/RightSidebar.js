@@ -140,10 +140,14 @@ export const RightSidebar = ({
   handleUpdateShape,
   saveState,
   sidebarHeight,
+  editable,
+  PathControl,
+  speedInfo,
 }) => {
   const [visible, setVisible] = useState(true);
+  const { baseSpeed, linearSpeed, angularSpeed } = speedInfo;
 
-  return (
+  return editable ? (
     <div className="right-info-container">
       {!visible &&
         (shape ? (
@@ -210,6 +214,71 @@ export const RightSidebar = ({
         </div>
       )}
     </div>
+  ) : (
+    <div className="right-info-container">
+      {!visible && (
+        <div
+          className="right-info-showcontent"
+          style={{ height: sidebarHeight }}
+        >
+          <div className="flex col">
+            <Comp.ImageButton
+              className="left-sidebar-btn"
+              imageId={'hideRightbar'}
+              imageclassName={'size-20px'}
+              onClick={() => setVisible(true)}
+            />
+          </div>
+          {PathControl}
+
+          <div className="flex col gap-5px">
+            Base speed
+            <div className="flex row gap-15px">
+              <InputNumber
+                placeholder="Base speed"
+                value={baseSpeed}
+                onChange={(e) => {
+                  // handleUpdateShape(shape.id, {
+                  //   startP: { ...shape.startP, x: Number(e.target.value) },
+                  // });
+                }}
+                width={100}
+                imgSrc="letterB"
+              />
+            </div>
+          </div>
+          <div className="flex col gap-5px">
+            Robot speed
+            <div className="flex row gap-15px">
+              <InputNumber
+                placeholder="0"
+                value={linearSpeed}
+                imgSrc="letterL"
+                readOnly={true}
+              />
+
+              <InputNumber
+                placeholder="0"
+                value={angularSpeed}
+                imgSrc="letterA"
+                readOnly={true}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {visible && (
+        <div className="right-info-hidecontent">
+          <Comp.ImageButton
+            className="left-sidebar-btn"
+            onClick={() => setVisible(false)}
+            imageId={'showRightbar'}
+            imageclassName={'size-20px'}
+          />
+        </div>
+      )}
+    </div>
   );
 };
 
@@ -219,9 +288,11 @@ const InputNumber = ({
   placeholder,
   onChange,
   imgSrc,
+  readOnly = false,
+  width = 50,
 }) => {
   return (
-    <div className="width-50per" style={{ position: 'relative' }}>
+    <div className={`width-${width}per`} style={{ position: 'relative' }}>
       <img
         className="size-15px"
         style={{
@@ -240,6 +311,7 @@ const InputNumber = ({
         defaultValue={defaultValue}
         value={value ? value.toFixed(2) : undefined}
         onChange={(e) => onChange?.(e)}
+        readOnly={readOnly}
       />
     </div>
   );

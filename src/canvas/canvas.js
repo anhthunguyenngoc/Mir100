@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef, useMemo, use } from 'react';
 import { Stage, Layer, Rect, Line, Text, Circle } from 'react-konva';
 
 import './canvas.css';
-import { CanvasToolbar } from './toolbar/CanvasToolbar';
 import * as CanvasComponent from './component';
 import * as Const from '../constant';
 import * as Utils from './utils';
@@ -58,9 +57,23 @@ const Canvas = () => {
   const [clipboard, setClipboard] = useState([]);
 
   const [newLine, setNewLine] = useState(null);
+<<<<<<< Updated upstream
   const [newPath, setNewPath] = useState([]);
   const [isContinuosLineFlag, setIsContinuosLineFlag] = useState(false);
   const [sharedPoints, setSharedPoints] = useState(new Map());
+=======
+<<<<<<< Updated upstream
+  const [newArc, setNewArc] = useState(null);
+  const [newZigzag, setNewZigzag] = useState(null);
+  const [newTangent, setNewTangent] = useState(null);
+  const [newULine, setNewULine] = useState(null);
+  const [newSpline, setNewSpline] = useState(null);
+=======
+  const [newPath, setNewPath] = useState([]);
+  const [isContinuosLine, setIsContinuosLine] = useState(false);
+  const [sharedPoints, setSharedPoints] = useState(new Map());
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
   const [newCircle, setNewCircle] = useState(null);
   const [newRectangle, setNewRectangle] = useState(null);
@@ -82,6 +95,7 @@ const Canvas = () => {
   const [gridSize, setGridSize] = useState(Const.INITIAL_GRID_SIZE);
   const [gridData, setGridData] = useState([]);
   const [snapPoint, setSnapPoint] = useState(null);
+  const [customSnapPoints, setCustomSnapPoints] = useState([]);
 
   //Selection
   const groupRefs = useRef({});
@@ -307,11 +321,12 @@ const Canvas = () => {
     const lines = [];
 
     //!!!!
-    // Lặp qua các zones trong layers
-    for (const zones in map?.metadata.layers) {
-      // Lấy shapes của từng zone
-      const shapes = map?.metadata.layers[zones].shapes;
+    // // Lặp qua các zones trong layers
+    // for (const zones in map?.metadata.layers) {
+    //   // Lấy shapes của từng zone
+    //   const shapes = map?.metadata.layers[zones].shapes;
 
+<<<<<<< Updated upstream
       // Nếu có shapes, lặp qua các shape để tạo các Line
       shapes.forEach((zone, index) => {
         lines.push(
@@ -329,17 +344,36 @@ const Canvas = () => {
     //$$$Test */
     // Object.entries(Const.metadata).forEach(([key, zones]) => {
     //   zones.forEach((zone) => {
+=======
+    //   // Nếu có shapes, lặp qua các shape để tạo các Line
+    //   shapes.forEach((zone, index) => {
+>>>>>>> Stashed changes
     //     lines.push(
     //       <Line
     //         points={zone.polygon.flatMap((point) => [point.x, point.y])}
     //         stroke={zone.color}
     //         strokeWidth={zone.brushsize}
-    //         closed={zone.type === 'shape'}
+    //         closed={shapes[0]?.type === 'shape'} // Giữ `false` nếu không muốn tạo đa giác kín
     //         fill={zone.color}
     //       />
     //     );
     //   });
-    // });
+    // }
+
+    //$$$Test */
+    Object.entries(Const.metadata).forEach(([key, zones]) => {
+      zones.forEach((zone) => {
+        lines.push(
+          <Line
+            points={zone.polygon.flatMap((point) => [point.x, point.y])}
+            stroke={zone.color}
+            strokeWidth={zone.brushsize}
+            closed={zone.type === 'shape'}
+            fill={zone.color}
+          />
+        );
+      });
+    });
 
     // Trả về mảng các phần tử Line
     return lines;
@@ -381,36 +415,159 @@ const Canvas = () => {
   ];
 
   const renderPositions = () => {
+<<<<<<< Updated upstream
     //!!!
+=======
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
     if (!mapPositions) return;
 
     return mapPositions.map((position) => {
       const p = Utils.getCanvasPosition(position.pos_x, position.pos_y, map);
       return (
         <ShapeComp.MyImage
+=======
+    //!!!
+    // if (!mapPositions) return;
+
+    // return mapPositions.map((position) => {
+    //   const p = Utils.getCanvasPosition(position.pos_x, position.pos_y, map);
+    //   return (
+    //     <ShapeComp.MyImage
+    //       x={p.x}
+    //       y={p.y}
+    //       rotation={position.orientation}
+    //       imageSrc={Const.getPositionImage(position.type_id)}
+    //       width={20}
+    //       height={20}
+    //       onDblClick={(e, x, y) => {
+    //         setPositionDialog({
+    //           isVisible: true,
+    //           name: position.name,
+    //           type_id: position.type_id,
+    //           id: position.guid,
+    //         });
+    //         setIsClickVisible(false);
+    //       }}
+    //       onClick={(e, x, y) => {
+    //         setPositionDialog({
+    //           isVisible: false,
+    //           name: position.name,
+    //           type_id: position.type_id,
+    //           id: position.guid,
+    //         });
+    //         handlePositionClick(e, x, y);
+    //         setTooltipContent(
+    //           <div className="flex row" style={{ gap: '2px' }}>
+    //             {[
+    //               actionList.GOTO,
+    //               actionList.CREATE_PATH,
+    //               actionList.MOVE,
+    //               actionList.EDIT,
+    //               actionList.DELETE,
+    //             ].map((action, index) => {
+    //               return (
+    //                 <Comp.Tooltip hoverContent={action.alt}>
+    //                   <Comp.SmallToolButton
+    //                     imageSrc={action.imageSrc}
+    //                     showExpand={false}
+    //                     alt={action.alt}
+    //                     onClick={() => action?.onClick(position.guid)}
+    //                     buttonStyle={{
+    //                       borderRadius: '0',
+    //                       ...(index === 0 && {
+    //                         borderTopLeftRadius: '5px',
+    //                         borderBottomLeftRadius: '5px',
+    //                       }),
+    //                       ...(index === 4 && {
+    //                         borderTopRightRadius: '5px',
+    //                         borderBottomRightRadius: '5px',
+    //                       }),
+    //                     }}
+    //                   />
+    //                 </Comp.Tooltip>
+    //               );
+    //             })}
+    //           </div>
+    //         );
+    //       }}
+    //       onMouseEnter={(e, x, y) => {
+    //         handlePositionHover(e, x, y);
+    //         setTooltipContent(
+    //           <div
+    //             className="radius-5px"
+    //             style={{
+    //               padding: '5px 10px',
+    //               backgroundColor: Const.Color.BUTTON,
+    //             }}
+    //           >
+    //             {position.name}
+    //           </div>
+    //         );
+    //       }}
+    //       onMouseLeave={() => {
+    //         setIsHoverVisible(false);
+    //       }}
+    //     />
+    //   );
+    // });
+
+    return fakeMapPositions.map((position) => {
+      const p = Utils.getCanvasPosition(position.pos_x, position.pos_y, {
+        metadata: { height: 568 },
+        resolution: 0.05,
+        origin_x: 0,
+        origin_y: 0,
+      });
+      return (
+        <ShapeComp.MyImage
+          ref={imageRef}
+>>>>>>> Stashed changes
           x={p.x}
           y={p.y}
           rotation={position.orientation}
           imageSrc={Const.getPositionImage(position.type_id)}
           width={20}
           height={20}
+<<<<<<< Updated upstream
           onDblClick={(e, x, y) => {
+=======
+<<<<<<< Updated upstream
+          onClick={() =>
+=======
+          onDblClick={(e, x, y) => {
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
             setPositionDialog({
               isVisible: true,
               name: position.name,
               type_id: position.type_id,
               id: position.guid,
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+            })
+          }
+=======
+>>>>>>> Stashed changes
             });
             setIsClickVisible(false);
           }}
           onClick={(e, x, y) => {
+<<<<<<< Updated upstream
+=======
+            handlePositionClick(e, x, y);
+>>>>>>> Stashed changes
             setPositionDialog({
               isVisible: false,
               name: position.name,
               type_id: position.type_id,
               id: position.guid,
             });
+<<<<<<< Updated upstream
             handlePositionClick(e, x, y);
+=======
+>>>>>>> Stashed changes
             setTooltipContent(
               <div className="flex row" style={{ gap: '2px' }}>
                 {[
@@ -426,14 +583,22 @@ const Canvas = () => {
                         imageSrc={action.imageSrc}
                         showExpand={false}
                         alt={action.alt}
+<<<<<<< Updated upstream
                         onClick={() => action?.onClick(position.guid)}
+=======
+                        onClick={action?.onClick}
+>>>>>>> Stashed changes
                         buttonStyle={{
                           borderRadius: '0',
                           ...(index === 0 && {
                             borderTopLeftRadius: '5px',
                             borderBottomLeftRadius: '5px',
                           }),
+<<<<<<< Updated upstream
                           ...(index === 4 && {
+=======
+                          ...(index === 2 && {
+>>>>>>> Stashed changes
                             borderTopRightRadius: '5px',
                             borderBottomRightRadius: '5px',
                           }),
@@ -462,6 +627,10 @@ const Canvas = () => {
           onMouseLeave={() => {
             setIsHoverVisible(false);
           }}
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
         />
       );
     });
@@ -682,6 +851,11 @@ const Canvas = () => {
     setDrawingMode(drawingMode === mode ? null : mode);
   };
 
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
   const initLine = (startP) => {
     switch (true) {
       case drawingMode === 'line':
@@ -758,10 +932,18 @@ const Canvas = () => {
   };
 
   useEffect(() => {
+<<<<<<< Updated upstream
     if (!newLine || !isContinuosLineFlag) return;
     initLine(newLine.startP);
   }, [drawingMode]);
 
+=======
+    if (!newLine || !isContinuosLine) return;
+    initLine(newLine.startP);
+  }, [drawingMode]);
+
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
   const defaultCursor = () => {
     toggleDrawingMode(null);
   };
@@ -929,7 +1111,15 @@ const Canvas = () => {
     onUpdateShape: (newProps) =>
       handleUpdateShape(selectedLayer.id, line.id, newProps),
     saveState: () => saveState(),
+<<<<<<< Updated upstream
     isNew: true,
+=======
+<<<<<<< Updated upstream
+=======
+    isNew: true,
+    addSnapPoint: (x, y) => customSnapPoints.push({x, y}),
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
   });
 
   const shapeProps = (line) => {
@@ -1038,6 +1228,11 @@ const Canvas = () => {
           ...baseShapeProps(line),
           direction: Const.LineDirection.NONE,
         };
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
 
       case Const.ShapeName.GROUP:
         return {
@@ -1083,7 +1278,11 @@ const Canvas = () => {
     // Gọi lại setSharedPoints nếu bạn dùng local state để render
     setSharedPoints(new Map(sharedPoints));
 
+<<<<<<< Updated upstream
     if (isContinuosLineFlag) {
+=======
+    if (isContinuosLine) {
+>>>>>>> Stashed changes
       initLine(line.endP);
     } else {
       setNewLine(null);
@@ -1332,6 +1531,10 @@ const Canvas = () => {
           });
         }
         break;
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
     }
   };
 
@@ -1400,9 +1603,237 @@ const Canvas = () => {
     //
 
     if (!drawingMode) return;
+<<<<<<< Updated upstream
 
     if (!isContinuosLineFlag) {
       setIsContinuosLineFlag(true);
+=======
+<<<<<<< Updated upstream
+    if (drawingMode === 'line') {
+      if (!newLine) {
+        setNewLine({
+          ...lineProps({
+            type: lineType,
+            name: Const.ShapeName.LINE,
+          }),
+          width: null,
+          height: null,
+          startP: { x: pointer.x, y: pointer.y },
+          endP: { x: pointer.x, y: pointer.y },
+        });
+      } else {
+        addShapeToLayer(selectedLayer.id, { ...shapeProps(newLine) });
+        setNewLine(null);
+        setDrawing(true);
+      }
+    } else if (drawingMode.includes('arc')) {
+      if (!newArc) {
+        setNewArc({
+          ...lineProps({
+            type: lineType,
+            name: Const.ShapeName.ARC,
+            points: [pointer],
+          }),
+          startP: pointer,
+          endP: null,
+          centerP: null,
+          midP: null,
+          startAngle: null,
+          endAngle: null,
+          clockwise: null,
+        });
+        setDrawing(true);
+      } else if (newArc.points.length < 2) {
+        setNewArc({ ...newArc, points: [...newArc.points, pointer] });
+      } else {
+        addShapeToLayer(selectedLayer.id, { ...shapeProps(newArc) });
+        setNewArc(null);
+      }
+    } else if (drawingMode.includes('zigzag')) {
+      if (!newZigzag) {
+        // Lưu điểm đầu tiên
+        setNewZigzag({
+          ...lineProps({
+            type: lineType,
+            name: Const.ShapeName.ZIGZAG,
+          }),
+          radius: 0,
+          direction: Const.LineDirection.START_TO_END,
+          startP: pointer,
+        });
+      } else if (newZigzag.startP && !adjustingRadius) {
+        if (drawingMode === 'sm-zigzag') {
+          const start = newZigzag.startP;
+          const mid = pointer;
+          setNewZigzag({
+            ...newZigzag,
+            midP: mid,
+            endP: ShapeComp.calculateEndPoint(start, mid),
+            radius: newZigzag.radius,
+          });
+        } else if (drawingMode === 'se-zigzag') {
+          const start = newZigzag.startP;
+          const end = pointer;
+          setNewZigzag({
+            ...newZigzag,
+            midP: ShapeComp.calculateMidPoint(start, end),
+            endP: end,
+            radius: newZigzag.radius,
+          });
+        }
+        setAdjustingRadius(true); // Cho phép điều chỉnh radius sau khi chọn trung điểm
+      } else if (
+        newZigzag.startP &&
+        newZigzag.midP &&
+        newZigzag.endP &&
+        adjustingRadius
+      ) {
+        addShapeToLayer(selectedLayer.id, { ...shapeProps(newZigzag) });
+        setNewZigzag(null);
+        setAdjustingRadius(false); // Ngừng điều chỉnh radius
+      }
+    } else if (drawingMode === 'tangent') {
+      if (newTangent) {
+        addShapeToLayer(selectedLayer.id, { ...shapeProps(newTangent) });
+        setNewTangent(null);
+      }
+    } else if (drawingMode.includes('uline')) {
+      if (!newULine) {
+        // Chọn điểm bắt đầu
+        setNewULine({
+          ...lineProps({
+            type: lineType,
+            name: Const.ShapeName.ULINE,
+          }),
+          rx: 0.1,
+          ry: 0.1,
+          startP: pointer,
+        });
+      } else if (newULine.startP && !adjustingRadius) {
+        // Chọn điểm bottom
+        setNewULine({
+          ...newULine,
+          bottomP: pointer,
+          endP: Utils.calculateUlineEndPoint(newULine.startP, pointer),
+        });
+        setAdjustingRadius(true);
+      } else {
+        // Khi click lần thứ 3, lưu đường U vào danh sách
+        addShapeToLayer(selectedLayer.id, { ...shapeProps(newULine) });
+        setNewULine(null); // Reset để vẽ đường mới
+        setAdjustingRadius(false);
+      }
+    } else if (drawingMode.includes('spline')) {
+      const { x, y } = pointer;
+      if (!newSpline) {
+        setNewSpline({
+          ...lineProps({
+            type: lineType,
+            name: Const.ShapeName.SPLINE,
+            points: [x, y],
+          }),
+        });
+      } else {
+        setNewSpline({ ...newSpline, points: [...newSpline.points, x, y] });
+      }
+    } else if (drawingMode.includes('circle')) {
+      if (!newCircle) {
+        setNewCircle({
+          ...lineProps({
+            type: zoneType,
+            name: Const.ShapeName.CIRCLE,
+            points: [pointer],
+          }),
+        });
+      } else if (newCircle.points.length === 2) {
+        if (
+          drawingMode === 'cr-circle' ||
+          drawingMode === 'cd-circle' ||
+          drawingMode === '2p-circle'
+        ) {
+          addShapeToLayer(selectedLayer.id, { ...shapeProps(newCircle) });
+          setNewCircle(null);
+        }
+      } else if (newCircle.points.length === 3) {
+        if (drawingMode === '3p-circle') {
+          addShapeToLayer(selectedLayer.id, { ...shapeProps(newCircle) });
+          setNewCircle(null);
+        }
+      }
+    } else if (drawingMode.includes('rectangle')) {
+      if (!newRectangle) {
+        setNewRectangle({
+          ...lineProps({
+            type: zoneType,
+            name: Const.ShapeName.RECTANGLE,
+          }),
+          startP: pointer,
+        });
+      } else if (newRectangle.startP && newRectangle.endP) {
+        addShapeToLayer(selectedLayer.id, { ...shapeProps(newRectangle) });
+        setNewRectangle(null);
+      }
+    } else if (drawingMode.includes('elip')) {
+      if (!newElip) {
+        setNewElip({
+          ...lineProps({
+            type: zoneType,
+            name: Const.ShapeName.ELLIPSE,
+            points: [pointer],
+          }),
+          clicked: false,
+        });
+      } else if (newElip.points.length === 2) {
+        if (drawingMode === 'cr-elip') {
+          addShapeToLayer(selectedLayer.id, { ...shapeProps(newElip) });
+          setNewElip(null);
+        } else if (drawingMode === 'r-elip') {
+          setNewElip({ ...newElip, clicked: true });
+        }
+      } else if (newElip.points.length === 3) {
+        if (drawingMode === 'r-elip') {
+          addShapeToLayer(selectedLayer.id, { ...shapeProps(newElip) });
+          setNewElip(null);
+        }
+      }
+    } else if (drawingMode.includes('polygon')) {
+      if (!newPolygon) {
+        setNewPolygon({
+          ...lineProps({
+            type: zoneType,
+            name: Const.ShapeName.POLYGON,
+            points: [pointer],
+          }),
+          isComplete: true,
+        });
+      } else {
+        setNewPolygon({
+          ...newPolygon,
+          points: [...newPolygon.points, pointer],
+        });
+      }
+    } else if (drawingMode.includes('freeShape')) {
+      if (!newFreeShape) {
+        setNewFreeShape({
+          ...lineProps({
+            type: zoneType,
+            name: Const.ShapeName.FREESHAPE,
+            points: [pointer.x, pointer.y],
+          }),
+          isComplete: true,
+        });
+      } else {
+        setNewFreeShape({
+          ...newFreeShape,
+          points: [...newFreeShape.points, pointer.x, pointer.y],
+        });
+      }
+=======
+
+    if (!isContinuosLine) {
+      setIsContinuosLine(true);
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
     }
 
     drawShape(pointer);
@@ -1473,45 +1904,61 @@ const Canvas = () => {
     const stage = target.getStage();
     const p = stage.getPointerPosition();
 
-    // Điều chỉnh vị trí con trỏ theo tỷ lệ zoom
-    const pointer = Utils.snapToGrid(
-      zoom,
-      gridSize,
-      Utils.adjustPointerForZoom(zoom, p)
-    );
+    // // Điều chỉnh vị trí con trỏ theo tỷ lệ zoom
+    // const pointer = Utils.snapToGrid(
+    //   zoom,
+    //   gridSize,
+    //   Utils.adjustPointerForZoom(zoom, p)
+    // );
 
-    setMousePos({
-      x: pointer.x,
-      y: pointer.y,
-      xRuler: p.x - Const.RULER_SIZE,
-      yRuler: p.y - Const.RULER_SIZE,
-    });
-    setSnapPoint(Utils.snapToGrid(zoom, gridSize, pointer));
+    // setMousePos({
+    //   x: pointer.x,
+    //   y: pointer.y,
+    //   xRuler: p.x - Const.RULER_SIZE,
+    //   yRuler: p.y - Const.RULER_SIZE,
+    // });
+    // setSnapPoint(Utils.snapToGrid(zoom, gridSize, pointer));
+
+    // 1. Lấy pointer đã chỉnh theo zoom
+  const adjustedPointer = Utils.adjustPointerForZoom(zoom, p);
+
+  // 3. Tính snapPoint thông minh
+  const smartSnap = Utils.getSmartSnap(adjustedPointer, customSnapPoints, gridSize, zoom);
+
+  // 4. Cập nhật state
+  setMousePos({
+    x: smartSnap.x,
+    y: smartSnap.y,
+    xRuler: p.x - Const.RULER_SIZE,
+    yRuler: p.y - Const.RULER_SIZE,
+  });
+
+  setSnapPoint(smartSnap);
 
     //Selection
     if (drawingMode === 'rect-selection') {
       if (selectionBox) {
         setSelectionBox({
-          x: Math.min(startPoint.x, pointer.x),
-          y: Math.min(startPoint.y, pointer.y),
-          width: Math.abs(startPoint.x - pointer.x),
-          height: Math.abs(startPoint.y - pointer.y),
+          x: Math.min(startPoint.x, snapPoint.x),
+          y: Math.min(startPoint.y, snapPoint.y),
+          width: Math.abs(startPoint.x - snapPoint.x),
+          height: Math.abs(startPoint.y - snapPoint.y),
         });
       }
     } else if (drawingMode === 'free-selection' && selectionPoints) {
-      setSelectionPoints((prev) => [...prev, pointer.x, pointer.y]);
+      setSelectionPoints((prev) => [...prev, snapPoint.x, snapPoint.y]);
     }
-    //
 
     //Vẽ đường thẳng
     if (drawing && newLine && drawingMode === 'line') {
       setNewLine({
         ...newLine,
-        endP: { x: pointer.x, y: pointer.y },
+        endP: { x: snapPoint.x, y: snapPoint.y },
       });
     }
 
     //Vẽ đường arc
+<<<<<<< Updated upstream
     if (drawingMode && drawingMode.includes('arc')) {
       if (newLine && newLine.points.length >= 2) {
         if (drawingMode.includes('3p')) {
@@ -1544,6 +1991,36 @@ const Canvas = () => {
             points: [...newLine.points.slice(0, 2), pointer],
           }); //start, end
         }
+=======
+<<<<<<< Updated upstream
+    if (newArc && newArc.points.length >= 2) {
+      if (drawingMode.includes('3p')) {
+        setNewArc({
+          ...newArc,
+          points: [...newArc.points.slice(0, 2), pointer],
+        });
+      } else if (drawingMode === 'sca-arc' || drawingMode === 'csa-arc') {
+        const angle = ShapeComp.arcCalculateAngle(newArc.points[1], pointer);
+        setNewArc({
+          ...newArc,
+          angle: angle,
+          points: [...newArc.points.slice(0, 2), pointer],
+        });
+      } else if (drawingMode === 'sea-arc') {
+        const angle = ShapeComp.arcCalculateAngle(newArc.points[0], pointer);
+        setNewArc({
+          ...newArc,
+          angle: angle,
+          points: [...newArc.points.slice(0, 2), pointer],
+        }); //start, end
+      } else if (drawingMode === 'ser-arc') {
+        const radius = ShapeComp.calculateDistance(newArc.points[1], pointer);
+        setNewArc({
+          ...newArc,
+          radius: radius,
+          points: [...newArc.points.slice(0, 2), pointer],
+        }); //start, end
+>>>>>>> Stashed changes
       }
     }
 
@@ -1575,7 +2052,77 @@ const Canvas = () => {
         const p0 = tp1.x + (tp0.x > tp2.x ? radius : -radius);
         const p1 = tp0.y + (tp0.y < tp2.y ? radius : -radius);
 
+<<<<<<< Updated upstream
         const deltaX = pointer.x - tp1.x;
+=======
+      const deltaX = pointer.x - tp1.x;
+=======
+    if (drawingMode && drawingMode.includes('arc')) {
+      if (newLine && newLine.points.length >= 2) {
+        if (drawingMode.includes('3p')) {
+          setNewLine({
+            ...newLine,
+            points: [...newLine.points.slice(0, 2), snapPoint],
+          });
+        } else if (drawingMode === 'sca-arc' || drawingMode === 'csa-arc') {
+          const angle = ShapeComp.arcCalculateAngle(newLine.points[1], snapPoint);
+          setNewLine({
+            ...newLine,
+            angle: angle,
+            points: [...newLine.points.slice(0, 2), snapPoint],
+          });
+        } else if (drawingMode === 'sea-arc') {
+          const angle = ShapeComp.arcCalculateAngle(newLine.points[0], snapPoint);
+          setNewLine({
+            ...newLine,
+            angle: angle,
+            points: [...newLine.points.slice(0, 2), snapPoint],
+          }); //start, end
+        } else if (drawingMode === 'ser-arc') {
+          const radius = ShapeComp.calculateDistance(
+            newLine.points[1],
+            snapPoint
+          );
+          setNewLine({
+            ...newLine,
+            radius: radius,
+            points: [...newLine.points.slice(0, 2), snapPoint],
+          }); //start, end
+        }
+      }
+    }
+
+    if (drawingMode && drawingMode.includes('zigzag')) {
+      //Vẽ đường zigzag
+      if (newLine && newLine.startP && !adjustingRadius) {
+        if (drawingMode === 'sm-zigzag') {
+          const start = newLine.startP;
+          const mid = snapPoint;
+          setNewLine({
+            ...newLine,
+            midP: mid,
+            endP: ShapeComp.calculateEndPoint(start, mid),
+            radius: newLine.radius,
+          });
+        } else if (drawingMode === 'se-zigzag') {
+          const start = newLine.startP;
+          const end = snapPoint;
+          setNewLine({
+            ...newLine,
+            midP: ShapeComp.calculateMidPoint(start, end),
+            endP: end,
+            radius: newLine.radius,
+          });
+        }
+      } else if (adjustingRadius && newLine) {
+        const radius = newLine.radius;
+        const [tp0, tp1, tp2] = [newLine.startP, newLine.midP, newLine.endP];
+        const p0 = tp1.x + (tp0.x > tp2.x ? radius : -radius);
+        const p1 = tp0.y + (tp0.y < tp2.y ? radius : -radius);
+
+        const deltaX = snapPoint.x - tp1.x;
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
         // Xác định vị trí của start (tp0) so với mid (tp1)
         const isLeft = tp0.x < p0; // start nằm bên trái mid
@@ -1610,8 +2157,8 @@ const Canvas = () => {
           center: { x: target.attrs.x, y: target.attrs.y },
           radius: target.attrs.outerRadius,
         };
-        const dx = pointer.x - center.x;
-        const dy = pointer.y - center.y;
+        const dx = snapPoint.x - center.x;
+        const dy = snapPoint.y - center.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
         if (Math.abs(distance - radius) <= 5) {
@@ -1621,7 +2168,7 @@ const Canvas = () => {
               name: Const.ShapeName.TANGENT,
               points: [],
             }),
-            contactPoint: pointer,
+            contactPoint: snapPoint,
             arc: { center, radius },
           });
         }
@@ -1629,12 +2176,36 @@ const Canvas = () => {
     }
 
     //Vẽ đường chữ U
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+    if (newULine && newULine.startP && !adjustingRadius) {
+      setNewULine({
+        ...newULine,
+        bottomP: pointer,
+        endP: Utils.calculateUlineEndPoint(newULine.startP, pointer),
+      }); // Giới hạn ry ≥ 0.1
+    } else if (
+      newULine &&
+      newULine.startP &&
+      newULine.bottomP &&
+      adjustingRadius
+    ) {
+      const deltaX = pointer.x - newULine.bottomP.x; // Khoảng cách di chuột
+      setNewULine({ ...newULine, ry: Math.max(0.1, deltaX) }); // Giới hạn ry ≥ 0.1
+=======
+>>>>>>> Stashed changes
     if (drawingMode && drawingMode.includes('uline')) {
       if (newLine && newLine.startP && !adjustingRadius) {
         setNewLine({
           ...newLine,
+<<<<<<< Updated upstream
           bottomP: pointer,
           endP: Utils.calculateUlineEndPoint(newLine.startP, pointer),
+=======
+          bottomP: snapPoint,
+          endP: Utils.calculateUlineEndPoint(newLine.startP, snapPoint),
+>>>>>>> Stashed changes
         }); // Giới hạn ry ≥ 0.1
       } else if (
         newLine &&
@@ -1642,32 +2213,55 @@ const Canvas = () => {
         newLine.bottomP &&
         adjustingRadius
       ) {
+<<<<<<< Updated upstream
         const deltaX = pointer.x - newLine.bottomP.x; // Khoảng cách di chuột
         setNewLine({ ...newLine, ry: Math.max(0.1, deltaX) }); // Giới hạn ry ≥ 0.1
       }
+=======
+        const deltaX = snapPoint.x - newLine.bottomP.x; // Khoảng cách di chuột
+        setNewLine({ ...newLine, ry: Math.max(0.1, deltaX) }); // Giới hạn ry ≥ 0.1
+      }
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
     }
 
     //Vẽ đường chữ Spline
     if (drawingMode && drawingMode.includes('spline')) {
+<<<<<<< Updated upstream
       const { x, y } = pointer;
+<<<<<<< Updated upstream
+=======
+      if (newSpline && newSpline.points.length === 2) {
+        setNewSpline({ ...newSpline, points: [...newSpline.points, x, y] });
+      } else if (newSpline && newSpline.points.length >= 4) {
+        setNewSpline({
+          ...newSpline,
+          points: [...newSpline.points.slice(0, -2), x, y],
+=======
+      const { x, y } = snapPoint;
+>>>>>>> Stashed changes
       if (newLine && newLine.points.length === 2) {
         setNewLine({ ...newLine, points: [...newLine.points, x, y] });
       } else if (newLine && newLine.points.length >= 4) {
         setNewLine({
           ...newLine,
           points: [...newLine.points.slice(0, -2), x, y],
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
         });
       }
     }
 
     //Vẽ Circle
     if (newCircle && newCircle.points && newCircle.points.length >= 1) {
-      setNewCircle({ ...newCircle, points: [newCircle.points[0], pointer] });
+      setNewCircle({ ...newCircle, points: [newCircle.points[0], snapPoint] });
     } else if (newCircle && newCircle.points && newCircle.points.length === 2) {
       if (drawingMode === '3p-circle') {
         setNewCircle({
           ...newCircle,
-          points: [...newCircle.points.slice(0, 2), pointer],
+          points: [...newCircle.points.slice(0, 2), snapPoint],
         });
       }
     }
@@ -1676,7 +2270,7 @@ const Canvas = () => {
     if (newRectangle && newRectangle.startP) {
       setNewRectangle({
         ...newRectangle,
-        endP: pointer,
+        endP: snapPoint,
       });
     }
 
@@ -1687,7 +2281,7 @@ const Canvas = () => {
       newElip.points.length >= 1 &&
       !newElip.clicked
     ) {
-      setNewElip({ ...newElip, points: [newElip.points[0], pointer] });
+      setNewElip({ ...newElip, points: [newElip.points[0], snapPoint] });
     } else if (
       newElip &&
       newElip.points &&
@@ -1696,7 +2290,7 @@ const Canvas = () => {
     ) {
       setNewElip({
         ...newElip,
-        points: [newElip.points[0], newElip.points[1], pointer],
+        points: [newElip.points[0], newElip.points[1], snapPoint],
       });
     }
 
@@ -1705,19 +2299,19 @@ const Canvas = () => {
       if (newPolygon.points.length === 1) {
         setNewPolygon({
           ...newPolygon,
-          points: [...newPolygon.points, pointer],
+          points: [...newPolygon.points, snapPoint],
         });
       } else if (newPolygon.points.length >= 2) {
         setNewPolygon({
           ...newPolygon,
-          points: [...newPolygon.points.slice(0, -1), pointer],
+          points: [...newPolygon.points.slice(0, -1), snapPoint],
         });
       }
     }
 
     //Vẽ Free Shape
     if (newFreeShape) {
-      const { x, y } = pointer;
+      const { x, y } = snapPoint;
       if (newFreeShape.points.length === 2) {
         setNewFreeShape({
           ...newFreeShape,
@@ -1760,10 +2354,23 @@ const Canvas = () => {
     }
   };
 
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
   const handleRightClick = (e) => {
     e.preventDefault();
   };
 
+<<<<<<< Updated upstream
+=======
+  
+    useEffect(() => {
+      console.log(snapPoint)
+    }, [snapPoint])
+
+>>>>>>> Stashed changes
   const handleStageDblClick = (e) => {
     if (newLine && drawingMode.includes('spline')) {
       if (newLine) {
@@ -1781,6 +2388,10 @@ const Canvas = () => {
     }
   };
 
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
   const handleStageRightClick = (e) => {
     const target = e.target;
     const stage = target.getStage();
@@ -1802,9 +2413,17 @@ const Canvas = () => {
       addShapeToLayer(selectedLayer.id, { ...shapeProps(newFreeShape) });
       setNewFreeShape(null);
     }
+<<<<<<< Updated upstream
 
     if (newPath && newPath.length > 0) {
       setIsContinuosLineFlag(false);
+=======
+<<<<<<< Updated upstream
+=======
+
+    if (newPath && newPath.length > 0) {
+      setIsContinuosLine(false);
+>>>>>>> Stashed changes
 
       const newGroup = {
         ...lineProps({
@@ -1821,6 +2440,10 @@ const Canvas = () => {
       setSharedPoints(new Map());
       resetAllShapes();
     }
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
   };
 
   const isGroupInSelection = (groupNode, selectionBox) => {
@@ -1884,8 +2507,14 @@ const Canvas = () => {
     });
   };
 
+<<<<<<< Updated upstream
   const extractAllShapes = (shapes) => {
   let result = [];
+=======
+<<<<<<< Updated upstream
+  const renderPointAlongZigzag = (line) => {
+    if (!line || !line.endP || !line.radius) return;
+>>>>>>> Stashed changes
 
   shapes.forEach(shape => {
     if (shape.type === 'group' && Array.isArray(shape.shapes)) {
@@ -1898,6 +2527,7 @@ const Canvas = () => {
     }
   });
 
+<<<<<<< Updated upstream
   return result;
 };
 
@@ -1909,11 +2539,51 @@ const Canvas = () => {
     })
     console.log(allShapes, converted);
     console.log({metadata: {...map?.metadata, layers: {...Utils.generateMetadataLayersFromShapes(converted)}}})
+=======
+    return pointPairs.map((p, idx) => (
+      <Circle key={idx} x={p.x} y={p.y} fill="red" radius={1} />
+    ));
+=======
+  const extractAllShapes = (shapes) => {
+    let result = [];
+
+    shapes.forEach((shape) => {
+      if (shape.type === 'group' && Array.isArray(shape.shapes)) {
+        // Nếu là group, lấy các shape bên trong (đệ quy)
+        result.push(shape);
+        result = result.concat(extractAllShapes(shape.shapes));
+      } else {
+        // Nếu là shape thường
+        result.push(shape);
+      }
+    });
+
+    return result;
+  };
+
+  const saveEditMap = async () => {
+    const allShapes = layers.flatMap((layer) => extractAllShapes(layer.shapes));
+    const converted = allShapes.map((shape) => {
+      return Utils.convertShapeForMetadata(shape);
+    });
+    console.log(allShapes, converted);
+    console.log({
+      metadata: {
+        ...map?.metadata,
+        layers: { ...Utils.generateMetadataLayersFromShapes(converted) },
+      },
+    });
+>>>>>>> Stashed changes
 
     // api.postAreaEvents({map_id: mapId, polygon: {}, type_id: })
     // const a = await api.putMap(mapId, {metadata: btoa(JSON.stringify(map?.metadata))});
     // console.log(a);
+<<<<<<< Updated upstream
   }
+=======
+>>>>>>> Stashed changes
+  };
+>>>>>>> Stashed changes
 
   //===========================================CALL API============================================
 
@@ -1959,6 +2629,7 @@ const Canvas = () => {
   }, [pathPoints]);
 
   const obstacles = [
+<<<<<<< Updated upstream
     map?.metadata.layers.areaprefs_forbidden.shapes,
     map?.metadata.layers.walls.shapes
   ]
@@ -1993,10 +2664,56 @@ const Canvas = () => {
     setTooltipContent('Image clicked!');
     setIsClickVisible(true);
   };
+=======
+<<<<<<< Updated upstream
+    // { x: 420, y: 300 },
+    // { x: 400, y: 300 },
+  ];
+>>>>>>> Stashed changes
 
   return (
     <div className="full-height flex col" onContextMenu={handleRightClick}>
       <CanvasToolbar
+=======
+    map?.metadata.layers.areaprefs_forbidden.shapes,
+    map?.metadata.layers.walls.shapes,
+  ];
+
+  const metadata = {
+    walls: map?.metadata.layers.walls.shapes,
+    forbiddenZone: map?.metadata.layers.areaprefs_forbidden.shapes,
+  };
+
+  // const obstacles = Const.obstacles;
+
+  // const metadata = Const.metadata;
+
+  const [isHoverVisible, setIsHoverVisible] = useState(false);
+  const [isClickVisible, setIsClickVisible] = useState(false);
+  const [tooltipContent, setTooltipContent] = useState('');
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const imageRef = useRef(null);
+
+  const handlePositionHover = (e, x, y) => {
+    const realPosX = (zoom * x) / 100 + Const.RULER_SIZE;
+    const realPosY = (zoom * y) / 100 + Const.RULER_SIZE;
+    setTooltipPosition({ x: realPosX, y: realPosY });
+    setTooltipContent('This is an image!'); // Replace with dynamic content
+    setIsHoverVisible(true);
+  };
+
+  const handlePositionClick = (e, x, y) => {
+    const realPosX = (zoom * x) / 100 + Const.RULER_SIZE;
+    const realPosY = (zoom * y) / 100 + Const.RULER_SIZE;
+    setTooltipPosition({ x: realPosX, y: realPosY });
+    setTooltipContent('Image clicked!');
+    setIsClickVisible(true);
+  };
+
+  return (
+    <div className="full-height flex col" onContextMenu={handleRightClick}>
+      <CanvasComponent.CanvasToolbar
+>>>>>>> Stashed changes
         toggleMode={toggleDrawingMode}
         defaultCursor={defaultCursor}
         removeShape={removeShape}
@@ -2165,6 +2882,7 @@ const Canvas = () => {
           />
         </Stage>
       </div>
+      <CanvasComponent.CanvasFooter setIsContinuosLine={setIsContinuosLine} />
     </div>
   );
 };

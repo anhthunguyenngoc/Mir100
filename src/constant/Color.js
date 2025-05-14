@@ -2,6 +2,7 @@ export const Color = {
   WHITE: '#FFFFFF',
   BLACK: '#000000',
   BUTTON: '#00474f',
+  SELECTED_BUTTON: '#08979c',
   ERROR: '#820014',
   GRAY: '#F5F5F5',
   DARKGRAY: '#DDDDDD',

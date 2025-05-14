@@ -289,6 +289,10 @@ input:focus {
   width: 100% !important;
 }
 
+.width-100per {
+  width: 100%;
+}
+
 .width-75per {
   width: 75%;
 }

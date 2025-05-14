@@ -25,6 +25,7 @@ export const ZoneName = {
 export const ShapeName = {
   ...LineName,
   ...ZoneName,
+  PATH: 'path',
 };
 
 export const LineDirection = {

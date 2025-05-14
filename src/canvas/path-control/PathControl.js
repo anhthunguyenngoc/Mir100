@@ -7,25 +7,24 @@ import * as Comp from '../../components';
 
 import { RosService } from '../../ros';
 import * as api from '../../api';
-import { getNextVelocity, insertCornerBufferPoints } from './PurePursuit';
+import { getNextVelocity } from './PurePursuit';
 
 export const PathControl = ({
   rosInstance,
   simPose,
   setSimPose,
   layers,
-  pathPoints,
-  setPathPoints,
   metadata,
   obstacles,
+  setSpeed,
 }) => {
   /** @type { api.TGetStatus } */
   const { robotStatus, fetchRobotStatus } = Context.useAppContext();
-  const { map } = Context.useCanvasContext();
+  const { map, pathPoints, setPathPoints } = Context.useCanvasContext();
 
   const [isMoving, setIsMoving] = useState(false);
   const [joystickControl, setJoystickControl] = useState(null);
-  const SPEED = 0.1;
+  const SPEED = 0.3;
 
   const joystickToggle = () => {
     if (!rosInstance) {
@@ -64,11 +63,20 @@ export const PathControl = ({
   };
 
   const startPath = async () => {
-    if (!joystickControl) {
-      joystickToggle();
-    }
+    // if (!joystickControl) {
+    //   joystickToggle();
+    // }
+    joystickToggle();
+    setIsMoving(true);
+  };
 
+  const pausePath = async () => {
     setIsMoving((prev) => !prev);
+  };
+
+  const cancelPath = async () => {
+    setIsMoving(false);
+    joystickToggle();
   };
 
   //========================Giả lập
@@ -105,16 +113,21 @@ export const PathControl = ({
         polygon: wall.polygon.map(
           (p) => Utils.getRealPosition(p.x, p.y, map) //!!!
         ),
-      }))
+      })),
+      0.3
     );
 
     if (!result) return;
 
     const { linear, angular, path: updatedPath } = result;
 
-    if (linear === 0 && angular === 0) setIsMoving(false);
+    setSpeed({ linear, angular });
 
-    setPathPoints(updatedPath); // Cập nhật path đã loại bỏ điểm đã qua
+    // if (linear === 0 && angular === 0) setIsMoving(false);
+
+    if (updatedPath.length !== pathPoints.length) {
+      setPathPoints(updatedPath);
+    }
 
     joystickControl.sendMovementCommand(linear, angular);
 
@@ -130,7 +143,10 @@ export const PathControl = ({
   //   const interval = setInterval(() => {
   //     //$$$ Test
   //     const result = getNextVelocity(
-  //       simPose,
+  //       {
+  //         ...simPose,
+  //         orientation: Utils.degreesToRadians(simPose.orientation),
+  //       },
   //       [...pathPoints],
   //       0.5,
   //       0.5,
@@ -173,14 +189,22 @@ export const PathControl = ({
 
   //     if (linear === 0 && angular === 0) setIsMoving(false);
 
-  //     setPathPoints(updatedPath); // Cập nhật path đã loại bỏ điểm đã qua
+  //     setSpeed({ linear, angular });
+
+  //     if (updatedPath.length !== pathPoints.length) {
+  //       setPathPoints(updatedPath);
+  //     }
 
   //     setSimPose((prev) => {
-  //       const newTheta = prev.orientation + angular * dt;
+  //       const newThetaRad =
+  //         Utils.degreesToRadians(prev.orientation) + angular * dt;
+  //       const newThetaDeg = Utils.radiansToDegrees(newThetaRad) % 360;
+  //       const normalizedTheta = (newThetaDeg + 360) % 360; // đảm bảo luôn dương
+
   //       return {
-  //         x: prev.x + linear * Math.cos(newTheta) * dt,
-  //         y: prev.y + linear * Math.sin(newTheta) * dt,
-  //         orientation: newTheta,
+  //         x: prev.x + linear * Math.cos(newThetaRad) * dt,
+  //         y: prev.y + linear * Math.sin(newThetaRad) * dt,
+  //         orientation: normalizedTheta,
   //       };
   //     });
   //   }, dt * 100); // Chuyển dt từ giây sang mili giây
@@ -190,6 +214,24 @@ export const PathControl = ({
 
   return (
     <div className="flex row">
+      <Comp.ImageButton
+        className="icon-btn height-fit-content"
+        imageId="start"
+        onClick={startPath}
+      />
+
+      <Comp.ImageButton
+        className="icon-btn height-fit-content"
+        imageId="pause"
+        onClick={pausePath}
+      />
+
+      <Comp.ImageButton
+        className="icon-btn height-fit-content"
+        imageId="cancel"
+        onClick={cancelPath}
+      />
+
       <select
         value={selectedShapeId || ''}
         onChange={(e) => {
@@ -202,8 +244,31 @@ export const PathControl = ({
             .find((shape) => shape.id.toString() === id);
 
           if (shape) {
-            const points = shape.getShapePoints(); // Gọi hàm lấy điểm
-            setPathPoints(insertCornerBufferPoints(points));
+            const points = shape
+              .getShapePoints(shape)
+              .map((p) => {
+                if (
+                  p &&
+                  typeof p.x === 'number' &&
+                  typeof p.y === 'number' &&
+                  !isNaN(p.x) &&
+                  !isNaN(p.y)
+                ) {
+                  return Utils.getRealPosition(p.x, p.y, map); //!!!
+
+                  // Test
+                  // Utils.getRealPosition(p.x, p.y, {
+                  //   metadata: { height: 568 },
+                  //   resolution: 0.05,
+                  //   origin_x: 0,
+                  //   origin_y: 0,
+                  // })
+                }
+                return null; // loại bỏ điểm không hợp lệ
+              })
+              .filter(Boolean); // lọc null
+
+            setPathPoints(Utils.simplifyPathByAngleThreshold(points));
           }
         }}
       >
@@ -216,13 +281,6 @@ export const PathControl = ({
           ))
         )}
       </select>
-
-      <Comp.ImageButton
-        className="icon-btn height-fit-content"
-        imageId={isMoving ? 'pause' : 'start'}
-        imageclassName="size-20px"
-        onClick={startPath}
-      />
     </div>
   );
 };

@@ -5,7 +5,6 @@ const findCircleFromCenterRadius = (p1, p2) => {
   if (!p2) return { x: p1.x, y: p1.y, radius: 0.1 };
   const dx = p2.x - p1.x;
   const dy = p2.y - p1.y;
-  console.log(Math.sqrt(dx * dx + dy * dy));
   return { x: p1.x, y: p1.y, radius: Math.sqrt(dx * dx + dy * dy) };
 };
 

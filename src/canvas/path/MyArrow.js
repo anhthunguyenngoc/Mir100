@@ -9,6 +9,7 @@ export const MyArrow = ({
   name,
   pointerLength,
   pointerWidth,
+  pointRadius,
   fill,
   dash,
   stroke,
@@ -20,7 +21,6 @@ export const MyArrow = ({
   onClick,
   selected,
   isDrawing,
-  onUpdatePoints,
   direction,
   onDrag,
   startP,
@@ -31,11 +31,15 @@ export const MyArrow = ({
   const [hovered, setHovered] = useState(false);
 
   useEffect(() => {
+    if (!startP || !endP) return;
+
     onUpdateShape({
       width: Math.abs(endP.x - startP.x),
       height: Math.abs(endP.y - startP.y),
     });
   }, [startP, endP]);
+
+  if (!startP || !endP) return;
 
   return (
     <Group ref={(node) => ref?.(node)}>
@@ -91,10 +95,10 @@ export const MyArrow = ({
           <MyCircle
             x={point.x}
             y={point.y}
-            radius={2}
+            radius={pointRadius}
             fill="white"
             stroke="blue"
-            strokeWidth={1}
+            strokeWidth={strokeWidth}
             draggable={true}
             isVisible={!isDrawing && (hovered || selected)}
             onDragEnd={(x, y) => {

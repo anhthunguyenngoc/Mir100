@@ -7,6 +7,7 @@ export const Button = ({
   text,
   onClick,
   type,
+  style,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -18,6 +19,7 @@ export const Button = ({
         color,
         border: `2px solid ${isHovered ? `${borderColor}CC` : borderColor}`,
         transition: 'all 0.2s ease',
+        ...style,
       }}
       onClick={() => onClick?.()}
       onMouseEnter={() => setIsHovered(true)}

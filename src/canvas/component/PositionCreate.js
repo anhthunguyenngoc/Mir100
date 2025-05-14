@@ -13,13 +13,14 @@ export const PositionCreate = ({ isVisible, setVisible, value, mode }) => {
   const [title, setTitle] = useState(null);
   const [typeOptions, setTypeOptions] = useState([]);
 
-  /** @type {[Array<api.TPostPositions>, Function]} */
+  /** @type {[api.TPostPositions, Function]} */
   const [formData, setFormData] = useState({
-    guid: value?.guid,
-    name: value?.name,
-    orientation: value?.orientation,
-    pos_x: value?.pos_x,
-    pos_y: value?.pos_y,
+    guid: value?.guid || null,
+    name: value?.name || '',
+    orientation: value?.orientation || 0,
+    pos_x: value?.pos_x || 0,
+    pos_y: value?.pos_y || 0,
+    type_id: value?.type_id || null,
   });
 
   const handleChange = (props) => {
@@ -30,56 +31,82 @@ export const PositionCreate = ({ isVisible, setVisible, value, mode }) => {
   };
 
   async function handleSubmit(event) {
-    event.preventDefault(); // Ngăn chặn hành vi gửi mặc định
+    event.preventDefault(); // Prevent default form submission
 
     const form = event.target;
 
-    handleChange({
+    const updatedData = {
       name: form['name']?.value,
       pos_x: Number(form['x-meter']?.value),
       pos_y: Number(form['y-meter']?.value),
       orientation: Number(form['orient']?.value),
       map_id: mapId,
       type_id: Number(formData.type_id),
-    });
+    };
+    
+    // Update form data with the submitted values
+    handleChange(updatedData);
 
+    // Determine which API call to make based on mode
     if (mode === 1) {
-      fetchPostPosition();
+      await fetchPostPosition(updatedData);
     } else if (mode === 2) {
-      fetchPutPosition();
+      await fetchPutPosition(updatedData);
     }
   }
 
-  const fetchPostPosition = async () => {
+  const fetchPostPosition = async (data) => {
     try {
-      const { statusCode, data } = await api.postPositions(formData);
+      const payload = {
+        ...formData,
+        ...data,
+      };
+      
+      const { statusCode, data: responseData } = await api.postPositions(payload);
       if (statusCode === api.STATUS_CODE.SUCCESS_POST) {
         setVisible(false);
         fetchCurrentMapPosition();
-        setFormData(null);
+        setFormData({
+          guid: null,
+          name: '',
+          orientation: 0,
+          pos_x: 0,
+          pos_y: 0,
+          type_id: null,
+        });
       }
     } catch (error) {
-      console.log('Error post mission');
+      console.log('Error post position:', error);
     }
   };
 
-  const fetchPutPosition = async () => {
+  const fetchPutPosition = async (data) => {
     try {
-      const { statusCode, data } = await api.putPosition(
-        formData.guid,
-        formData
-      );
+      const payload = {
+        ...formData,
+        ...data,
+      };
+      
+      const { statusCode } = await api.putPosition(formData.guid, payload);
 
       if (statusCode === api.STATUS_CODE.SUCCESS_GET) {
         setVisible(false);
         fetchCurrentMapPosition();
-        setFormData(null);
+        setFormData({
+          guid: null,
+          name: '',
+          orientation: 0,
+          pos_x: 0,
+          pos_y: 0,
+          type_id: null,
+        });
       }
     } catch (error) {
-      console.log('Error put mission');
+      console.log('Error put position:', error);
     }
   };
 
+  // Set the title based on mode
   useEffect(() => {
     if (mode === 1) {
       setTitle('Create position');
@@ -88,22 +115,39 @@ export const PositionCreate = ({ isVisible, setVisible, value, mode }) => {
     }
   }, [mode]);
 
+  // Update form data when value prop changes
   useEffect(() => {
-    handleChange({
-      guid: value?.guid,
-      name: value?.name,
-      orientation: value?.orientation,
-      pos_x: value?.pos_x,
-      pos_y: value?.pos_y,
+    if (!value) return;
+    
+    setFormData({
+      guid: value.guid || null,
+      name: value.name || '',
+      orientation: value.orientation || 0,
+      pos_x: value.pos_x || 0,
+      pos_y: value.pos_y || 0,
+      type_id: value.type_id || null,
     });
   }, [value]);
 
+  // Setup position type options
   useEffect(() => {
     const filteredData = positionTypes.filter((item) =>
       Const.POSITION_TYPE_ID.includes(Number(item.id))
     );
     setTypeOptions(filteredData);
   }, [positionTypes]);
+
+  // Find the default type value
+  const getDefaultTypeValue = () => {
+    if (formData.type_id) {
+      const matched = typeOptions.find(item => Number(item.id) === Number(formData.type_id));
+      return matched ? { guid: matched.id, name: matched.name } : null;
+    }
+    
+    return typeOptions.length > 0 
+      ? { guid: typeOptions[0].id, name: typeOptions[0].name } 
+      : null;
+  };
 
   return (
     isVisible && (
@@ -119,17 +163,17 @@ export const PositionCreate = ({ isVisible, setVisible, value, mode }) => {
             <h2>{title}</h2>
           </div>
           <div>
-            <label for="name">Name</label>
+            <label htmlFor="name">Name</label>
             <input
               name="name"
               type="text"
-              value={formData?.name}
+              value={formData.name || ''}
               onChange={(e) => handleChange({ name: e.target.value })}
             />
           </div>
           <div className="flex row full-width gap-frame">
             <div className="flex col full-width gap-5px">
-              <label for="type">Type</label>
+              <label htmlFor="type">Type</label>
               <Comps.SelectionDropdown
                 styleClass="full-height full-width align-center background"
                 containerStyleClass="full-height"
@@ -142,28 +186,15 @@ export const PositionCreate = ({ isVisible, setVisible, value, mode }) => {
                 onChange={(v) => {
                   handleChange({ type_id: v.guid });
                 }}
-                defaultValue={
-                  value.type_id
-                    ? (() => {
-                        const matched = typeOptions.find(
-                          (item) => item.guid === value.guid
-                        );
-                        return matched
-                          ? { guid: matched.id, name: matched.name }
-                          : null;
-                      })()
-                    : typeOptions.length > 0
-                      ? { guid: typeOptions[0].id, name: typeOptions[0].name }
-                      : null
-                }
+                defaultValue={getDefaultTypeValue()}
               />
             </div>
             <div className="flex col full-width gap-5px">
-              <label for="orient">Orientation from X-asis</label>
+              <label htmlFor="orient">Orientation from X-axis</label>
               <input
                 name="orient"
                 type="number"
-                value={formData?.orientation}
+                value={formData.orientation || 0}
                 onChange={(e) =>
                   handleChange({ orientation: Number(e.target.value) })
                 }
@@ -172,22 +203,22 @@ export const PositionCreate = ({ isVisible, setVisible, value, mode }) => {
           </div>
           <div className="flex row full-width gap-frame">
             <div className="flex col full-width gap-5px">
-              <label for="x-meter">X coordinate in meters</label>
+              <label htmlFor="x-meter">X coordinate in meters</label>
               <input
                 name="x-meter"
                 type="number"
-                value={formData?.pos_x}
+                value={formData.pos_x || 0}
                 onChange={(e) =>
                   handleChange({ pos_x: Number(e.target.value) })
                 }
               />
             </div>
             <div className="flex col full-width gap-5px">
-              <label for="y-meter">Y coordinate in meters:</label>
+              <label htmlFor="y-meter">Y coordinate in meters:</label>
               <input
                 name="y-meter"
                 type="number"
-                value={formData?.pos_y}
+                value={formData.pos_y || 0}
                 onChange={(e) =>
                   handleChange({ pos_y: Number(e.target.value) })
                 }

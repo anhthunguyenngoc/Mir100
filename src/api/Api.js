@@ -557,7 +557,6 @@ export const deleteMissionQueueId = async (id) => {
  */
 export const deletePosition = async (guid) => {
   const response = await deleteAPI(URL.deletePositionId(guid));
-  console.log(response);
   return {
     statusCode: response.statusCode,
   };

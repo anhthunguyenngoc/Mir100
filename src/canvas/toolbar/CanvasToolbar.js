@@ -8,8 +8,6 @@ import {
   SelectionDropdown,
 } from '../../components';
 import * as Const from '../../constant';
-import { PathControl } from 'canvas/path-control';
-import { random } from 'testt';
 
 const verticalLine = {
   width: '1px',
@@ -38,7 +36,7 @@ export const CanvasToolbar = ({
   hasShapeSelected,
   editable,
   setEditable,
-  PathControl,
+  saveEditMap,
 }) => {
   const [selectOptions, setSelectOptions] = useState(Const.select);
   const [lineOptions, setLineOptions] = useState(Const.line);
@@ -87,7 +85,7 @@ export const CanvasToolbar = ({
             borderBottomLeftRadius: '5px',
             width: '79.9px',
           }}
-          onClick={() => setEditable(false)}
+          onClick={() => {setEditable(false); saveEditMap()}}
         >
           <img className="size-20px" src={Const.ImageSrc['save']}></img>
         </button>
@@ -292,8 +290,11 @@ export const CanvasToolbar = ({
       </div>
     </div>
   ) : (
-    <div className="flex row space-between full-width">
-      <div className="flex row" style={{gap: '1px'}}>
+    <div
+      className="flex row space-between full-width"
+      style={{ marginBottom: '5px' }}
+    >
+      <div className="flex row" style={{ gap: '1px' }}>
         <SmallToolButton
           imageSrc="search"
           showExpand={false}
@@ -301,7 +302,7 @@ export const CanvasToolbar = ({
           buttonStyle={{
             borderRadius: '0',
             borderTopLeftRadius: '5px',
-              borderBottomLeftRadius: '5px',
+            borderBottomLeftRadius: '5px',
           }}
         />
         <SmallToolButton
@@ -324,7 +325,7 @@ export const CanvasToolbar = ({
           buttonStyle={{
             borderRadius: '0',
             borderTopRightRadius: '5px',
-              borderBottomRightRadius: '5px',
+            borderBottomRightRadius: '5px',
           }}
           onClick={() => {
             toggleMode('add-pos');
@@ -332,77 +333,105 @@ export const CanvasToolbar = ({
         />
       </div>
 
-      {PathControl}
-
-      <ul className="flex row full-height width-fit-content gap-5px">
+      <div className="flex row" style={{ gap: '10px' }}>
         <div className="flex row" style={{ gap: '1px' }}>
-          {[6, 0, 3]
-            .map((index) => pathOptions[index])
-            .map((option, index) => {
-              const setOptionFunc = setOptionsMap[option.id] || (() => {}); // Nếu không có thì dùng function rỗng
+          <SmallToolButton
+            imageSrc="undo"
+            showExpand={false}
+            alt="Undo"
+            onClick={() => undo()}
+            isActive={undoActive}
+          />
+          <SmallToolButton
+            imageSrc="redo"
+            showExpand={false}
+            alt="Redo"
+            onClick={() => redo()}
+            isActive={redoActive}
+          />
 
-              return (
-                <SmallToolButton
-                  key={option.id}
-                  id={option.id}
-                  alt={option.alt}
-                  imageSrc={option.imgSrc}
-                  toggleMode={toggleMode}
-                  showExpand={option.showExpand}
-                  options={option.options}
-                  setOptions={setOptionFunc} // Truyền hàm set tương ứng
-                  isActive={true}
-                  buttonStyle={{
-                    borderRadius: '0',
-                    ...(index === 0 && {
-                      borderTopLeftRadius: '5px',
-                      borderBottomLeftRadius: '5px',
-                    }),
-                    ...(index === 2 && {
-                      borderTopRightRadius: '5px',
-                      borderBottomRightRadius: '5px',
-                    }),
-                  }}
-                />
-              );
-            })}
+          <SmallToolButton
+            imageSrc="bin"
+            showExpand={false}
+            alt="Delete"
+            onClick={() => removeShape()}
+          />
         </div>
-        <div className="flex row" style={{ gap: '1px' }}>
-          {[1, 2, 4, 5]
-            .map((index) => pathOptions[index])
-            .map((option, index) => {
-              const setOptionFunc = setOptionsMap[option.id] || (() => {}); // Nếu không có thì dùng function rỗng
 
-              return (
-                <SmallToolButton
-                  key={option.id}
-                  id={option.id}
-                  alt={option.alt}
-                  imageSrc={option.imgSrc}
-                  toggleMode={toggleMode}
-                  showExpand={true}
-                  options={option.options}
-                  setOptions={setOptionFunc} // Truyền hàm set tương ứng
-                  isActive={true}
-                  buttonStyle={{
-                    borderRadius: '0',
-                    ...(index === 0 && {
-                      borderTopLeftRadius: '5px',
-                      borderBottomLeftRadius: '5px',
-                    }),
-                  }}
-                  expandStyle={{
-                    borderRadius: '0',
-                    ...(index === 3 && {
-                      borderTopRightRadius: '5px',
-                      borderBottomRightRadius: '5px',
-                    }),
-                  }}
-                />
-              );
-            })}
-        </div>
-      </ul>
+        <ul
+          className="flex row full-height width-fit-content"
+          style={{ gap: '3px' }}
+        >
+          <div className="flex row" style={{ gap: '1px' }}>
+            {[6, 0, 3]
+              .map((index) => pathOptions[index])
+              .map((option, index) => {
+                const setOptionFunc = setOptionsMap[option.id] || (() => {}); // Nếu không có thì dùng function rỗng
+
+                return (
+                  <SmallToolButton
+                    key={option.id}
+                    id={option.id}
+                    alt={option.alt}
+                    imageSrc={option.imgSrc}
+                    toggleMode={toggleMode}
+                    showExpand={option.showExpand}
+                    options={option.options}
+                    setOptions={setOptionFunc} // Truyền hàm set tương ứng
+                    isActive={true}
+                    buttonStyle={{
+                      borderRadius: '0',
+                      ...(index === 0 && {
+                        borderTopLeftRadius: '5px',
+                        borderBottomLeftRadius: '5px',
+                      }),
+                      ...(index === 2 && {
+                        borderTopRightRadius: '5px',
+                        borderBottomRightRadius: '5px',
+                      }),
+                    }}
+                  />
+                );
+              })}
+          </div>
+
+          <div className="flex row" style={{ gap: '1px' }}>
+            {[1, 2, 4, 5]
+              .map((index) => pathOptions[index])
+              .map((option, index) => {
+                const setOptionFunc = setOptionsMap[option.id] || (() => {}); // Nếu không có thì dùng function rỗng
+
+                return (
+                  <SmallToolButton
+                    key={option.id}
+                    id={option.id}
+                    alt={option.alt}
+                    imageSrc={option.imgSrc}
+                    toggleMode={toggleMode}
+                    showExpand={true}
+                    options={option.options}
+                    setOptions={setOptionFunc} // Truyền hàm set tương ứng
+                    isActive={true}
+                    buttonStyle={{
+                      borderRadius: '0',
+                      ...(index === 0 && {
+                        borderTopLeftRadius: '5px',
+                        borderBottomLeftRadius: '5px',
+                      }),
+                    }}
+                    expandStyle={{
+                      borderRadius: '0',
+                      ...(index === 3 && {
+                        borderTopRightRadius: '5px',
+                        borderBottomRightRadius: '5px',
+                      }),
+                    }}
+                  />
+                );
+              })}
+          </div>
+        </ul>
+      </div>
 
       <SmallToolButton
         imageSrc="edit"

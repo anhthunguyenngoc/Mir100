@@ -2,17 +2,30 @@ import { useState, useRef, useEffect } from 'react';
 import * as Const from '../constant';
 
 // Component Tooltip chính với hiệu ứng nhảy lên khi xuất hiện
-export const PositionTooltip = ({
+export const Tooltip = ({
   children,
   hoverContent,
   clickContent,
   position = 'top',
   style = {},
-  tooltipPosition,
-  isHoverVisible,
-  isClickVisible,
-  setIsClickVisible,
 }) => {
+  const [isHoverVisible, setIsHoverVisible] = useState(false);
+  const [isClickVisible, setIsClickVisible] = useState(false);
+  const triggerRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (triggerRef.current && !triggerRef.current.contains(event.target)) {
+        setIsClickVisible(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   // Xác định tooltip nào nên hiển thị
   const shouldShowHover = isHoverVisible && !isClickVisible && hoverContent;
   const shouldShowClick = isClickVisible && clickContent;
@@ -139,13 +152,14 @@ export const PositionTooltip = ({
 
   return (
     <div
+      ref={triggerRef}
       style={{
-        position: 'absolute',
+        position: 'relative',
         display: 'inline-block',
-        left: tooltipPosition.x,
-        top: tooltipPosition.y,
       }}
-      onMouseLeave={() => setIsClickVisible(false)}
+      onMouseEnter={() => setIsHoverVisible(true)}
+      onMouseLeave={() => setIsHoverVisible(false)}
+      onClick={() => setIsClickVisible(!isClickVisible)}
     >
       {children}
 
@@ -155,7 +169,8 @@ export const PositionTooltip = ({
           style={{
             position: 'absolute',
             zIndex: 4,
-            backgroundColor: Const.Color.WHITE,
+            backgroundColor: Const.Color.BUTTON,
+            padding: '4px 8px',
             color: 'white',
             borderRadius: '4px',
             minWidth: 'max-content',
@@ -184,7 +199,8 @@ export const PositionTooltip = ({
           style={{
             position: 'absolute',
             zIndex: 4,
-            backgroundColor: Const.Color.WHITE,
+            backgroundColor: Const.Color.BUTTON,
+            padding: '4px 8px',
             color: 'white',
             borderRadius: '4px',
             minWidth: 'max-content',

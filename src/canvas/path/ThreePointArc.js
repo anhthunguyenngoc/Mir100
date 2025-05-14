@@ -226,6 +226,7 @@ export const ThreePointArc = ({
   points,
   pointerLength,
   pointerWidth,
+  pointRadius,
   fill,
   dash,
   stroke,
@@ -237,7 +238,6 @@ export const ThreePointArc = ({
   onClick,
   selected,
   isDrawing,
-  onUpdatePoints,
   showStartPoint,
   direction,
   mode,
@@ -255,6 +255,7 @@ export const ThreePointArc = ({
   useEffect(() => {
     if (points.length < 3) return;
     const arc = calculateArc(points, mode, angle, radius);
+    console.log(arc);
     if (arc) {
       onUpdateShape({
         startP: arc.startP,
@@ -338,7 +339,7 @@ export const ThreePointArc = ({
               console.log(start, center, end);
 
               // Gửi tọa độ cập nhật lên state
-              onUpdatePoints([start, center, end]);
+              onUpdateShape({ points: [start, center, end] });
 
               // Giữ vị trí của Arc về (0,0) để tránh lỗi kéo thả
               // arc.position({ x: 0, y: 0 });
@@ -373,9 +374,9 @@ export const ThreePointArc = ({
                 : points[0].y
             }
             points={[-10, 0, 0, 0]}
-            pointerLength={15}
-            pointerWidth={10}
-            fill={stroke}
+            pointerLength={pointerLength}
+            pointerWidth={pointerWidth}
+            fill={fill}
             stroke={selected ? 'red' : hovered ? 'blue' : stroke} // Đổi màu khi hover
             strokeWidth={hovered ? strokeWidth + 2 : strokeWidth}
             rotation={getArrowRotation()}
@@ -387,10 +388,10 @@ export const ThreePointArc = ({
           <MyCircle
             x={point.x}
             y={point.y}
-            radius={6}
+            radius={pointRadius}
             fill="white"
             stroke="blue"
-            strokeWidth={1}
+            strokeWidth={strokeWidth}
             draggable={true}
             isVisible={!isDrawing && (hovered || selected || showStartPoint)}
             onDragEnd={(x, y) => {

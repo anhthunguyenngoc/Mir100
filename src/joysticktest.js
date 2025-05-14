@@ -8,7 +8,7 @@ export const DefaultDashboard = () => {
   useEffect(() => {
     let protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
     let port = window.location.protocol === 'https:' ? '443' : '9090';
-    let ip = '192.168.0.172';
+    let ip = '192.168.0.173';
 
     const rosInstance = new ROSLIB.Ros({
       url: `${protocol}${ip}:${port}`,
@@ -155,3 +155,29 @@ export const DefaultDashboard = () => {
     </div>
   );
 };
+
+// setTooltipContent(<>
+//           <div className="flex col gap-10px" style={{backgroundColor: Const.Color.BUTTON, padding: '8px 4px'}}>
+//             {[
+//               actionList.GOTO,
+//               actionList.CREATE_PATH,
+//               actionList.MOVE,
+//               actionList.EDIT,
+//               actionList.DELETE,
+//             ].map((action) => {
+//               return (
+//                   <button
+//                       className="button full-width"
+//                       style={{
+//                         backgroundColor: action.buttonColor,
+//                         color: action.textColor,
+//                         borderColor: action.buttonColor,
+//                       }}
+//                       onClick={() => action?.onClick()}
+//                     >
+//                       {action.buttonText.toUpperCase()}
+//                     </button>
+//               );
+//             })}
+//           </div>
+//       </>);

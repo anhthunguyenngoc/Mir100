@@ -11,16 +11,53 @@ export const MyImage = ({
   width,
   height,
   onClick,
+  onMouseEnter,
+  onMouseLeave,
+  onDblClick,
 }) => {
   const [image, setImage] = useState(null);
 
   useEffect(() => {
-    const img = new window.Image();
-    img.src = imageSrc; // hoặc PNG cũng được
-    img.onload = () => setImage(img);
-  }, []);
+    if (!imageSrc) return;
 
-  if (!width || !height || !x || !y) return;
+    const img = new window.Image();
+    img.src = imageSrc;
+    img.onload = () => {
+      if (img.width > 0 && img.height > 0) {
+        setImage(img);
+      } else {
+        console.warn('Loaded image has 0 width or height:', imageSrc);
+      }
+    };
+    img.onerror = () => {
+      console.warn('Failed to load image:', imageSrc);
+    };
+  }, [imageSrc]);
+
+  if (!image || !width || !height || x === undefined || y === undefined)
+    return null;
+
+  const handleOnClick = (e) => {
+    const currentX = e.target.x(); // Lấy tọa độ X hiện tại của Image
+    const currentY = e.target.y() - width / 2; // Lấy tọa độ Y hiện tại của Image
+    if (onClick) onClick(e, currentX, currentY);
+  };
+
+  const handleOnMouseEnter = (e) => {
+    const currentX = e.target.x(); // Lấy tọa độ X hiện tại của Image
+    const currentY = e.target.y() - width / 2; // Lấy tọa độ Y hiện tại của Image
+    if (onMouseEnter) onMouseEnter(e, currentX, currentY);
+  };
+
+  const handleOnDblClick = (e) => {
+    const currentX = e.target.x(); // Lấy tọa độ X hiện tại của Image
+    const currentY = e.target.y() - width / 2; // Lấy tọa độ Y hiện tại của Image
+    if (onDblClick) onDblClick(e, currentX, currentY);
+  };
+
+  const handleOnMouseLeave = (e) => {
+    if (onMouseLeave) onMouseLeave(e);
+  };
 
   return (
     image && (
@@ -33,7 +70,10 @@ export const MyImage = ({
         offsetX={width / 2} // để xoay quanh tâm
         offsetY={height / 2}
         rotation={-rotation}
-        onClick={() => onClick?.()}
+        onClick={handleOnClick}
+        onMouseEnter={handleOnMouseEnter}
+        onMouseLeave={handleOnMouseLeave}
+        onDblClick={handleOnDblClick}
       />
     )
   );

@@ -9,7 +9,7 @@ export const ImageButton = ({
 }) => {
   return (
     <button className={className} style={style} onClick={onClick}>
-      <img className={imageClass} src={ImageSrc[imageId]} loading="lazy" />
+      <img className="size-20px" src={ImageSrc[imageId]} loading="lazy" />
     </button>
   );
 };

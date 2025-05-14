@@ -44,8 +44,8 @@ export const SmallToolButton = ({
       {showExpand && (
         <div className="flex col relative-pos expand-container">
           <button
-            className={`tool-btn icon-btn radius-5px center padding-4px ${showSelection ? 'selected' : ''} ${!isActive ? 'inactive' : ''}`}
-            style={{ height: '38.4px', ...expandStyle }}
+            className={`tool-btn icon-btn full-height radius-5px center padding-4px ${showSelection ? 'selected' : ''} ${!isActive ? 'inactive' : ''}`}
+            style={{ ...expandStyle }}
             onClick={(e) => {
               if (isActive) {
                 setShowSelection(!showSelection);

@@ -60,10 +60,26 @@ export const MapEdit = () => {
           </button>
         </div>
 
+<<<<<<< Updated upstream
           <section id="map-canvas">
             <CanvasView mapId={guid} />
           </section>
       </div>
+=======
+<<<<<<< Updated upstream
+        <div className="map">
+          <div ref={containerRef} id="map-canvas">
+            <CanvasView mapId={guid} />
+          </div>
+        </div>
+      </section>
+=======
+        <section id="map-canvas">
+          <CanvasView mapId={guid} />
+        </section>
+      </div>
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
     </div>
   );
 };

@@ -27,13 +27,22 @@ export const SelectionDropdown = ({
     onChange?.(selected);
   }, [selected]);
 
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
   useEffect(() => {
     if (defaultValue && defaultValue.guid !== selected?.guid) {
       setSelected(defaultValue);
     }
   }, [defaultValue]);
 
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
   return (
     <OutsideClickHandler onOutsideClick={() => setIsOpen(false)}>
       <div

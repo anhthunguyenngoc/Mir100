@@ -42,10 +42,21 @@ export const PositionCreate = ({ isVisible, setVisible, value, mode }) => {
       orientation: Number(form['orient']?.value),
       map_id: mapId,
       type_id: Number(formData.type_id),
+<<<<<<< Updated upstream
     };
     
     // Update form data with the submitted values
     handleChange(updatedData);
+=======
+<<<<<<< Updated upstream
+    });
+=======
+    };
+
+    // Update form data with the submitted values
+    handleChange(updatedData);
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
     // Determine which API call to make based on mode
     if (mode === 1) {
@@ -57,12 +68,25 @@ export const PositionCreate = ({ isVisible, setVisible, value, mode }) => {
 
   const fetchPostPosition = async (data) => {
     try {
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+      const { statusCode, data } = await api.postPositions(formData);
+=======
+>>>>>>> Stashed changes
       const payload = {
         ...formData,
         ...data,
       };
+<<<<<<< Updated upstream
       
       const { statusCode, data: responseData } = await api.postPositions(payload);
+=======
+
+      const { statusCode, data: responseData } =
+        await api.postPositions(payload);
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
       if (statusCode === api.STATUS_CODE.SUCCESS_POST) {
         setVisible(false);
         fetchCurrentMapPosition();
@@ -82,12 +106,27 @@ export const PositionCreate = ({ isVisible, setVisible, value, mode }) => {
 
   const fetchPutPosition = async (data) => {
     try {
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+      const { statusCode, data } = await api.putPosition(
+        formData.guid,
+        formData
+      );
+=======
+>>>>>>> Stashed changes
       const payload = {
         ...formData,
         ...data,
       };
+<<<<<<< Updated upstream
       
       const { statusCode } = await api.putPosition(formData.guid, payload);
+=======
+
+      const { statusCode } = await api.putPosition(formData.guid, payload);
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
       if (statusCode === api.STATUS_CODE.SUCCESS_GET) {
         setVisible(false);
@@ -117,8 +156,21 @@ export const PositionCreate = ({ isVisible, setVisible, value, mode }) => {
 
   // Update form data when value prop changes
   useEffect(() => {
+<<<<<<< Updated upstream
     if (!value) return;
     
+=======
+<<<<<<< Updated upstream
+    handleChange({
+      guid: value?.guid,
+      name: value?.name,
+      orientation: value?.orientation,
+      pos_x: value?.pos_x,
+      pos_y: value?.pos_y,
+=======
+    if (!value) return;
+
+>>>>>>> Stashed changes
     setFormData({
       guid: value.guid || null,
       name: value.name || '',
@@ -126,6 +178,10 @@ export const PositionCreate = ({ isVisible, setVisible, value, mode }) => {
       pos_x: value.pos_x || 0,
       pos_y: value.pos_y || 0,
       type_id: value.type_id || null,
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
     });
   }, [value]);
 
@@ -137,6 +193,7 @@ export const PositionCreate = ({ isVisible, setVisible, value, mode }) => {
     setTypeOptions(filteredData);
   }, [positionTypes]);
 
+<<<<<<< Updated upstream
   // Find the default type value
   const getDefaultTypeValue = () => {
     if (formData.type_id) {
@@ -149,6 +206,25 @@ export const PositionCreate = ({ isVisible, setVisible, value, mode }) => {
       : null;
   };
 
+=======
+<<<<<<< Updated upstream
+=======
+  // Find the default type value
+  const getDefaultTypeValue = () => {
+    if (formData.type_id) {
+      const matched = typeOptions.find(
+        (item) => Number(item.id) === Number(formData.type_id)
+      );
+      return matched ? { guid: matched.id, name: matched.name } : null;
+    }
+
+    return typeOptions.length > 0
+      ? { guid: typeOptions[0].id, name: typeOptions[0].name }
+      : null;
+  };
+
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
   return (
     isVisible && (
       <>

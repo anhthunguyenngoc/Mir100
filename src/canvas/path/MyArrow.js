@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Arrow, Group } from 'react-konva';
 import { MyCircle } from './MyCircle';
 import { LineDirection } from '../../constant';
-import { normalizeAbsolutePosition } from 'canvas/utils';
+import * as Utils from '../utils';
 
 export const MyArrow = ({
   ref,
@@ -27,6 +27,7 @@ export const MyArrow = ({
   endP,
   onUpdateShape,
   saveState,
+  addSnapPoint,
 }) => {
   const [hovered, setHovered] = useState(false);
 
@@ -57,7 +58,7 @@ export const MyArrow = ({
         draggable={draggable}
         onDragEnd={(e) => {
           const arrow = e.target;
-          const absPos = normalizeAbsolutePosition(arrow.getAbsolutePosition()); // Lấy vị trí tuyệt đối của Arrow
+          const absPos = Utils.normalizeAbsolutePosition(arrow.getAbsolutePosition()); // Lấy vị trí tuyệt đối của Arrow
 
           const arrowPoints = arrow.points();
           const startX = absPos.x + arrowPoints[0];
@@ -90,8 +91,8 @@ export const MyArrow = ({
           onDragStart?.();
         }}
       />
-      {!isDrawing &&
-        [startP, endP].map((point, index) => (
+      {
+        [startP, endP, Utils.getMidPoint(startP, endP)].map((point, index) => (
           <MyCircle
             x={point.x}
             y={point.y}
@@ -100,7 +101,7 @@ export const MyArrow = ({
             stroke="blue"
             strokeWidth={strokeWidth}
             draggable={true}
-            isVisible={!isDrawing && (hovered || selected)}
+            isVisible={(hovered || selected)}
             onDragEnd={(x, y) => {
               const newPos = onDrag(x, y);
               onUpdateShape(
@@ -117,6 +118,9 @@ export const MyArrow = ({
               saveState();
             }}
             hitboxVisible={!isDrawing}
+            onHitboxEnter={(x, y) => {
+              addSnapPoint(x, y)
+            }}
           />
         ))}
     </Group>

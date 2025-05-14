@@ -33,7 +33,6 @@ export const SelectionDropdown = ({
     }
   }, [defaultValue]);
 
-
   return (
     <OutsideClickHandler onOutsideClick={() => setIsOpen(false)}>
       <div

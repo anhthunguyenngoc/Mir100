@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef, useMemo, use } from 'react';
 import { Stage, Layer, Rect, Line, Text, Circle } from 'react-konva';
 
 import './canvas.css';
-import { CanvasToolbar } from './toolbar/CanvasToolbar';
 import * as CanvasComponent from './component';
 import * as Const from '../constant';
 import * as Utils from './utils';
@@ -59,7 +58,7 @@ const Canvas = () => {
 
   const [newLine, setNewLine] = useState(null);
   const [newPath, setNewPath] = useState([]);
-  const [isContinuosLineFlag, setIsContinuosLineFlag] = useState(false);
+  const [isContinuosLine, setIsContinuosLine] = useState(false);
   const [sharedPoints, setSharedPoints] = useState(new Map());
 
   const [newCircle, setNewCircle] = useState(null);
@@ -82,6 +81,7 @@ const Canvas = () => {
   const [gridSize, setGridSize] = useState(Const.INITIAL_GRID_SIZE);
   const [gridData, setGridData] = useState([]);
   const [snapPoint, setSnapPoint] = useState(null);
+  const [customSnapPoints, setCustomSnapPoints] = useState([]);
 
   //Selection
   const groupRefs = useRef({});
@@ -307,39 +307,39 @@ const Canvas = () => {
     const lines = [];
 
     //!!!!
-    // Lặp qua các zones trong layers
-    for (const zones in map?.metadata.layers) {
-      // Lấy shapes của từng zone
-      const shapes = map?.metadata.layers[zones].shapes;
+    // // Lặp qua các zones trong layers
+    // for (const zones in map?.metadata.layers) {
+    //   // Lấy shapes của từng zone
+    //   const shapes = map?.metadata.layers[zones].shapes;
 
-      // Nếu có shapes, lặp qua các shape để tạo các Line
-      shapes.forEach((zone, index) => {
-        lines.push(
-          <Line
-            points={zone.polygon.flatMap((point) => [point.x, point.y])}
-            stroke={zone.color}
-            strokeWidth={zone.brushsize}
-            closed={shapes[0]?.type === 'shape'} // Giữ `false` nếu không muốn tạo đa giác kín
-            fill={zone.color}
-          />
-        );
-      });
-    }
-
-    //$$$Test */
-    // Object.entries(Const.metadata).forEach(([key, zones]) => {
-    //   zones.forEach((zone) => {
+    //   // Nếu có shapes, lặp qua các shape để tạo các Line
+    //   shapes.forEach((zone, index) => {
     //     lines.push(
     //       <Line
     //         points={zone.polygon.flatMap((point) => [point.x, point.y])}
     //         stroke={zone.color}
     //         strokeWidth={zone.brushsize}
-    //         closed={zone.type === 'shape'}
+    //         closed={shapes[0]?.type === 'shape'} // Giữ `false` nếu không muốn tạo đa giác kín
     //         fill={zone.color}
     //       />
     //     );
     //   });
-    // });
+    // }
+
+    //$$$Test */
+    Object.entries(Const.metadata).forEach(([key, zones]) => {
+      zones.forEach((zone) => {
+        lines.push(
+          <Line
+            points={zone.polygon.flatMap((point) => [point.x, point.y])}
+            stroke={zone.color}
+            strokeWidth={zone.brushsize}
+            closed={zone.type === 'shape'}
+            fill={zone.color}
+          />
+        );
+      });
+    });
 
     // Trả về mảng các phần tử Line
     return lines;
@@ -382,100 +382,12 @@ const Canvas = () => {
 
   const renderPositions = () => {
     //!!!
-    if (!mapPositions) return;
+    // if (!mapPositions) return;
 
-    return mapPositions.map((position) => {
-      const p = Utils.getCanvasPosition(position.pos_x, position.pos_y, map);
-      return (
-        <ShapeComp.MyImage
-          x={p.x}
-          y={p.y}
-          rotation={position.orientation}
-          imageSrc={Const.getPositionImage(position.type_id)}
-          width={20}
-          height={20}
-          onDblClick={(e, x, y) => {
-            setPositionDialog({
-              isVisible: true,
-              name: position.name,
-              type_id: position.type_id,
-              id: position.guid,
-            });
-            setIsClickVisible(false);
-          }}
-          onClick={(e, x, y) => {
-            setPositionDialog({
-              isVisible: false,
-              name: position.name,
-              type_id: position.type_id,
-              id: position.guid,
-            });
-            handlePositionClick(e, x, y);
-            setTooltipContent(
-              <div className="flex row" style={{ gap: '2px' }}>
-                {[
-                  actionList.GOTO,
-                  actionList.CREATE_PATH,
-                  actionList.MOVE,
-                  actionList.EDIT,
-                  actionList.DELETE,
-                ].map((action, index) => {
-                  return (
-                    <Comp.Tooltip hoverContent={action.alt}>
-                      <Comp.SmallToolButton
-                        imageSrc={action.imageSrc}
-                        showExpand={false}
-                        alt={action.alt}
-                        onClick={() => action?.onClick(position.guid)}
-                        buttonStyle={{
-                          borderRadius: '0',
-                          ...(index === 0 && {
-                            borderTopLeftRadius: '5px',
-                            borderBottomLeftRadius: '5px',
-                          }),
-                          ...(index === 4 && {
-                            borderTopRightRadius: '5px',
-                            borderBottomRightRadius: '5px',
-                          }),
-                        }}
-                      />
-                    </Comp.Tooltip>
-                  );
-                })}
-              </div>
-            );
-          }}
-          onMouseEnter={(e, x, y) => {
-            handlePositionHover(e, x, y);
-            setTooltipContent(
-              <div
-                className="radius-5px"
-                style={{
-                  padding: '5px 10px',
-                  backgroundColor: Const.Color.BUTTON,
-                }}
-              >
-                {position.name}
-              </div>
-            );
-          }}
-          onMouseLeave={() => {
-            setIsHoverVisible(false);
-          }}
-        />
-      );
-    });
-
-    // return fakeMapPositions.map((position) => {
-    //   const p = Utils.getCanvasPosition(position.pos_x, position.pos_y, {
-    //     metadata: { height: 568 },
-    //     resolution: 0.05,
-    //     origin_x: 0,
-    //     origin_y: 0,
-    //   });
+    // return mapPositions.map((position) => {
+    //   const p = Utils.getCanvasPosition(position.pos_x, position.pos_y, map);
     //   return (
     //     <ShapeComp.MyImage
-    //       ref={imageRef}
     //       x={p.x}
     //       y={p.y}
     //       rotation={position.orientation}
@@ -492,13 +404,13 @@ const Canvas = () => {
     //         setIsClickVisible(false);
     //       }}
     //       onClick={(e, x, y) => {
-    //         handlePositionClick(e, x, y);
     //         setPositionDialog({
     //           isVisible: false,
     //           name: position.name,
     //           type_id: position.type_id,
     //           id: position.guid,
     //         });
+    //         handlePositionClick(e, x, y);
     //         setTooltipContent(
     //           <div className="flex row" style={{ gap: '2px' }}>
     //             {[
@@ -514,14 +426,14 @@ const Canvas = () => {
     //                     imageSrc={action.imageSrc}
     //                     showExpand={false}
     //                     alt={action.alt}
-    //                     onClick={action?.onClick}
+    //                     onClick={() => action?.onClick(position.guid)}
     //                     buttonStyle={{
     //                       borderRadius: '0',
     //                       ...(index === 0 && {
     //                         borderTopLeftRadius: '5px',
     //                         borderBottomLeftRadius: '5px',
     //                       }),
-    //                       ...(index === 2 && {
+    //                       ...(index === 4 && {
     //                         borderTopRightRadius: '5px',
     //                         borderBottomRightRadius: '5px',
     //                       }),
@@ -553,6 +465,94 @@ const Canvas = () => {
     //     />
     //   );
     // });
+
+    return fakeMapPositions.map((position) => {
+      const p = Utils.getCanvasPosition(position.pos_x, position.pos_y, {
+        metadata: { height: 568 },
+        resolution: 0.05,
+        origin_x: 0,
+        origin_y: 0,
+      });
+      return (
+        <ShapeComp.MyImage
+          ref={imageRef}
+          x={p.x}
+          y={p.y}
+          rotation={position.orientation}
+          imageSrc={Const.getPositionImage(position.type_id)}
+          width={20}
+          height={20}
+          onDblClick={(e, x, y) => {
+            setPositionDialog({
+              isVisible: true,
+              name: position.name,
+              type_id: position.type_id,
+              id: position.guid,
+            });
+            setIsClickVisible(false);
+          }}
+          onClick={(e, x, y) => {
+            handlePositionClick(e, x, y);
+            setPositionDialog({
+              isVisible: false,
+              name: position.name,
+              type_id: position.type_id,
+              id: position.guid,
+            });
+            setTooltipContent(
+              <div className="flex row" style={{ gap: '2px' }}>
+                {[
+                  actionList.GOTO,
+                  actionList.CREATE_PATH,
+                  actionList.MOVE,
+                  actionList.EDIT,
+                  actionList.DELETE,
+                ].map((action, index) => {
+                  return (
+                    <Comp.Tooltip hoverContent={action.alt}>
+                      <Comp.SmallToolButton
+                        imageSrc={action.imageSrc}
+                        showExpand={false}
+                        alt={action.alt}
+                        onClick={action?.onClick}
+                        buttonStyle={{
+                          borderRadius: '0',
+                          ...(index === 0 && {
+                            borderTopLeftRadius: '5px',
+                            borderBottomLeftRadius: '5px',
+                          }),
+                          ...(index === 2 && {
+                            borderTopRightRadius: '5px',
+                            borderBottomRightRadius: '5px',
+                          }),
+                        }}
+                      />
+                    </Comp.Tooltip>
+                  );
+                })}
+              </div>
+            );
+          }}
+          onMouseEnter={(e, x, y) => {
+            handlePositionHover(e, x, y);
+            setTooltipContent(
+              <div
+                className="radius-5px"
+                style={{
+                  padding: '5px 10px',
+                  backgroundColor: Const.Color.BUTTON,
+                }}
+              >
+                {position.name}
+              </div>
+            );
+          }}
+          onMouseLeave={() => {
+            setIsHoverVisible(false);
+          }}
+        />
+      );
+    });
   };
 
   const renderCreatePosition = () => {
@@ -758,7 +758,7 @@ const Canvas = () => {
   };
 
   useEffect(() => {
-    if (!newLine || !isContinuosLineFlag) return;
+    if (!newLine || !isContinuosLine) return;
     initLine(newLine.startP);
   }, [drawingMode]);
 
@@ -930,6 +930,7 @@ const Canvas = () => {
       handleUpdateShape(selectedLayer.id, line.id, newProps),
     saveState: () => saveState(),
     isNew: true,
+    addSnapPoint: (x, y) => customSnapPoints.push({x, y}),
   });
 
   const shapeProps = (line) => {
@@ -1083,7 +1084,7 @@ const Canvas = () => {
     // Gọi lại setSharedPoints nếu bạn dùng local state để render
     setSharedPoints(new Map(sharedPoints));
 
-    if (isContinuosLineFlag) {
+    if (isContinuosLine) {
       initLine(line.endP);
     } else {
       setNewLine(null);
@@ -1401,8 +1402,8 @@ const Canvas = () => {
 
     if (!drawingMode) return;
 
-    if (!isContinuosLineFlag) {
-      setIsContinuosLineFlag(true);
+    if (!isContinuosLine) {
+      setIsContinuosLine(true);
     }
 
     drawShape(pointer);
@@ -1473,41 +1474,56 @@ const Canvas = () => {
     const stage = target.getStage();
     const p = stage.getPointerPosition();
 
-    // Điều chỉnh vị trí con trỏ theo tỷ lệ zoom
-    const pointer = Utils.snapToGrid(
-      zoom,
-      gridSize,
-      Utils.adjustPointerForZoom(zoom, p)
-    );
+    // // Điều chỉnh vị trí con trỏ theo tỷ lệ zoom
+    // const pointer = Utils.snapToGrid(
+    //   zoom,
+    //   gridSize,
+    //   Utils.adjustPointerForZoom(zoom, p)
+    // );
 
-    setMousePos({
-      x: pointer.x,
-      y: pointer.y,
-      xRuler: p.x - Const.RULER_SIZE,
-      yRuler: p.y - Const.RULER_SIZE,
-    });
-    setSnapPoint(Utils.snapToGrid(zoom, gridSize, pointer));
+    // setMousePos({
+    //   x: pointer.x,
+    //   y: pointer.y,
+    //   xRuler: p.x - Const.RULER_SIZE,
+    //   yRuler: p.y - Const.RULER_SIZE,
+    // });
+    // setSnapPoint(Utils.snapToGrid(zoom, gridSize, pointer));
+
+    // 1. Lấy pointer đã chỉnh theo zoom
+  const adjustedPointer = Utils.adjustPointerForZoom(zoom, p);
+
+  // 3. Tính snapPoint thông minh
+  const smartSnap = Utils.getSmartSnap(adjustedPointer, customSnapPoints, gridSize, zoom);
+
+  // 4. Cập nhật state
+  setMousePos({
+    x: smartSnap.x,
+    y: smartSnap.y,
+    xRuler: p.x - Const.RULER_SIZE,
+    yRuler: p.y - Const.RULER_SIZE,
+  });
+
+  setSnapPoint(smartSnap);
 
     //Selection
     if (drawingMode === 'rect-selection') {
       if (selectionBox) {
         setSelectionBox({
-          x: Math.min(startPoint.x, pointer.x),
-          y: Math.min(startPoint.y, pointer.y),
-          width: Math.abs(startPoint.x - pointer.x),
-          height: Math.abs(startPoint.y - pointer.y),
+          x: Math.min(startPoint.x, snapPoint.x),
+          y: Math.min(startPoint.y, snapPoint.y),
+          width: Math.abs(startPoint.x - snapPoint.x),
+          height: Math.abs(startPoint.y - snapPoint.y),
         });
       }
     } else if (drawingMode === 'free-selection' && selectionPoints) {
-      setSelectionPoints((prev) => [...prev, pointer.x, pointer.y]);
+      setSelectionPoints((prev) => [...prev, snapPoint.x, snapPoint.y]);
     }
-    //
 
     //Vẽ đường thẳng
     if (drawing && newLine && drawingMode === 'line') {
       setNewLine({
         ...newLine,
-        endP: { x: pointer.x, y: pointer.y },
+        endP: { x: snapPoint.x, y: snapPoint.y },
       });
     }
 
@@ -1517,31 +1533,31 @@ const Canvas = () => {
         if (drawingMode.includes('3p')) {
           setNewLine({
             ...newLine,
-            points: [...newLine.points.slice(0, 2), pointer],
+            points: [...newLine.points.slice(0, 2), snapPoint],
           });
         } else if (drawingMode === 'sca-arc' || drawingMode === 'csa-arc') {
-          const angle = ShapeComp.arcCalculateAngle(newLine.points[1], pointer);
+          const angle = ShapeComp.arcCalculateAngle(newLine.points[1], snapPoint);
           setNewLine({
             ...newLine,
             angle: angle,
-            points: [...newLine.points.slice(0, 2), pointer],
+            points: [...newLine.points.slice(0, 2), snapPoint],
           });
         } else if (drawingMode === 'sea-arc') {
-          const angle = ShapeComp.arcCalculateAngle(newLine.points[0], pointer);
+          const angle = ShapeComp.arcCalculateAngle(newLine.points[0], snapPoint);
           setNewLine({
             ...newLine,
             angle: angle,
-            points: [...newLine.points.slice(0, 2), pointer],
+            points: [...newLine.points.slice(0, 2), snapPoint],
           }); //start, end
         } else if (drawingMode === 'ser-arc') {
           const radius = ShapeComp.calculateDistance(
             newLine.points[1],
-            pointer
+            snapPoint
           );
           setNewLine({
             ...newLine,
             radius: radius,
-            points: [...newLine.points.slice(0, 2), pointer],
+            points: [...newLine.points.slice(0, 2), snapPoint],
           }); //start, end
         }
       }
@@ -1552,7 +1568,7 @@ const Canvas = () => {
       if (newLine && newLine.startP && !adjustingRadius) {
         if (drawingMode === 'sm-zigzag') {
           const start = newLine.startP;
-          const mid = pointer;
+          const mid = snapPoint;
           setNewLine({
             ...newLine,
             midP: mid,
@@ -1561,7 +1577,7 @@ const Canvas = () => {
           });
         } else if (drawingMode === 'se-zigzag') {
           const start = newLine.startP;
-          const end = pointer;
+          const end = snapPoint;
           setNewLine({
             ...newLine,
             midP: ShapeComp.calculateMidPoint(start, end),
@@ -1575,7 +1591,7 @@ const Canvas = () => {
         const p0 = tp1.x + (tp0.x > tp2.x ? radius : -radius);
         const p1 = tp0.y + (tp0.y < tp2.y ? radius : -radius);
 
-        const deltaX = pointer.x - tp1.x;
+        const deltaX = snapPoint.x - tp1.x;
 
         // Xác định vị trí của start (tp0) so với mid (tp1)
         const isLeft = tp0.x < p0; // start nằm bên trái mid
@@ -1610,8 +1626,8 @@ const Canvas = () => {
           center: { x: target.attrs.x, y: target.attrs.y },
           radius: target.attrs.outerRadius,
         };
-        const dx = pointer.x - center.x;
-        const dy = pointer.y - center.y;
+        const dx = snapPoint.x - center.x;
+        const dy = snapPoint.y - center.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
         if (Math.abs(distance - radius) <= 5) {
@@ -1621,7 +1637,7 @@ const Canvas = () => {
               name: Const.ShapeName.TANGENT,
               points: [],
             }),
-            contactPoint: pointer,
+            contactPoint: snapPoint,
             arc: { center, radius },
           });
         }
@@ -1633,8 +1649,8 @@ const Canvas = () => {
       if (newLine && newLine.startP && !adjustingRadius) {
         setNewLine({
           ...newLine,
-          bottomP: pointer,
-          endP: Utils.calculateUlineEndPoint(newLine.startP, pointer),
+          bottomP: snapPoint,
+          endP: Utils.calculateUlineEndPoint(newLine.startP, snapPoint),
         }); // Giới hạn ry ≥ 0.1
       } else if (
         newLine &&
@@ -1642,14 +1658,14 @@ const Canvas = () => {
         newLine.bottomP &&
         adjustingRadius
       ) {
-        const deltaX = pointer.x - newLine.bottomP.x; // Khoảng cách di chuột
+        const deltaX = snapPoint.x - newLine.bottomP.x; // Khoảng cách di chuột
         setNewLine({ ...newLine, ry: Math.max(0.1, deltaX) }); // Giới hạn ry ≥ 0.1
       }
     }
 
     //Vẽ đường chữ Spline
     if (drawingMode && drawingMode.includes('spline')) {
-      const { x, y } = pointer;
+      const { x, y } = snapPoint;
       if (newLine && newLine.points.length === 2) {
         setNewLine({ ...newLine, points: [...newLine.points, x, y] });
       } else if (newLine && newLine.points.length >= 4) {
@@ -1662,12 +1678,12 @@ const Canvas = () => {
 
     //Vẽ Circle
     if (newCircle && newCircle.points && newCircle.points.length >= 1) {
-      setNewCircle({ ...newCircle, points: [newCircle.points[0], pointer] });
+      setNewCircle({ ...newCircle, points: [newCircle.points[0], snapPoint] });
     } else if (newCircle && newCircle.points && newCircle.points.length === 2) {
       if (drawingMode === '3p-circle') {
         setNewCircle({
           ...newCircle,
-          points: [...newCircle.points.slice(0, 2), pointer],
+          points: [...newCircle.points.slice(0, 2), snapPoint],
         });
       }
     }
@@ -1676,7 +1692,7 @@ const Canvas = () => {
     if (newRectangle && newRectangle.startP) {
       setNewRectangle({
         ...newRectangle,
-        endP: pointer,
+        endP: snapPoint,
       });
     }
 
@@ -1687,7 +1703,7 @@ const Canvas = () => {
       newElip.points.length >= 1 &&
       !newElip.clicked
     ) {
-      setNewElip({ ...newElip, points: [newElip.points[0], pointer] });
+      setNewElip({ ...newElip, points: [newElip.points[0], snapPoint] });
     } else if (
       newElip &&
       newElip.points &&
@@ -1696,7 +1712,7 @@ const Canvas = () => {
     ) {
       setNewElip({
         ...newElip,
-        points: [newElip.points[0], newElip.points[1], pointer],
+        points: [newElip.points[0], newElip.points[1], snapPoint],
       });
     }
 
@@ -1705,19 +1721,19 @@ const Canvas = () => {
       if (newPolygon.points.length === 1) {
         setNewPolygon({
           ...newPolygon,
-          points: [...newPolygon.points, pointer],
+          points: [...newPolygon.points, snapPoint],
         });
       } else if (newPolygon.points.length >= 2) {
         setNewPolygon({
           ...newPolygon,
-          points: [...newPolygon.points.slice(0, -1), pointer],
+          points: [...newPolygon.points.slice(0, -1), snapPoint],
         });
       }
     }
 
     //Vẽ Free Shape
     if (newFreeShape) {
-      const { x, y } = pointer;
+      const { x, y } = snapPoint;
       if (newFreeShape.points.length === 2) {
         setNewFreeShape({
           ...newFreeShape,
@@ -1764,6 +1780,11 @@ const Canvas = () => {
     e.preventDefault();
   };
 
+  
+    useEffect(() => {
+      console.log(snapPoint)
+    }, [snapPoint])
+
   const handleStageDblClick = (e) => {
     if (newLine && drawingMode.includes('spline')) {
       if (newLine) {
@@ -1804,7 +1825,7 @@ const Canvas = () => {
     }
 
     if (newPath && newPath.length > 0) {
-      setIsContinuosLineFlag(false);
+      setIsContinuosLine(false);
 
       const newGroup = {
         ...lineProps({
@@ -1885,35 +1906,39 @@ const Canvas = () => {
   };
 
   const extractAllShapes = (shapes) => {
-  let result = [];
+    let result = [];
 
-  shapes.forEach(shape => {
-    if (shape.type === 'group' && Array.isArray(shape.shapes)) {
-      // Nếu là group, lấy các shape bên trong (đệ quy)
-      result.push(shape);
-      result = result.concat(extractAllShapes(shape.shapes));
-    } else {
-      // Nếu là shape thường
-      result.push(shape);
-    }
-  });
+    shapes.forEach((shape) => {
+      if (shape.type === 'group' && Array.isArray(shape.shapes)) {
+        // Nếu là group, lấy các shape bên trong (đệ quy)
+        result.push(shape);
+        result = result.concat(extractAllShapes(shape.shapes));
+      } else {
+        // Nếu là shape thường
+        result.push(shape);
+      }
+    });
 
-  return result;
-};
-
+    return result;
+  };
 
   const saveEditMap = async () => {
-    const allShapes = layers.flatMap(layer => extractAllShapes(layer.shapes));
+    const allShapes = layers.flatMap((layer) => extractAllShapes(layer.shapes));
     const converted = allShapes.map((shape) => {
       return Utils.convertShapeForMetadata(shape);
-    })
+    });
     console.log(allShapes, converted);
-    console.log({metadata: {...map?.metadata, layers: {...Utils.generateMetadataLayersFromShapes(converted)}}})
+    console.log({
+      metadata: {
+        ...map?.metadata,
+        layers: { ...Utils.generateMetadataLayersFromShapes(converted) },
+      },
+    });
 
     // api.postAreaEvents({map_id: mapId, polygon: {}, type_id: })
     // const a = await api.putMap(mapId, {metadata: btoa(JSON.stringify(map?.metadata))});
     // console.log(a);
-  }
+  };
 
   //===========================================CALL API============================================
 
@@ -1960,10 +1985,10 @@ const Canvas = () => {
 
   const obstacles = [
     map?.metadata.layers.areaprefs_forbidden.shapes,
-    map?.metadata.layers.walls.shapes
-  ]
+    map?.metadata.layers.walls.shapes,
+  ];
 
-   const metadata = {
+  const metadata = {
     walls: map?.metadata.layers.walls.shapes,
     forbiddenZone: map?.metadata.layers.areaprefs_forbidden.shapes,
   };
@@ -1996,7 +2021,7 @@ const Canvas = () => {
 
   return (
     <div className="full-height flex col" onContextMenu={handleRightClick}>
-      <CanvasToolbar
+      <CanvasComponent.CanvasToolbar
         toggleMode={toggleDrawingMode}
         defaultCursor={defaultCursor}
         removeShape={removeShape}
@@ -2165,6 +2190,7 @@ const Canvas = () => {
           />
         </Stage>
       </div>
+      <CanvasComponent.CanvasFooter setIsContinuosLine={setIsContinuosLine} />
     </div>
   );
 };

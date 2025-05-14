@@ -9,3 +9,5 @@ export * from './MarkerCreate';
 export * from './PositionCreate';
 export * from './joystick';
 export * from './CreatePath';
+export * from './toolbar';
+export * from './CanvasFooter';

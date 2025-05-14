@@ -24,15 +24,19 @@ export const CreatPath = ({ isVisible, setVisible, positionId }) => {
   };
 
   const [simPose, setSimPose] = useState({
-      y: 13,
-      x: 17,
-      orientation: -171,
-    });
+    y: 13,
+    x: 17,
+    orientation: -171,
+  });
 
   const getPositionFromId = async (posId) => {
-    if(posId === 'robot-position') {
+    if (posId === 'robot-position') {
       //!!!
-      return Utils.getCanvasPosition(robotStatus?.position.x, robotStatus?.position.y, map);
+      return Utils.getCanvasPosition(
+        robotStatus?.position.x,
+        robotStatus?.position.y,
+        map
+      );
 
       //Test
       // return Utils.getCanvasPosition(simPose.x, simPose.y, {
@@ -41,11 +45,12 @@ export const CreatPath = ({ isVisible, setVisible, positionId }) => {
       //   origin_x: 0,
       //   origin_y: 0,
       // });
-    }
-    else {
+    } else {
       //!!!
       const findPos = await fetchPosition(posId);
-      return findPos ? Utils.getCanvasPosition(findPos.pos_x, findPos.pos_y, map) : null;
+      return findPos
+        ? Utils.getCanvasPosition(findPos.pos_x, findPos.pos_y, map)
+        : null;
 
       //Test
       // const findPos = fakeMapPositions.find((pos) => pos.guid === posId);
@@ -56,8 +61,8 @@ export const CreatPath = ({ isVisible, setVisible, positionId }) => {
       //     origin_x: 0,
       //     origin_y: 0,
       //   }) : null;
-      }
-  }
+    }
+  };
 
   const fakeMapPositions = [
     {
@@ -98,22 +103,22 @@ export const CreatPath = ({ isVisible, setVisible, positionId }) => {
 
   const obstacles = [
     map?.metadata.layers.areaprefs_forbidden.shapes,
-    map?.metadata.layers.walls.shapes
-  ] //!!!
+    map?.metadata.layers.walls.shapes,
+  ]; //!!!
 
   //  const metadata = {
   //   walls: map?.metadata.layers.walls.shapes,
   //   forbiddenZone: map?.metadata.layers.areaprefs_forbidden.shapes,
   // };
 
-    useEffect(() => {
-      if (positionId) {
-        setFormData(prev => ({
-          ...prev,
-          goalId: positionId
-        }));
-      }
-    }, [positionId]);
+  useEffect(() => {
+    if (positionId) {
+      setFormData((prev) => ({
+        ...prev,
+        goalId: positionId,
+      }));
+    }
+  }, [positionId]);
 
   async function handleSubmit(event) {
     event.preventDefault(); // Ngăn chặn hành vi gửi mặc định
@@ -154,7 +159,7 @@ export const CreatPath = ({ isVisible, setVisible, positionId }) => {
       mapHeight: map?.metadata.height,
     });
 
-    worker.onerror = function(error) {
+    worker.onerror = function (error) {
       setIsLoading(false);
     };
 
@@ -182,10 +187,17 @@ export const CreatPath = ({ isVisible, setVisible, positionId }) => {
                 <Comps.SelectionDropdown
                   styleClass="full-height full-width align-center background"
                   containerStyleClass="full-width full-height"
-                  options={[{guid: 'robot-position', name: 'Robot position'}, ...mapPositions]} // {mapPositions}
+                  options={[
+                    { guid: 'robot-position', name: 'Robot position' },
+                    ...mapPositions,
+                  ]} // {mapPositions}
                   placeHolderText="Start position"
                   iconColor={Const.Color.BUTTON}
-                  defaultValue={formData.startId === 'robot-position' ? {guid: 'robot-position', name: 'Robot position'} : null}
+                  defaultValue={
+                    formData.startId === 'robot-position'
+                      ? { guid: 'robot-position', name: 'Robot position' }
+                      : null
+                  }
                   onChange={(value) => {
                     handleChange({ startId: value.guid });
                   }}
@@ -195,9 +207,11 @@ export const CreatPath = ({ isVisible, setVisible, positionId }) => {
                   backgroundColor={Const.Color.BUTTON}
                   borderColor={Const.Color.BUTTON}
                   color={Const.Color.WHITE}
-                  onClick={() => setFormData({
-                    startId: 'robot-position',
-                  })}
+                  onClick={() =>
+                    setFormData({
+                      startId: 'robot-position',
+                    })
+                  }
                   text="Use robot position"
                   type="button"
                   style={{ whiteSpace: 'nowrap' }}
@@ -214,7 +228,8 @@ export const CreatPath = ({ isVisible, setVisible, positionId }) => {
               options={mapPositions} //{fakeMapPositions} // {mapPositions} !!!
               placeHolderText="Goal position"
               iconColor={Const.Color.BUTTON}
-              defaultValue={mapPositions.find( //!!!
+              defaultValue={mapPositions.find(
+                //!!!
                 (pos) => pos.guid === positionId
               )}
               onChange={(value) => {

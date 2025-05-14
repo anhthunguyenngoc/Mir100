@@ -43,7 +43,7 @@ export const PositionCreate = ({ isVisible, setVisible, value, mode }) => {
       map_id: mapId,
       type_id: Number(formData.type_id),
     };
-    
+
     // Update form data with the submitted values
     handleChange(updatedData);
 
@@ -61,8 +61,9 @@ export const PositionCreate = ({ isVisible, setVisible, value, mode }) => {
         ...formData,
         ...data,
       };
-      
-      const { statusCode, data: responseData } = await api.postPositions(payload);
+
+      const { statusCode, data: responseData } =
+        await api.postPositions(payload);
       if (statusCode === api.STATUS_CODE.SUCCESS_POST) {
         setVisible(false);
         fetchCurrentMapPosition();
@@ -86,7 +87,7 @@ export const PositionCreate = ({ isVisible, setVisible, value, mode }) => {
         ...formData,
         ...data,
       };
-      
+
       const { statusCode } = await api.putPosition(formData.guid, payload);
 
       if (statusCode === api.STATUS_CODE.SUCCESS_GET) {
@@ -118,7 +119,7 @@ export const PositionCreate = ({ isVisible, setVisible, value, mode }) => {
   // Update form data when value prop changes
   useEffect(() => {
     if (!value) return;
-    
+
     setFormData({
       guid: value.guid || null,
       name: value.name || '',
@@ -140,12 +141,14 @@ export const PositionCreate = ({ isVisible, setVisible, value, mode }) => {
   // Find the default type value
   const getDefaultTypeValue = () => {
     if (formData.type_id) {
-      const matched = typeOptions.find(item => Number(item.id) === Number(formData.type_id));
+      const matched = typeOptions.find(
+        (item) => Number(item.id) === Number(formData.type_id)
+      );
       return matched ? { guid: matched.id, name: matched.name } : null;
     }
-    
-    return typeOptions.length > 0 
-      ? { guid: typeOptions[0].id, name: typeOptions[0].name } 
+
+    return typeOptions.length > 0
+      ? { guid: typeOptions[0].id, name: typeOptions[0].name }
       : null;
   };
 

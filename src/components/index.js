@@ -7,3 +7,5 @@ export * from './ToggleSwitch';
 export * from './confirm-dialog';
 export * from './PositionTooltip';
 export * from './Tooltip';
+export * from './Toggle';
+export * from './Checkbox';

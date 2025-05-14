@@ -60,9 +60,9 @@ export const MapEdit = () => {
           </button>
         </div>
 
-          <section id="map-canvas">
-            <CanvasView mapId={guid} />
-          </section>
+        <section id="map-canvas">
+          <CanvasView mapId={guid} />
+        </section>
       </div>
     </div>
   );

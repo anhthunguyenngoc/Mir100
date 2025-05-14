@@ -12,6 +12,34 @@ export const snapToGrid = (zoom, gridSize, value) => {
   };
 };
 
+export const getSmartSnap = (pointer, customSnapPoints, gridSize, zoom) => {
+  const SNAP_DISTANCE = 10; // khoảng cách cho phép snap vào shape
+
+  // Tìm customSnap gần nhất
+  let nearest = null;
+  let minDist = Infinity;
+
+  for (const pt of customSnapPoints) {
+    const d = getDistance(pt, pointer);
+    if (d < SNAP_DISTANCE && d < minDist) {
+      minDist = d;
+      nearest = pt;
+    }
+  }
+
+  if (nearest) return nearest;
+
+  // Nếu không gần shape nào thì snap to grid
+  return snapToGrid(zoom, gridSize, pointer);
+};
+
+export const getDistance = (p1, p2) => {
+  const dx = p1.x - p2.x;
+  const dy = p1.y - p2.y;
+  return Math.sqrt(dx * dx + dy * dy);
+};
+
+
 export const adjustPointerForZoom = (zoom, pointer) => {
   const zoomScale = zoom / 100;
   return {
@@ -358,4 +386,19 @@ export function simplifyPathByAngleThreshold(
 
   simplified.push(path[path.length - 1]);
   return simplified;
+}
+
+/**
+ * Tính trung điểm giữa hai điểm A và B
+ * @param {{x: number, y: number}} p1 - Điểm đầu
+ * @param {{x: number, y: number}} p2 - Điểm cuối
+ * @returns {{x: number, y: number}} Trung điểm giữa p1 và p2
+ */
+export function getMidPoint(p1, p2) {
+  if(!p1 || !p2) return;
+  
+  return {
+    x: (p1.x + p2.x) / 2,
+    y: (p1.y + p2.y) / 2,
+  };
 }

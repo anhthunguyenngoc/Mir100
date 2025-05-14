@@ -1,13 +1,13 @@
 import { useState } from 'react';
 
 import './toolbar.css';
-import { VerticalLine } from '../../components/VerticalLine';
+import { VerticalLine } from '../../../components/VerticalLine';
 import {
   SmallToolButton,
   BigToolButton,
   SelectionDropdown,
-} from '../../components';
-import * as Const from '../../constant';
+} from '../../../components';
+import * as Const from '../../../constant';
 
 const verticalLine = {
   width: '1px',
@@ -85,7 +85,10 @@ export const CanvasToolbar = ({
             borderBottomLeftRadius: '5px',
             width: '79.9px',
           }}
-          onClick={() => {setEditable(false); saveEditMap()}}
+          onClick={() => {
+            setEditable(false);
+            saveEditMap();
+          }}
         >
           <img className="size-20px" src={Const.ImageSrc['save']}></img>
         </button>

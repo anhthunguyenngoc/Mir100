@@ -187,42 +187,21 @@ function intersectSplineSpline(splineA, splineB) {
 }
 
 function intersectLineZLine(line, zline) {
-  const { startP, midP, endP, radius } = zline;
-  if (!startP || !midP || !endP) return [];
-
-  // Tính các điểm phụ theo code gốc
-  const dx1 = startP.x > endP.x ? radius : -radius;
-  const dy1 = startP.y < endP.y ? radius : -radius;
-  const dy2 = startP.y > endP.y ? radius : -radius;
-  const dx2 = startP.x < endP.x ? radius : -radius;
-
-  // Các điểm trên đường zigzag
-  const A = { x: midP.x + dx1, y: startP.y };
-  const B = { x: midP.x, y: startP.y + dy1 };
-  const C = { x: midP.x, y:endP.y + dy2 };
-  const D = { x: midP.x + dx2, y:endP.y };
-
+  const { segments } = utils.getZLineSegments(zline);
   let intersections = [];
 
-  // Đoạn thẳng 1: P0 -> A
-  let inter = intersectLineLine({ startP: startP, endP: A} , line);
-  if (inter.length > 0) intersections.push(inter[0]);
-
-  // Đường cong 1: Q1 từ A -> B, control: midP.x, startP.y
-  inter = utils.intersectLineQuadBezier(line, {points: [A, { x: midP.x, y: startP.y }, B]});
-  intersections = intersections.concat(inter);
-
-  // Đoạn thẳng 2: B -> C
-  inter = intersectLineLine({ startP: B, endP: C}, line);
-  if (inter.length > 0) intersections.push(inter[0]);
-
-  // Đường cong 2: Q2 từ C -> D, control: midP.x,endP.y
-  inter = utils.intersectLineQuadBezier(line, {points: [C, { x: midP.x, y:endP.y }, D]});
-  intersections = intersections.concat(inter);
-
-  // Đoạn thẳng 3: D ->endP
-  inter = intersectLineLine({ startP: D, endP: endP} , line);
-  if (inter.length > 0) intersections.push(inter[0]);
+  for (const seg of segments) {
+    let inter = [];
+    if (seg.type === 'line') {
+      inter = intersectLineLine(seg, line);
+    } else if (seg.type === 'quad') {
+      inter = utils.intersectLineQuadBezier(line, seg);
+    }
+    
+    if (inter && inter.length > 0) {
+      intersections.push(...inter);
+    }
+  }
 
   return intersections;
 }

@@ -50,6 +50,8 @@ function intersectLineArc(line, arc) {
     y: line.startP.y + t * dy,
   }));
 
+  console.log(line, arc, candidates)
+
   return candidates.filter(
     (p) => utils.isPointOnSegment(p, line) && utils.isPointOnArc(p, arc)
   );
@@ -74,6 +76,7 @@ function intersectArcArc(arc1, arc2) {
 
   const p1 = { x: x2 + rx, y: y2 + ry };
   const p2 = { x: x2 - rx, y: y2 - ry };
+
   return [p1, p2].filter(
     (p) => utils.isPointOnArc(p, arc1) && utils.isPointOnArc(p, arc2)
   );
@@ -206,7 +209,7 @@ function intersectLineZLine(line, zline) {
   if (inter.length > 0) intersections.push(inter[0]);
 
   // Đường cong 1: Q1 từ A -> B, control: midP.x, startP.y
-  inter = utils.intersectLineQuadBezier(line.startP, line.endP, A, { x: midP.x, y: startP.y }, B);
+  inter = utils.intersectLineQuadBezier(line, {points: [A, { x: midP.x, y: startP.y }, B]});
   intersections = intersections.concat(inter);
 
   // Đoạn thẳng 2: B -> C
@@ -214,7 +217,7 @@ function intersectLineZLine(line, zline) {
   if (inter.length > 0) intersections.push(inter[0]);
 
   // Đường cong 2: Q2 từ C -> D, control: midP.x,endP.y
-  inter = utils.intersectLineQuadBezier(line.startP, line.endP, C, { x: midP.x, y:endP.y }, D);
+  inter = utils.intersectLineQuadBezier(line, {points: [C, { x: midP.x, y:endP.y }, D]});
   intersections = intersections.concat(inter);
 
   // Đoạn thẳng 3: D ->endP
@@ -247,7 +250,6 @@ function intersectLineULine(line, uline) {
   return results;
 }
 
-//ongoing
 function intersectArcULine(arc, uline) {
     const { startP, bottomP, endP } = uline;
   const results = [];
@@ -272,21 +274,67 @@ function intersectArcULine(arc, uline) {
   return results;
 }
 
-
 function intersectArcZLine(arc, zline) {
-  return zline.segments.flatMap((seg) => intersectLineArc(seg, arc));
+ const { segments } = utils.getZLineSegments(zline);
+  let intersections = [];
+
+  for (const seg of segments) {
+    let inter = [];
+    if (seg.type === 'line') {
+      inter = intersectLineArc({ startP: seg.start, endP: seg.end }, arc);
+    } else if (seg.type === 'quad') {
+      inter = utils.intersectArcQuadBezier(arc, { points: seg.points });
+    }
+    if (inter && inter.length > 0) {
+      intersections.push(...inter);
+    }
+  }
+
+  return intersections;
 }
 
 
+function intersectZLineZLine(zline1, zline2) {
+ const { segments: segments1 } = utils.getZLineSegments(zline1);
+ const { segments: segments2 } = utils.getZLineSegments(zline2);
+  let intersections = [];
+
+  for (const seg1 of segments1) {
+    for (const seg2 of segments2) {
+    let inter = [];
+      const key = `${seg1.type}-${seg2.type}`;
+
+      switch (key) {
+        case 'line-line':
+          inter = intersectLineLine(seg1, seg2);
+          break;
+        case 'line-quad':
+          inter = utils.intersectLineQuadBezier(seg1, seg2);
+          break;
+        case 'quad-line':
+          inter = utils.intersectLineQuadBezier(seg2, seg1); // đảo lại
+          break;
+        case 'quad-quad':
+          inter = utils.intersectQuadraticBezierQuadraticBezier(seg1, seg2);
+          break;
+        default:
+          console.warn(`Không xử lý được loại giao nhau: ${key}`);
+          break;
+      }
+
+      if (inter?.length) {
+        intersections.push(...inter);
+      }
+
+  }
+  }
+  return intersections;
+}
+
+//ongoing
 function intersectArcSpline(arc, spline) {
   const segments = utils.approximateSpline(spline);
   return segments.flatMap((seg) => intersectLineArc(seg, arc));
-}
-
-function intersectZLineZLine(z1, z2) {
-  return z1.segments.flatMap((s1) =>
-    z2.segments.flatMap((s2) => intersectLineLine(s1, s2))
-  );
 }
 
 function intersectZLineULine(zline, uline) {
@@ -364,10 +412,10 @@ export function getAllIntersections(shapes) {
         case 'uline_line':
           points = intersectLineULine(b, a);
           break;
-        case 'arc_zline':
+        case 'arc_zigzag':
           points = intersectArcZLine(a, b);
           break;
-        case 'zline_arc':
+        case 'zigzag_arc':
           points = intersectArcZLine(b, a);
           break;
         case 'arc_uline':
@@ -382,19 +430,19 @@ export function getAllIntersections(shapes) {
         case 'spline_arc':
           points = intersectArcSpline(b, a);
           break;
-        case 'zline_zline':
+        case 'zigzag_zigzag':
           points = intersectZLineZLine(a, b);
           break;
-        case 'zline_uline':
+        case 'zigzag_uline':
           points = intersectZLineULine(a, b);
           break;
-        case 'uline_zline':
+        case 'uline_zigzag':
           points = intersectZLineULine(b, a);
           break;
-        case 'zline_spline':
+        case 'zigzag_spline':
           points = intersectZLineSpline(a, b);
           break;
-        case 'spline_zline':
+        case 'spline_zigzag':
           points = intersectZLineSpline(b, a);
           break;
         case 'uline_uline':

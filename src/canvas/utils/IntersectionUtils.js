@@ -424,7 +424,10 @@ function quadBezierPoint(t, p0, p1, p2) {
 }
 
 // Hàm tìm giao điểm đường thẳng với quadratic Bézier
-export function intersectLineQuadBezier(lineP0, lineP1, bezP0, bezP1, bezP2) {
+export function intersectLineQuadBezier(line, bezier) {
+  const { startP: lineP0, endP: lineP1} = line;
+  const [ bezP0, bezP1, bezP2 ] = bezier.points;
+  
   // Chuyển đường thẳng về dạng: ax + by + c = 0
   const a = lineP1.y - lineP0.y;
   const b = lineP0.x - lineP1.x;
@@ -729,4 +732,90 @@ function refineIntersectionPoints(points, circleCenter, r, ellipseCenter, rx, ry
     
     return { x, y };
   });
+}
+
+//Quadratic & arc
+export function intersectArcQuadBezier(arc, bezier, samples = 1000) {
+  const [P0, P1, P2] = bezier.points;
+  const result = [];
+
+  for (let i = 0; i <= samples; i++) {
+    const t = i / samples;
+    const x = (1 - t) ** 2 * P0.x + 2 * (1 - t) * t * P1.x + t ** 2 * P2.x;
+    const y = (1 - t) ** 2 * P0.y + 2 * (1 - t) * t * P1.y + t ** 2 * P2.y;
+
+    if (isPointOnArc({ x, y }, arc)) {
+      result.push({ x, y });
+    }
+  }
+
+  return result;
+}
+
+//Quadratic & Quadratic
+export function intersectQuadraticBezierQuadraticBezier(p, q, threshold = 1) {
+    const [p0, p1, p2] = p.points;
+    const [q0, q1, q2] = q.points;
+
+    const bezier = (a0, a1, a2, t) =>
+        (1 - t) * (1 - t) * a0 + 2 * (1 - t) * t * a1 + t * t * a2;
+
+    const bezierPoint = (pt0, pt1, pt2, t) => ({
+        x: bezier(pt0.x, pt1.x, pt2.x, t),
+        y: bezier(pt0.y, pt1.y, pt2.y, t)
+    });
+
+    const steps = 100;
+    const result = [];
+
+    for (let i = 0; i <= steps; i++) {
+        const t = i / steps;
+        const pt = bezierPoint(p0, p1, p2, t);
+
+        for (let j = 0; j <= steps; j++) {
+            const s = j / steps;
+            const qt = bezierPoint(q0, q1, q2, s);
+
+            const dx = pt.x - qt.x;
+            const dy = pt.y - qt.y;
+            const dist2 = dx * dx + dy * dy;
+
+            if (dist2 < threshold * threshold) {
+                result.push({ x: (pt.x + qt.x) / 2, y: (pt.y + qt.y) / 2 });
+            }
+        }
+    }
+
+    // Loại bỏ các điểm gần nhau trùng lặp
+    const unique = [];
+    for (const p of result) {
+        if (!unique.some(q => Math.hypot(q.x - p.x, q.y - p.y) < 1)) {
+            unique.push(p);
+        }
+    }
+
+    return unique;
+}
+
+//Zline
+export function getZLineSegments({ startP, midP, endP, radius }) {
+  const dx1 = startP.x > endP.x ? radius : -radius;
+  const dy1 = startP.y < endP.y ? radius : -radius;
+  const dy2 = startP.y > endP.y ? radius : -radius;
+  const dx2 = startP.x < endP.x ? radius : -radius;
+
+  const A = { x: midP.x + dx1, y: startP.y };
+  const B = { x: midP.x, y: startP.y + dy1 };
+  const C = { x: midP.x, y: endP.y + dy2 };
+  const D = { x: midP.x + dx2, y: endP.y };
+
+  return {
+    segments: [
+      { type: 'line', startP: startP, endP: A },
+      { type: 'quad', points: [A, { x: midP.x, y: startP.y }, B] },
+      { type: 'line', startP: B, endP: C },
+      { type: 'quad', points: [C, { x: midP.x, y: endP.y }, D] },
+      { type: 'line', startP: D, endP: endP }
+    ]
+  };
 }

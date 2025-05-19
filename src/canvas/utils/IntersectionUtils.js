@@ -589,3 +589,144 @@ function isPointOnEllipseArc(angle, startAngle, endAngle, isClockwise) {
     }
   }
 }
+
+//EllipseArc & Arc
+export function intersectEllipticalArcArc(ellipArc, arc, sampleStep = 0.01) {
+  const { bottomP, rx, ry, startP, endP } = ellipArc;
+  // Trước tiên, ta cần tìm tất cả giao điểm giữa đường tròn và ellipse
+  // Sau đó kiểm tra xem những điểm đó có nằm trên cung tròn và cung ellipse không
+  
+  const circlePoints = findCircleEllipseIntersection(
+    arc.centerP, arc.radius,
+    bottomP, rx, ry
+  );
+
+  // Bước 1: Tính góc bắt đầu và kết thúc
+  const startAngle = getAngleOnEllipse(startP, bottomP.x, bottomP.y, rx, ry);
+  const endAngle = getAngleOnEllipse(endP, bottomP.x, bottomP.y, rx, ry);
+
+  // Bước 2: Xác định hướng cung elip
+  let delta = endAngle - startAngle;
+  if (delta < 0) delta += 2 * Math.PI;
+  const isClockwise = delta > Math.PI;
+  
+  // Lọc các điểm giao nằm trên cả hai cung
+  return circlePoints.filter(point => {
+    const pointAngle = getAngleOnEllipse(point, bottomP.x, bottomP.y, rx, ry);
+    return isPointOnArc(point, arc) &&
+    isPointOnEllipseArc(pointAngle, bottomP, rx, ry, 
+                        startP, endP, isClockwise)
+    }
+  );
+}
+
+function findCircleEllipseIntersection(circleCenter, r, ellipseCenter, rx, ry) {
+  // Giả sử ellipse nằm ở gốc tọa độ để đơn giản hóa bài toán
+  // Dịch chuyển đường tròn tương ứng
+  const h = circleCenter.x - ellipseCenter.x;
+  const k = circleCenter.y - ellipseCenter.y;
+  
+  // Phương trình đường tròn: (x-h)² + (y-k)² = r²
+  // Phương trình ellipse: (x/rx)² + (y/ry)² = 1
+  
+  // Đây là một hệ phương trình phức tạp, ta cần giải quyết bằng cách thay thế
+  // và đưa về phương trình bậc 4 cho một biến
+  
+  // Phương pháp tiếp cận số học sẽ được sử dụng
+  // Tìm giao điểm bằng cách giải phương trình theo các giá trị của x
+  
+  const xMin = Math.min(ellipseCenter.x - rx, circleCenter.x - r);
+  const xMax = Math.max(ellipseCenter.x + rx, circleCenter.x + r);
+  const step = Math.min(rx, r) / 1000; // Bước nhỏ để tăng độ chính xác
+  
+  const intersections = [];
+  let lastEval = null;
+  
+  for (let x = xMin; x <= xMax; x += step) {
+    // Tính các giá trị y từ phương trình ellipse: y = ±ry * sqrt(1 - (x-cx)²/rx²)
+    const xFromEllipseCenter = x - ellipseCenter.x;
+    const ellipseRadical = 1 - (xFromEllipseCenter * xFromEllipseCenter) / (rx * rx);
+    
+    if (ellipseRadical >= 0) {
+      const yValuesFromEllipse = [
+        ellipseCenter.y + ry * Math.sqrt(ellipseRadical),
+        ellipseCenter.y - ry * Math.sqrt(ellipseRadical)
+      ];
+      
+      // Tính giá trị y từ phương trình đường tròn: y = k ± sqrt(r² - (x-h)²)
+      const xFromCircleCenter = x - circleCenter.x;
+      const circleRadical = r * r - xFromCircleCenter * xFromCircleCenter;
+      
+      if (circleRadical >= 0) {
+        const yValuesFromCircle = [
+          circleCenter.y + Math.sqrt(circleRadical),
+          circleCenter.y - Math.sqrt(circleRadical)
+        ];
+        
+        // Kiểm tra các cặp giá trị y từ ellipse và đường tròn
+        for (const yEllipse of yValuesFromEllipse) {
+          for (const yCircle of yValuesFromCircle) {
+            // Nếu hai giá trị y gần nhau, đó là một giao điểm gần đúng
+            if (Math.abs(yEllipse - yCircle) < step * 2) {
+              // Kiểm tra để tránh thêm điểm trùng lặp
+              const isTooClose = intersections.some(point => 
+                Math.abs(point.x - x) < step * 2 && Math.abs(point.y - yEllipse) < step * 2
+              );
+              
+              if (!isTooClose) {
+                intersections.push({ x, y: (yEllipse + yCircle) / 2 });
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  // Tinh chỉnh các điểm giao
+  return refineIntersectionPoints(intersections, circleCenter, r, ellipseCenter, rx, ry);
+}
+
+/**
+ * Tinh chỉnh các điểm giao để tăng độ chính xác
+ */
+function refineIntersectionPoints(points, circleCenter, r, ellipseCenter, rx, ry) {
+  return points.map(point => {
+    // Sử dụng phương pháp Newton-Raphson để cải thiện độ chính xác
+    let x = point.x;
+    let y = point.y;
+    
+    // Lặp một vài lần để tinh chỉnh
+    for (let i = 0; i < 5; i++) {
+      // Tính sai số từ phương trình đường tròn
+      const dx = x - circleCenter.x;
+      const dy = y - circleCenter.y;
+      const circleError = dx * dx + dy * dy - r * r;
+      
+      // Tính sai số từ phương trình ellipse
+      const ex = (x - ellipseCenter.x) / rx;
+      const ey = (y - ellipseCenter.y) / ry;
+      const ellipseError = ex * ex + ey * ey - 1;
+      
+      // Nếu đủ chính xác thì dừng
+      if (Math.abs(circleError) < 1e-10 && Math.abs(ellipseError) < 1e-10) {
+        break;
+      }
+      
+      // Tính đạo hàm
+      const dcx = 2 * dx;
+      const dcy = 2 * dy;
+      const dex = 2 * ex / rx;
+      const dey = 2 * ey / ry;
+      
+      // Giải hệ phương trình tuyến tính để cập nhật x, y
+      const det = dcx * dey - dcy * dex;
+      if (Math.abs(det) < 1e-10) break;
+      
+      x -= (dey * circleError - dcy * ellipseError) / det;
+      y -= (dcx * ellipseError - dex * circleError) / det;
+    }
+    
+    return { x, y };
+  });
+}

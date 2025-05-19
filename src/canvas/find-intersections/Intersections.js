@@ -248,15 +248,35 @@ function intersectLineULine(line, uline) {
 }
 
 //ongoing
+function intersectArcULine(arc, uline) {
+    const { startP, bottomP, endP } = uline;
+  const results = [];
+
+  const verticalLeft = [startP, { x: startP.x, y: bottomP.y }];
+  const verticalRight = [{ x: endP.x, y: bottomP.y }, endP];
+
+  // Kiểm tra giao nhau với 2 đoạn dọc
+  const inter1 = intersectLineArc({startP: verticalLeft[0], endP: verticalLeft[1]}, arc);
+  const inter2 = intersectLineArc({startP: verticalRight[0], endP: verticalRight[1]}, arc);
+  if (inter1.length > 0) results.push(...inter1);
+  if (inter2.length > 0) results.push(...inter2);
+
+  // Kiểm tra giao nhau với cung tròn
+  const arcResult = utils.intersectEllipticalArcArc(
+    uline,
+    arc,
+  );
+
+  results.push(...arcResult);
+
+  return results;
+}
+
+
 function intersectArcZLine(arc, zline) {
   return zline.segments.flatMap((seg) => intersectLineArc(seg, arc));
 }
 
-function intersectArcULine(arc, uline) {
-  return uline.segments.flatMap((seg) =>
-    seg.radius ? intersectArcArc(arc, seg) : intersectLineArc(seg, arc)
-  );
-}
 
 function intersectArcSpline(arc, spline) {
   const segments = utils.approximateSpline(spline);

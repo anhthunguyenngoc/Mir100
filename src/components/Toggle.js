@@ -7,11 +7,11 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: '10px',
-    margin: '10px 0'
+    margin: '10px 0',
   },
   toggleLabel: {
     fontSize: '14px',
-    fontWeight: '500'
+    fontWeight: '500',
   },
   toggleButton: {
     position: 'relative',
@@ -24,7 +24,7 @@ const styles = {
     cursor: 'pointer',
     transition: 'background-color 0.3s',
     border: 'none',
-    padding: 0
+    padding: 0,
   },
   toggleButtonActive: {
     backgroundColor: Const.Color.SELECTED_BUTTON,
@@ -37,23 +37,23 @@ const styles = {
     borderRadius: '50%',
     backgroundColor: Const.Color.WHITE,
     transition: 'transform 0.3s',
-    boxShadow: '0 1px 2px rgba(0,0,0,0.2)'
+    boxShadow: '0 1px 2px rgba(0,0,0,0.2)',
   },
   toggleThumbActive: {
-    transform: 'translateX(20px)'
+    transform: 'translateX(20px)',
   },
   checkboxContainer: {
     display: 'flex',
     alignItems: 'center',
     gap: '10px',
-    margin: '10px 0'
+    margin: '10px 0',
   },
   checkboxInput: {
     position: 'absolute',
     opacity: 0,
     cursor: 'pointer',
     height: 0,
-    width: 0
+    width: 0,
   },
   checkboxLabel: {
     fontSize: '14px',
@@ -61,7 +61,7 @@ const styles = {
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
-    gap: '8px'
+    gap: '8px',
   },
   checkboxCustom: {
     height: '20px',
@@ -71,26 +71,26 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    transition: 'all 0.2s'
+    transition: 'all 0.2s',
   },
   checkboxCustomChecked: {
     backgroundColor: '#3b82f6',
-    borderColor: '#3b82f6'
+    borderColor: '#3b82f6',
   },
   checkmark: {
     color: 'white',
     fontSize: '12px',
-    visibility: 'hidden'
+    visibility: 'hidden',
   },
   checkmarkVisible: {
-    visibility: 'visible'
-  }
+    visibility: 'visible',
+  },
 };
 
 // Toggle Component
 export const Toggle = ({ label, isOn = false, onToggle }) => {
   const [toggleState, setToggleState] = useState(isOn);
-  
+
   const handleToggle = () => {
     const newState = !toggleState;
     setToggleState(newState);
@@ -98,14 +98,14 @@ export const Toggle = ({ label, isOn = false, onToggle }) => {
       onToggle(newState);
     }
   };
-  
+
   return (
     <div style={styles.toggleContainer}>
       <button
         onClick={handleToggle}
         style={{
           ...styles.toggleButton,
-          ...(toggleState ? styles.toggleButtonActive : {})
+          ...(toggleState ? styles.toggleButtonActive : {}),
         }}
         aria-checked={toggleState}
         role="switch"
@@ -113,7 +113,7 @@ export const Toggle = ({ label, isOn = false, onToggle }) => {
         <span
           style={{
             ...styles.toggleThumb,
-            ...(toggleState ? styles.toggleThumbActive : {})
+            ...(toggleState ? styles.toggleThumbActive : {}),
           }}
         />
       </button>

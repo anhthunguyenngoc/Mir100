@@ -76,7 +76,6 @@ export const MyCircle = ({
   isVisible,
   dragBoundFunc,
   hitboxVisible,
-  onHitboxEnter,
   mode,
   ref,
   onClick,
@@ -104,12 +103,11 @@ export const MyCircle = ({
       <Circle //hitbox
         x={circle.x}
         y={circle.y}
-        radius={circle.radius + 1}
+        radius={circle.radius + 10}
         visible={hitboxVisible}
         onMouseEnter={() => {
           setShowCircle(true);
           onMouseEnter?.(circle.x, circle.y);
-          onHitboxEnter(circle.x, circle.y);
         }}
         onMouseLeave={() => {
           // setShowCircle(false);

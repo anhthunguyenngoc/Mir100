@@ -76,6 +76,7 @@ export const MyULine = ({
   selected,
   isDrawing,
   direction,
+  rx,
   ry,
   onDrag,
   onUpdateShape,

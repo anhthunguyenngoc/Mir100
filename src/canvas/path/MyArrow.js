@@ -27,7 +27,6 @@ export const MyArrow = ({
   endP,
   onUpdateShape,
   saveState,
-  addSnapPoint,
 }) => {
   const [hovered, setHovered] = useState(false);
 
@@ -58,7 +57,9 @@ export const MyArrow = ({
         draggable={draggable}
         onDragEnd={(e) => {
           const arrow = e.target;
-          const absPos = Utils.normalizeAbsolutePosition(arrow.getAbsolutePosition()); // Lấy vị trí tuyệt đối của Arrow
+          const absPos = Utils.normalizeAbsolutePosition(
+            arrow.getAbsolutePosition()
+          ); // Lấy vị trí tuyệt đối của Arrow
 
           const arrowPoints = arrow.points();
           const startX = absPos.x + arrowPoints[0];
@@ -91,38 +92,30 @@ export const MyArrow = ({
           onDragStart?.();
         }}
       />
-      {
-        [startP, endP, Utils.getMidPoint(startP, endP)].map((point, index) => (
-          <MyCircle
-            x={point.x}
-            y={point.y}
-            radius={pointRadius}
-            fill="white"
-            stroke="blue"
-            strokeWidth={strokeWidth}
-            draggable={true}
-            isVisible={(hovered || selected)}
-            onDragEnd={(x, y) => {
-              const newPos = onDrag(x, y);
-              onUpdateShape(
-                index === 0 ? { startP: newPos } : { endP: newPos }
-              );
-            }}
-            onDragMove={(x, y) => {
-              const newPos = onDrag(x, y);
-              onUpdateShape(
-                index === 0 ? { startP: newPos } : { endP: newPos }
-              );
-            }}
-            onDragStart={() => {
-              saveState();
-            }}
-            hitboxVisible={!isDrawing}
-            onHitboxEnter={(x, y) => {
-              addSnapPoint(x, y)
-            }}
-          />
-        ))}
+      {[startP, endP].map((point, index) => (
+        <MyCircle
+          x={point.x}
+          y={point.y}
+          radius={pointRadius}
+          fill="white"
+          stroke="blue"
+          strokeWidth={strokeWidth}
+          draggable={true}
+          isVisible={!isDrawing && (hovered || selected)}
+          onDragEnd={(x, y) => {
+            const newPos = onDrag(x, y);
+            onUpdateShape(index === 0 ? { startP: newPos } : { endP: newPos });
+          }}
+          onDragMove={(x, y) => {
+            const newPos = onDrag(x, y);
+            onUpdateShape(index === 0 ? { startP: newPos } : { endP: newPos });
+          }}
+          onDragStart={() => {
+            saveState();
+          }}
+          hitboxVisible={!isDrawing}
+        />
+      ))}
     </Group>
   );
 };

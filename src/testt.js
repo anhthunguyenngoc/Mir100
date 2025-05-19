@@ -3947,3 +3947,42 @@
 //   }
 //   return !0;
 // }
+
+// function intersectLineSpline(line, spline, alpha = 0.0, numSamples = 20) {
+
+//   const flatPoints = spline.points;
+//   if (!flatPoints || flatPoints.length < 4) return [];
+
+//   const points = [];
+//   for (let i = 0; i < flatPoints.length; i += 2) {
+//     points.push({ x: flatPoints[i], y: flatPoints[i + 1] });
+//   }
+
+//   const intersections = [];
+
+//   const startTime = performance.now(); // ⏱️ Bắt đầu đo thời gian
+
+
+//   for (let i = 0; i < points.length - 1; i++) {
+//     const p0 = points[i - 1] || points[i];
+//     const p1 = points[i];
+//     const p2 = points[i + 1];
+//     const p3 = points[i + 2] || points[i + 1];
+
+//     for (let j = 0; j < numSamples; j++) {
+//       const t1 = j / numSamples;
+//       const t2 = (j + 1) / numSamples;
+
+//       const pt1 = catmullRomPoint(p0, p1, p2, p3, t1, alpha);
+//       const pt2 = catmullRomPoint(p0, p1, p2, p3, t2, alpha);
+
+//       const inter = intersectLineLine(line, {startP: pt1, endP: pt2});
+//       if (inter.length > 0) intersections.push(inter[0]);
+//     }
+//   }
+
+//       const endTime = performance.now(); // ⏱️ Kết thúc
+//   console.log(`⏱️ Thời gian chạy ( khôngcó bounding box): ${(endTime - startTime)}ms`);
+
+//   return intersections;
+// }

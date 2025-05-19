@@ -9,3 +9,4 @@ export * from './PositionTooltip';
 export * from './Tooltip';
 export * from './Toggle';
 export * from './Checkbox';
+export * from './SelectionDropUp';

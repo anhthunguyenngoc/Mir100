@@ -25,6 +25,7 @@ export const getSmartSnap = (pointer, customSnapPoints, gridSize, zoom) => {
       minDist = d;
       nearest = pt;
     }
+    console.log(d);
   }
 
   if (nearest) return nearest;
@@ -33,12 +34,30 @@ export const getSmartSnap = (pointer, customSnapPoints, gridSize, zoom) => {
   return snapToGrid(zoom, gridSize, pointer);
 };
 
+// Tính điểm vuông góc từ chuột đến đoạn thẳng AB
+export function getSnapPoint(mouse, A, B) {
+  const AB = { x: B.x - A.x, y: B.y - A.y };
+  const AM = { x: mouse.x - A.x, y: mouse.y - A.y };
+  const ab2 = AB.x ** 2 + AB.y ** 2;
+  const am_dot_ab = AM.x * AB.x + AM.y * AB.y;
+  const t = am_dot_ab / ab2;
+
+  if (t < 0)
+    return A; // ngoài đoạn về phía A
+  else if (t > 1) return B; // ngoài đoạn về phía B
+
+  // Điểm nằm trên đoạn AB
+  return {
+    x: A.x + AB.x * t,
+    y: A.y + AB.y * t,
+  };
+}
+
 export const getDistance = (p1, p2) => {
   const dx = p1.x - p2.x;
   const dy = p1.y - p2.y;
   return Math.sqrt(dx * dx + dy * dy);
 };
-
 
 export const adjustPointerForZoom = (zoom, pointer) => {
   const zoomScale = zoom / 100;
@@ -395,10 +414,56 @@ export function simplifyPathByAngleThreshold(
  * @returns {{x: number, y: number}} Trung điểm giữa p1 và p2
  */
 export function getMidPoint(p1, p2) {
-  if(!p1 || !p2) return;
-  
+  if (!p1 || !p2) return;
+
   return {
     x: (p1.x + p2.x) / 2,
     y: (p1.y + p2.y) / 2,
   };
+}
+
+export function getAllShapesFromLayers(layers) {
+  const result = [];
+
+  function extractShapes(shapes) {
+    for (const item of shapes) {
+      if (item.name === 'group' && Array.isArray(item.shapes)) {
+        // Nếu là group, đệ quy vào shapes con
+        extractShapes(item.shapes);
+      } else {
+        // Nếu không phải group, thêm vào kết quả
+        result.push(item);
+      }
+    }
+  }
+
+  for (const layer of layers) {
+    if (Array.isArray(layer.shapes)) {
+      extractShapes(layer.shapes);
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Chuyển mảng số dạng [x, y, x, y, ...] thành mảng đối tượng [{x, y}, ...]
+ * Chỉ thực hiện nếu mảng hợp lệ (có độ dài chẵn và toàn số)
+ * @param {any[]} flatArray - Mảng đầu vào
+ * @returns {{x: number, y: number}[] | null} - Mảng đối tượng tọa độ
+ */
+export function convertToPointObjects(flatArray) {
+  if (
+    !Array.isArray(flatArray) ||
+    flatArray.length % 2 !== 0 ||
+    !flatArray.every(n => typeof n === 'number' && isFinite(n))
+  ) {
+    return flatArray; 
+  }
+
+  const result = [];
+  for (let i = 0; i < flatArray.length; i += 2) {
+    result.push({ x: flatArray[i], y: flatArray[i + 1] });
+  }
+  return result;
 }

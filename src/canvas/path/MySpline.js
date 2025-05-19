@@ -2,76 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Line, Group, Arrow } from 'react-konva';
 import { MyCircle } from './MyCircle';
 import { LineDirection } from '../../constant';
-
-// Hàm tính toán B-Spline bằng thuật toán De Boor
-const deBoor = (k, x, t, c, p) => {
-  let d = c.map((point) => ({ ...point }));
-  for (let r = 1; r <= p; r++) {
-    for (let j = k; j > k - p + r - 1; j--) {
-      let alpha = (x - t[j]) / (t[j + p - r + 1] - t[j]);
-      d[j] = {
-        x: (1 - alpha) * d[j - 1].x + alpha * d[j].x,
-        y: (1 - alpha) * d[j - 1].y + alpha * d[j].y,
-      };
-    }
-  }
-  return d[k];
-};
-
-const computeBSpline = (flatPoints, degree = 2, numSamples = 100) => {
-  if (flatPoints.length < (degree + 1) * 2) return flatPoints;
-
-  const extendFactor = 0; // Giảm độ kéo dài để tránh vượt quá
-
-  // Bước 1: Chuyển mảng phẳng thành mảng {x, y}
-  const points = [];
-  for (let i = 0; i < flatPoints.length; i += 2) {
-    points.push({ x: flatPoints[i], y: flatPoints[i + 1] });
-  }
-
-  const extendedPoints = [];
-
-  // Bước 2: Kéo dài điểm đầu
-  const p0 = points[0];
-  const p1 = points[1];
-  const dx0 = p0.x - p1.x;
-  const dy0 = p0.y - p1.y;
-  extendedPoints.push({
-    x: p0.x + dx0 * extendFactor,
-    y: p0.y + dy0 * extendFactor,
-  });
-
-  // Thêm các điểm gốc
-  extendedPoints.push(...points);
-
-  // Bước 3: Kéo dài điểm cuối
-  const pn = points[points.length - 1];
-  const pn1 = points[points.length - 2];
-  const dxn = pn.x - pn1.x;
-  const dyn = pn.y - pn1.y;
-  extendedPoints.push({
-    x: pn.x + dxn * extendFactor,
-    y: pn.y + dyn * extendFactor,
-  });
-
-  // Bước 4: Tạo knot vector đều
-  const n = extendedPoints.length - 1;
-  const knots = Array(n + degree + 2)
-    .fill(0)
-    .map((_, i) => i);
-
-  // Bước 5: Tính điểm trên spline
-  const curvePoints = [];
-  for (let i = degree; i <= n; i++) {
-    for (let j = 0; j < numSamples; j++) {
-      const u = knots[i] + ((knots[i + 1] - knots[i]) * j) / numSamples;
-      const point = deBoor(i, u, knots, extendedPoints, degree);
-      if (point) curvePoints.push(point.x, point.y);
-    }
-  }
-
-  return curvePoints;
-};
+import * as utils from '../utils'
 
 const getArrowRotation = (points, direction) => {
   const start =
@@ -128,7 +59,7 @@ export const sampleBSplineByDistance = (
   if (flatPoints.length < (degree + 1) * 2) return flatPoints;
 
   // Tính spline với nhiều điểm
-  const splineFlat = computeBSpline(flatPoints, degree, numSamples);
+  const splineFlat = utils.computeBSpline(flatPoints, degree, numSamples);
 
   // Chuyển thành mảng điểm {x, y}
   const splinePoints = [];
@@ -373,7 +304,7 @@ export const MySpline = ({
     if (mode && mode.includes('p-')) {
       return computePSpline(pts);
     } else if (mode && mode.includes('cv-')) {
-      return computeBSpline(pts);
+      return utils.computeBSpline(pts);
     }
   };
 

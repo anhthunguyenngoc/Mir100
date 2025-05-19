@@ -11,3 +11,4 @@ export * from './joystick';
 export * from './CreatePath';
 export * from './toolbar';
 export * from './CanvasFooter';
+export * from './SnapPointIcon';

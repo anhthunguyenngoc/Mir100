@@ -8,6 +8,8 @@ import * as Utils from './utils';
 import * as ShapeComp from '../canvas/path';
 import * as Context from '../context';
 import * as Comp from '../components';
+import * as Intersections from './find-intersections';
+import * as Snap from './snap-point/SnapPoint';
 
 //Api
 import * as api from '../api';
@@ -28,6 +30,7 @@ const Canvas = () => {
     mapPositions,
     actionList,
     pathPoints,
+    enabledSnapModes,
   } = Context.useCanvasContext();
 
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -81,7 +84,6 @@ const Canvas = () => {
   const [gridSize, setGridSize] = useState(Const.INITIAL_GRID_SIZE);
   const [gridData, setGridData] = useState([]);
   const [snapPoint, setSnapPoint] = useState(null);
-  const [customSnapPoints, setCustomSnapPoints] = useState([]);
 
   //Selection
   const groupRefs = useRef({});
@@ -930,7 +932,6 @@ const Canvas = () => {
       handleUpdateShape(selectedLayer.id, line.id, newProps),
     saveState: () => saveState(),
     isNew: true,
-    addSnapPoint: (x, y) => customSnapPoints.push({x, y}),
   });
 
   const shapeProps = (line) => {
@@ -1207,6 +1208,7 @@ const Canvas = () => {
             ...newLine,
             bottomP: pointer,
             endP: Utils.calculateUlineEndPoint(newLine.startP, pointer),
+            rx: Math.abs(newLine.startP.x - pointer.x), //drawingMode.includes('sm-') ? Math.abs(newLine.startP.x - pointer.x) : (Math.abs(newLine.startP.x - pointer.x) / 2), !!!
           });
           setAdjustingRadius(true);
         } else {
@@ -1346,19 +1348,23 @@ const Canvas = () => {
       resetSelection();
     }
 
-    // Điều chỉnh vị trí con trỏ theo tỷ lệ zoom
-    const pointer = Utils.snapToGrid(
-      zoom,
-      gridSize,
-      Utils.adjustPointerForZoom(zoom, p)
-    );
+    const adjustedPointer = Utils.adjustPointerForZoom(zoom, p);
+    const smartSnap =
+      Snap.getSnapPoint(
+        enabledSnapModes,
+        adjustedPointer,
+        newLine?.startP,
+        Utils.getAllShapesFromLayers(layers),
+        gridSize
+      ) || adjustedPointer;
+    setSnapPoint(smartSnap);
 
     // Selection bắt đầu
     if (drawingMode === 'rect-selection' && !selectionBox) {
-      setStartPoint(pointer);
-      setSelectionBox({ x: pointer.x, y: pointer.y, width: 0, height: 0 });
+      setStartPoint(smartSnap);
+      setSelectionBox({ x: smartSnap.x, y: smartSnap.y, width: 0, height: 0 });
     } else if (drawingMode === 'free-selection') {
-      setSelectionPoints([pointer.x, pointer.y]);
+      setSelectionPoints([smartSnap.x, smartSnap.y]);
     }
 
     // Click thứ 2 - xác nhận vùng chọn
@@ -1406,14 +1412,18 @@ const Canvas = () => {
       setIsContinuosLine(true);
     }
 
-    drawShape(pointer);
+    drawShape(smartSnap);
 
     //Thêm position
     if (drawingMode === 'add-pos') {
       if (!createPos) {
-        setCreatePos({ pos_x: mousePos.x, pos_y: mousePos.y, orientation: 0 });
+        setCreatePos({
+          pos_x: smartSnap.x,
+          pos_y: smartSnap.y,
+          orientation: 0,
+        });
       } else {
-        const m = { pos_x: mousePos.x, pos_y: mousePos.y };
+        const m = { pos_x: smartSnap.x, pos_y: smartSnap.y };
         const realPos = Utils.getRealPosition(
           Number(createPos.pos_x),
           Number(createPos.pos_y),
@@ -1439,12 +1449,12 @@ const Canvas = () => {
     if (drawingMode === 'add-marker') {
       if (!createMarker) {
         setCreateMarker({
-          pos_x: mousePos.x,
-          pos_y: mousePos.y,
+          pos_x: smartSnap.x,
+          pos_y: smartSnap.y,
           orientation: 0,
         });
       } else {
-        const m = { pos_x: mousePos.x, pos_y: mousePos.y };
+        const m = { pos_x: smartSnap.x, pos_y: smartSnap.y };
         setCreateMarker({
           ...createMarker,
           orientation: Utils.getAngleSigned(
@@ -1474,56 +1484,37 @@ const Canvas = () => {
     const stage = target.getStage();
     const p = stage.getPointerPosition();
 
-    // // Điều chỉnh vị trí con trỏ theo tỷ lệ zoom
-    // const pointer = Utils.snapToGrid(
-    //   zoom,
-    //   gridSize,
-    //   Utils.adjustPointerForZoom(zoom, p)
-    // );
-
-    // setMousePos({
-    //   x: pointer.x,
-    //   y: pointer.y,
-    //   xRuler: p.x - Const.RULER_SIZE,
-    //   yRuler: p.y - Const.RULER_SIZE,
-    // });
-    // setSnapPoint(Utils.snapToGrid(zoom, gridSize, pointer));
-
-    // 1. Lấy pointer đã chỉnh theo zoom
-  const adjustedPointer = Utils.adjustPointerForZoom(zoom, p);
-
-  // 3. Tính snapPoint thông minh
-  const smartSnap = Utils.getSmartSnap(adjustedPointer, customSnapPoints, gridSize, zoom);
-
-  // 4. Cập nhật state
-  setMousePos({
-    x: smartSnap.x,
-    y: smartSnap.y,
-    xRuler: p.x - Const.RULER_SIZE,
-    yRuler: p.y - Const.RULER_SIZE,
-  });
-
-  setSnapPoint(smartSnap);
+    const adjustedPointer = Utils.adjustPointerForZoom(zoom, p);
+    const smartSnap =
+      Snap.getSnapPoint(
+        enabledSnapModes,
+        adjustedPointer,
+        newLine?.startP,
+        Utils.getAllShapesFromLayers(layers),
+        gridSize
+      ) || adjustedPointer;
+    setSnapPoint(smartSnap);
+    setMousePos({ x: adjustedPointer.x, y: adjustedPointer.y, xRuler: p.x, yRuler: p.y });
 
     //Selection
     if (drawingMode === 'rect-selection') {
       if (selectionBox) {
         setSelectionBox({
-          x: Math.min(startPoint.x, snapPoint.x),
-          y: Math.min(startPoint.y, snapPoint.y),
-          width: Math.abs(startPoint.x - snapPoint.x),
-          height: Math.abs(startPoint.y - snapPoint.y),
+          x: Math.min(startPoint.x, smartSnap.x),
+          y: Math.min(startPoint.y, smartSnap.y),
+          width: Math.abs(startPoint.x - smartSnap.x),
+          height: Math.abs(startPoint.y - smartSnap.y),
         });
       }
     } else if (drawingMode === 'free-selection' && selectionPoints) {
-      setSelectionPoints((prev) => [...prev, snapPoint.x, snapPoint.y]);
+      setSelectionPoints((prev) => [...prev, smartSnap.x, smartSnap.y]);
     }
 
     //Vẽ đường thẳng
     if (drawing && newLine && drawingMode === 'line') {
       setNewLine({
         ...newLine,
-        endP: { x: snapPoint.x, y: snapPoint.y },
+        endP: { x: smartSnap.x, y: smartSnap.y },
       });
     }
 
@@ -1533,31 +1524,37 @@ const Canvas = () => {
         if (drawingMode.includes('3p')) {
           setNewLine({
             ...newLine,
-            points: [...newLine.points.slice(0, 2), snapPoint],
+            points: [...newLine.points.slice(0, 2), smartSnap],
           });
         } else if (drawingMode === 'sca-arc' || drawingMode === 'csa-arc') {
-          const angle = ShapeComp.arcCalculateAngle(newLine.points[1], snapPoint);
+          const angle = ShapeComp.arcCalculateAngle(
+            newLine.points[1],
+            smartSnap
+          );
           setNewLine({
             ...newLine,
             angle: angle,
-            points: [...newLine.points.slice(0, 2), snapPoint],
+            points: [...newLine.points.slice(0, 2), smartSnap],
           });
         } else if (drawingMode === 'sea-arc') {
-          const angle = ShapeComp.arcCalculateAngle(newLine.points[0], snapPoint);
+          const angle = ShapeComp.arcCalculateAngle(
+            newLine.points[0],
+            smartSnap
+          );
           setNewLine({
             ...newLine,
             angle: angle,
-            points: [...newLine.points.slice(0, 2), snapPoint],
+            points: [...newLine.points.slice(0, 2), smartSnap],
           }); //start, end
         } else if (drawingMode === 'ser-arc') {
           const radius = ShapeComp.calculateDistance(
             newLine.points[1],
-            snapPoint
+            smartSnap
           );
           setNewLine({
             ...newLine,
             radius: radius,
-            points: [...newLine.points.slice(0, 2), snapPoint],
+            points: [...newLine.points.slice(0, 2), smartSnap],
           }); //start, end
         }
       }
@@ -1568,7 +1565,7 @@ const Canvas = () => {
       if (newLine && newLine.startP && !adjustingRadius) {
         if (drawingMode === 'sm-zigzag') {
           const start = newLine.startP;
-          const mid = snapPoint;
+          const mid = smartSnap;
           setNewLine({
             ...newLine,
             midP: mid,
@@ -1577,7 +1574,7 @@ const Canvas = () => {
           });
         } else if (drawingMode === 'se-zigzag') {
           const start = newLine.startP;
-          const end = snapPoint;
+          const end = smartSnap;
           setNewLine({
             ...newLine,
             midP: ShapeComp.calculateMidPoint(start, end),
@@ -1591,7 +1588,7 @@ const Canvas = () => {
         const p0 = tp1.x + (tp0.x > tp2.x ? radius : -radius);
         const p1 = tp0.y + (tp0.y < tp2.y ? radius : -radius);
 
-        const deltaX = snapPoint.x - tp1.x;
+        const deltaX = smartSnap.x - tp1.x;
 
         // Xác định vị trí của start (tp0) so với mid (tp1)
         const isLeft = tp0.x < p0; // start nằm bên trái mid
@@ -1626,8 +1623,8 @@ const Canvas = () => {
           center: { x: target.attrs.x, y: target.attrs.y },
           radius: target.attrs.outerRadius,
         };
-        const dx = snapPoint.x - center.x;
-        const dy = snapPoint.y - center.y;
+        const dx = smartSnap.x - center.x;
+        const dy = smartSnap.y - center.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
         if (Math.abs(distance - radius) <= 5) {
@@ -1637,7 +1634,7 @@ const Canvas = () => {
               name: Const.ShapeName.TANGENT,
               points: [],
             }),
-            contactPoint: snapPoint,
+            contactPoint: smartSnap,
             arc: { center, radius },
           });
         }
@@ -1649,8 +1646,8 @@ const Canvas = () => {
       if (newLine && newLine.startP && !adjustingRadius) {
         setNewLine({
           ...newLine,
-          bottomP: snapPoint,
-          endP: Utils.calculateUlineEndPoint(newLine.startP, snapPoint),
+          bottomP: smartSnap,
+          endP: Utils.calculateUlineEndPoint(newLine.startP, smartSnap),
         }); // Giới hạn ry ≥ 0.1
       } else if (
         newLine &&
@@ -1658,14 +1655,14 @@ const Canvas = () => {
         newLine.bottomP &&
         adjustingRadius
       ) {
-        const deltaX = snapPoint.x - newLine.bottomP.x; // Khoảng cách di chuột
+        const deltaX = smartSnap.x - newLine.bottomP.x; // Khoảng cách di chuột
         setNewLine({ ...newLine, ry: Math.max(0.1, deltaX) }); // Giới hạn ry ≥ 0.1
       }
     }
 
     //Vẽ đường chữ Spline
     if (drawingMode && drawingMode.includes('spline')) {
-      const { x, y } = snapPoint;
+      const { x, y } = smartSnap;
       if (newLine && newLine.points.length === 2) {
         setNewLine({ ...newLine, points: [...newLine.points, x, y] });
       } else if (newLine && newLine.points.length >= 4) {
@@ -1678,12 +1675,12 @@ const Canvas = () => {
 
     //Vẽ Circle
     if (newCircle && newCircle.points && newCircle.points.length >= 1) {
-      setNewCircle({ ...newCircle, points: [newCircle.points[0], snapPoint] });
+      setNewCircle({ ...newCircle, points: [newCircle.points[0], smartSnap] });
     } else if (newCircle && newCircle.points && newCircle.points.length === 2) {
       if (drawingMode === '3p-circle') {
         setNewCircle({
           ...newCircle,
-          points: [...newCircle.points.slice(0, 2), snapPoint],
+          points: [...newCircle.points.slice(0, 2), smartSnap],
         });
       }
     }
@@ -1692,7 +1689,7 @@ const Canvas = () => {
     if (newRectangle && newRectangle.startP) {
       setNewRectangle({
         ...newRectangle,
-        endP: snapPoint,
+        endP: smartSnap,
       });
     }
 
@@ -1703,7 +1700,7 @@ const Canvas = () => {
       newElip.points.length >= 1 &&
       !newElip.clicked
     ) {
-      setNewElip({ ...newElip, points: [newElip.points[0], snapPoint] });
+      setNewElip({ ...newElip, points: [newElip.points[0], smartSnap] });
     } else if (
       newElip &&
       newElip.points &&
@@ -1712,7 +1709,7 @@ const Canvas = () => {
     ) {
       setNewElip({
         ...newElip,
-        points: [newElip.points[0], newElip.points[1], snapPoint],
+        points: [newElip.points[0], newElip.points[1], smartSnap],
       });
     }
 
@@ -1721,19 +1718,19 @@ const Canvas = () => {
       if (newPolygon.points.length === 1) {
         setNewPolygon({
           ...newPolygon,
-          points: [...newPolygon.points, snapPoint],
+          points: [...newPolygon.points, smartSnap],
         });
       } else if (newPolygon.points.length >= 2) {
         setNewPolygon({
           ...newPolygon,
-          points: [...newPolygon.points.slice(0, -1), snapPoint],
+          points: [...newPolygon.points.slice(0, -1), smartSnap],
         });
       }
     }
 
     //Vẽ Free Shape
     if (newFreeShape) {
-      const { x, y } = snapPoint;
+      const { x, y } = smartSnap;
       if (newFreeShape.points.length === 2) {
         setNewFreeShape({
           ...newFreeShape,
@@ -1749,7 +1746,7 @@ const Canvas = () => {
 
     //Thêm position
     if (drawingMode === 'add-pos' && createPos) {
-      const m = { pos_x: mousePos.x, pos_y: mousePos.y };
+      const m = { pos_x: smartSnap.x, pos_y: smartSnap.y };
       setCreatePos({
         ...createPos,
         orientation: Utils.getAngleSigned(
@@ -1763,7 +1760,7 @@ const Canvas = () => {
 
     //Thêm marker
     if (drawingMode === 'add-marker' && createMarker) {
-      const m = { pos_x: mousePos.x, pos_y: mousePos.y };
+      const m = { pos_x: smartSnap.x, pos_y: smartSnap.y };
       setCreateMarker({
         ...createMarker,
         orientation: Utils.getAngleSigned(
@@ -1779,11 +1776,6 @@ const Canvas = () => {
   const handleRightClick = (e) => {
     e.preventDefault();
   };
-
-  
-    useEffect(() => {
-      console.log(snapPoint)
-    }, [snapPoint])
 
   const handleStageDblClick = (e) => {
     if (newLine && drawingMode.includes('spline')) {
@@ -1922,18 +1914,62 @@ const Canvas = () => {
     return result;
   };
 
+  // Đệ quy lấy tất cả shape name === "line"
+  const collectAllLines = (shapes) => {
+    const lines = [];
+
+    for (const shape of shapes) {
+      if (shape.name === 'line') {
+        lines.push({ p1: shape.startP, p2: shape.endP });
+      }
+
+      // Nếu là group thì tiếp tục đệ quy
+      if (Array.isArray(shape.shapes)) {
+        lines.push(...collectAllLines(shape.shapes));
+      }
+    }
+
+    return lines;
+  };
+
+  // Hàm chính
+  const renderIntersection = () => {
+    // const allLines = [];
+    // for (const layer of layers) {
+    //   allLines.push(...collectAllLines(layer.shapes || []));
+    // }
+    // const intersections = [];
+    // if(allLines.length < 2) return;
+    // for (let i = 0; i < allLines.length; i++) {
+    //   for (let j = i + 1; j < allLines.length; j++) {
+    //     const intersect = Intersections.intersectLineLine(allLines[i], allLines[2]);
+    //     if (intersect) intersections.push(intersect);
+    //   }
+    // }
+    // console.log(allLines, intersections)
+    // return intersections.map((pt, idx) => (
+    //   <Circle
+    //     key={`intersect-${idx}`}
+    //     x={pt.x}
+    //     y={pt.y}
+    //     radius={5}
+    //     fill="red"
+    //   />
+    // ));
+  };
+
   const saveEditMap = async () => {
     const allShapes = layers.flatMap((layer) => extractAllShapes(layer.shapes));
     const converted = allShapes.map((shape) => {
       return Utils.convertShapeForMetadata(shape);
     });
-    console.log(allShapes, converted);
-    console.log({
-      metadata: {
-        ...map?.metadata,
-        layers: { ...Utils.generateMetadataLayersFromShapes(converted) },
-      },
-    });
+    // console.log(allShapes, converted);
+    // console.log({
+    //   metadata: {
+    //     ...map?.metadata,
+    //     layers: { ...Utils.generateMetadataLayersFromShapes(converted) },
+    //   },
+    // });
 
     // api.postAreaEvents({map_id: mapId, polygon: {}, type_id: })
     // const a = await api.putMap(mapId, {metadata: btoa(JSON.stringify(map?.metadata))});
@@ -2132,6 +2168,8 @@ const Canvas = () => {
               {drawSelection()}
 
               {renderPathPoints()}
+
+              {renderIntersection()}
 
               {robotStatus && (
                 <ShapeComp.MyImage

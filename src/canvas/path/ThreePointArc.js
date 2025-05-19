@@ -255,16 +255,24 @@ export const ThreePointArc = ({
   useEffect(() => {
     if (points.length < 3) return;
     const arc = calculateArc(points, mode, angle, radius);
-    console.log(arc);
+
     if (arc) {
+      let { startAngle, endAngle, clockwise } = arc;
+      if (clockwise && endAngle < startAngle) {
+        endAngle += 360;
+      }
+      if (!clockwise && startAngle < endAngle) {
+        startAngle += 360;
+      }
+
       onUpdateShape({
         startP: arc.startP,
         endP: arc.endP,
         midP: arc.midP,
         centerP: arc.centerP,
         radius: arc.radius,
-        startAngle: arc.startAngle,
-        endAngle: arc.endAngle,
+        startAngle,
+        endAngle,
         clockwise: arc.clockwise,
       });
     }
@@ -336,13 +344,10 @@ export const ThreePointArc = ({
                     Math.sin(((arc.rotation() + arc.angle()) * Math.PI) / 180),
               };
 
-              console.log(start, center, end);
-
-              // Gửi tọa độ cập nhật lên state
               onUpdateShape({ points: [start, center, end] });
 
               // Giữ vị trí của Arc về (0,0) để tránh lỗi kéo thả
-              // arc.position({ x: 0, y: 0 });
+              arc.position({ x: 0, y: 0 });
             }}
             onMouseEnter={(e) => {
               if (!isDrawing) {

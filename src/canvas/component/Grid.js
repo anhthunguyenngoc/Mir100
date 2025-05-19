@@ -1,5 +1,8 @@
 import React, { forwardRef } from 'react';
-import { Layer, Line, Rect } from 'react-konva';
+import { Layer, Line, Rect, Image } from 'react-konva';
+import * as Snap from '../snap-point/SnapPoint';
+import { SnapPointIcon } from './SnapPointIcon';
+import * as Const from '../../constant';
 
 export const Grid = forwardRef(
   ({ gridData, canvasPos, snapPoint, gridSize }, ref) => {
@@ -14,14 +17,13 @@ export const Grid = forwardRef(
           />
         ))}
         {/* ================================================Điểm Snap================================================= */}
-        {snapPoint && (
-          <Rect
-            x={snapPoint.x - 5}
-            y={snapPoint.y - 5}
-            width={gridSize / 4}
-            height={gridSize / 4}
-            fill="red"
-            opacity={0.5}
+        {snapPoint && snapPoint.type && (
+          <SnapPointIcon
+            x={snapPoint.x}
+            y={snapPoint.y}
+            width={gridSize / 2}
+            height={gridSize / 2}
+            Icon={Const.snapMode[snapPoint.type].pointIcon}
           />
         )}
       </Layer>

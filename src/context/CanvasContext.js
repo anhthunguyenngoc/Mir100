@@ -23,6 +23,7 @@ export const CanvasProvider = ({ children, mapId }) => {
   const [positionDialog, setPositionDialog] = useState({
     isVisible: false,
   });
+  const [enabledSnapModes, setEnabledSnapModes] = useState(Const.snapModeInit);
 
   /** @type {[Array<api.TGetPosition_types>, Function]} */
   const [positionTypes, setPositionTypes] = useState([]);
@@ -266,6 +267,8 @@ export const CanvasProvider = ({ children, mapId }) => {
         pathPoints,
         setPathPoints,
         setIsLoading,
+        enabledSnapModes,
+        setEnabledSnapModes,
       }}
     >
       {children}

@@ -131,8 +131,8 @@ export const Ruler = ({
       )}
       <Text
         text={`(${mousePos.x}, ${mousePos.y})`}
-        x={mousePos.xRuler + CanvasConstant.RULER_SIZE + 20}
-        y={mousePos.yRuler + CanvasConstant.RULER_SIZE + 20}
+        x={mousePos.xRuler + CanvasConstant.RULER_SIZE}
+        y={mousePos.yRuler + CanvasConstant.RULER_SIZE}
         fontSize={14}
         fill="black"
       />

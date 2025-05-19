@@ -7,14 +7,14 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: '10px',
-    margin: '10px 0'
+    margin: '10px 0',
   },
   checkboxInput: {
     position: 'absolute',
     opacity: 0,
     cursor: 'pointer',
     height: 0,
-    width: 0
+    width: 0,
   },
   checkboxLabel: {
     fontSize: '14px',
@@ -22,7 +22,7 @@ const styles = {
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
-    gap: '8px'
+    gap: '8px',
   },
   checkboxCustom: {
     height: '20px',
@@ -32,26 +32,26 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    transition: 'all 0.2s'
+    transition: 'all 0.2s',
   },
   checkboxCustomChecked: {
     backgroundColor: Const.Color.SELECTED_BUTTON,
-    borderColor: Const.Color.SELECTED_BUTTON
+    borderColor: Const.Color.SELECTED_BUTTON,
   },
   checkmark: {
     color: 'white',
     fontSize: '12px',
-    visibility: 'hidden'
+    visibility: 'hidden',
   },
   checkmarkVisible: {
-    visibility: 'visible'
-  }
+    visibility: 'visible',
+  },
 };
 
 // Checkbox Component
 export const Checkbox = ({ label, checked = false, onChange }) => {
   const [isChecked, setIsChecked] = useState(checked);
-  
+
   const handleChange = () => {
     const newState = !isChecked;
     setIsChecked(newState);
@@ -59,7 +59,7 @@ export const Checkbox = ({ label, checked = false, onChange }) => {
       onChange(newState);
     }
   };
-  
+
   return (
     <div style={styles.checkboxContainer}>
       <label style={styles.checkboxLabel}>
@@ -69,16 +69,16 @@ export const Checkbox = ({ label, checked = false, onChange }) => {
           onChange={handleChange}
           style={styles.checkboxInput}
         />
-        <span 
+        <span
           style={{
             ...styles.checkboxCustom,
-            ...(isChecked ? styles.checkboxCustomChecked : {})
+            ...(isChecked ? styles.checkboxCustomChecked : {}),
           }}
         >
-          <span 
+          <span
             style={{
               ...styles.checkmark,
-              ...(isChecked ? styles.checkmarkVisible : {})
+              ...(isChecked ? styles.checkmarkVisible : {}),
             }}
           >
             ✓

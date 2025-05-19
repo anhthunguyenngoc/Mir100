@@ -38,6 +38,8 @@ import {
 
 import { PATH } from './Path';
 
+import Test from 'joysticktest';
+
 export const PUBLIC_ROUTER = [
   {
     key: 'login-by-pass',

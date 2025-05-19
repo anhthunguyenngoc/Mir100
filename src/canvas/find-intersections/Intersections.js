@@ -281,9 +281,9 @@ function intersectArcZLine(arc, zline) {
   for (const seg of segments) {
     let inter = [];
     if (seg.type === 'line') {
-      inter = intersectLineArc({ startP: seg.start, endP: seg.end }, arc);
+      inter = intersectLineArc(seg, arc);
     } else if (seg.type === 'quad') {
-      inter = utils.intersectArcQuadBezier(arc, { points: seg.points });
+      inter = utils.intersectArcQuadBezier(arc, seg);
     }
     if (inter && inter.length > 0) {
       intersections.push(...inter);

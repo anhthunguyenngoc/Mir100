@@ -749,7 +749,16 @@ export function intersectArcQuadBezier(arc, bezier, samples = 1000) {
     }
   }
 
-  return result;
+  const unique = [];
+  const threshold = 1; // khoảng cách tối thiểu giữa 2 điểm để coi là khác nhau
+
+  for (const p of result) {
+    if (!unique.some(q => Math.hypot(q.x - p.x, q.y - p.y) < threshold)) {
+      unique.push(p);
+    }
+  }
+
+  return unique;
 }
 
 //Quadratic & Quadratic

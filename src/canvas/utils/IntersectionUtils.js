@@ -425,6 +425,7 @@ function quadBezierPoint(t, p0, p1, p2) {
 
 // Hàm tìm giao điểm đường thẳng với quadratic Bézier
 export function intersectLineQuadBezier(line, bezier) {
+
   const { startP: lineP0, endP: lineP1} = line;
   const [ bezP0, bezP1, bezP2 ] = bezier.points;
   
@@ -465,24 +466,24 @@ export function intersectLineQuadBezier(line, bezier) {
       }
     }
   });
-
+  console.log(intersections)
   return intersections;
 }
 
 export function intersectLineEllipseArc(line, ellipse) {
   const { startP: p1, endP: p2 } = line;
-  const { rx, ry, bottomP } = ellipse;
+  const { rx, ry, centerP } = ellipse;
   
   // Bước 1: Tìm giao điểm giữa đường thẳng và elip đầy đủ
   // Dịch chuyển bài toán để tâm elip nằm tại gốc tọa độ
   const p1Shifted = {
-    x: p1.x - bottomP.x,
-    y: p1.y - bottomP.y
+    x: p1.x - centerP.x,
+    y: p1.y - centerP.y
   };
   
   const p2Shifted = {
-    x: p2.x - bottomP.x,
-    y: p2.y - bottomP.y
+    x: p2.x - centerP.x,
+    y: p2.y - centerP.y
   };
   
   // Biểu diễn tham số của đường thẳng: p = p1 + t * (p2 - p1)
@@ -538,29 +539,12 @@ export function intersectLineEllipseArc(line, ellipse) {
   }
     
   // Lọc các giao điểm nằm trên cung
-  return filterPointOnEllipseArc(ellipse, intersections);
+   return intersections.filter(p => 
+     isPointOnEllipseArc(p, ellipse)
+);
 }
 
 //Ellipse arc
-export function filterPointOnEllipseArc(uline, points) {
-  const { rx, ry, bottomP, startP, endP } = uline;
-
-  // Bước 1: Tính góc bắt đầu và kết thúc
-  const startAngle = getAngleOnEllipse(startP, bottomP.x, bottomP.y, rx, ry);
-  const endAngle = getAngleOnEllipse(endP, bottomP.x, bottomP.y, rx, ry);
-
-  // Bước 2: Xác định hướng cung elip
-  let delta = endAngle - startAngle;
-  if (delta < 0) delta += 2 * Math.PI;
-  const isClockwise = delta > Math.PI;
-
-    // Bước 4: Lọc các điểm nằm trên cung
-  return points.filter(p => {
-    const pointAngle = getAngleOnEllipse(p, bottomP.x, bottomP.y, rx, ry);
-    return isPointOnEllipseArc(pointAngle, startAngle, endAngle, isClockwise)
-});
-}
-
 function getAngleOnEllipse(p, cx, cy, rx, ry) {
   // Tính góc của điểm p đối với tâm elip
   const dx = (p.x - cx) / rx;
@@ -570,7 +554,27 @@ function getAngleOnEllipse(p, cx, cy, rx, ry) {
   return angle; // radian từ 0 đến 2π
 }
 
-function isPointOnEllipseArc(angle, startAngle, endAngle, isClockwise) {
+export function isPointOnEllipseArc(point, ellipArc, epsilon = 1e-2) {
+  const { centerP, rx, ry, startP, endP } = ellipArc;
+
+  // Kiểm tra ellipse equation
+  const dx = point.x - centerP.x;
+  const dy = point.y - centerP.y;
+  const ellipseEq = (dx * dx) / (rx * rx) + (dy * dy) / (ry * ry);
+
+  if (Math.abs(ellipseEq - 1) > epsilon) return false; // Không nằm trên ellipse
+
+    // Bước 1: Tính góc bắt đầu và kết thúc
+  let startAngle = getAngleOnEllipse(startP, centerP.x, centerP.y, rx, ry);
+  let endAngle = getAngleOnEllipse(endP, centerP.x, centerP.y, rx, ry);
+
+  // Bước 2: Xác định hướng cung elip
+  let delta = endAngle - startAngle;
+  if (delta < 0) delta += 2 * Math.PI;
+  const isClockwise = delta > Math.PI;
+
+  let angle = getAngleOnEllipse(point, centerP.x, centerP.y, rx, ry);
+
   // Chuẩn hóa các góc để đảm bảo chúng nằm trong phạm vi [0, 2π]
   angle = (angle + 2 * Math.PI) % (2 * Math.PI);
   startAngle = (startAngle + 2 * Math.PI) % (2 * Math.PI);
@@ -595,30 +599,20 @@ function isPointOnEllipseArc(angle, startAngle, endAngle, isClockwise) {
 
 //EllipseArc & Arc
 export function intersectEllipticalArcArc(ellipArc, arc, sampleStep = 0.01) {
-  const { bottomP, rx, ry, startP, endP } = ellipArc;
+  const { centerP, rx, ry } = ellipArc;
   // Trước tiên, ta cần tìm tất cả giao điểm giữa đường tròn và ellipse
   // Sau đó kiểm tra xem những điểm đó có nằm trên cung tròn và cung ellipse không
   
   const circlePoints = findCircleEllipseIntersection(
     arc.centerP, arc.radius,
-    bottomP, rx, ry
+    centerP, rx, ry
   );
-
-  // Bước 1: Tính góc bắt đầu và kết thúc
-  const startAngle = getAngleOnEllipse(startP, bottomP.x, bottomP.y, rx, ry);
-  const endAngle = getAngleOnEllipse(endP, bottomP.x, bottomP.y, rx, ry);
-
-  // Bước 2: Xác định hướng cung elip
-  let delta = endAngle - startAngle;
-  if (delta < 0) delta += 2 * Math.PI;
-  const isClockwise = delta > Math.PI;
   
   // Lọc các điểm giao nằm trên cả hai cung
   return circlePoints.filter(point => {
-    const pointAngle = getAngleOnEllipse(point, bottomP.x, bottomP.y, rx, ry);
+    
     return isPointOnArc(point, arc) &&
-    isPointOnEllipseArc(pointAngle, bottomP, rx, ry, 
-                        startP, endP, isClockwise)
+    isPointOnEllipseArc(point, arc)
     }
   );
 }
@@ -827,4 +821,99 @@ export function getZLineSegments({ startP, midP, endP, radius }) {
       { type: 'line', startP: D, endP: endP }
     ]
   };
+}
+
+//Uline
+export function getULineSegments(uline) {
+  const { startP, bottomP, endP, rx, ry } = uline;
+
+  // Hai đoạn dọc
+  const leftSegment = {
+    type: 'line',
+    startP: startP,
+    endP: { x: startP.x, y: bottomP.y },
+  };
+
+  const rightSegment = {
+    type: 'line',
+    startP: { x: endP.x, y: bottomP.y },
+    endP: endP,
+  };
+
+  // Cung cong phía dưới
+  const arcSegment = {
+    type: 'arc',
+    startP: { x: startP.x, y: bottomP.y },
+    endP: { x: endP.x, y: bottomP.y },
+    centerP: bottomP, 
+    rx,
+    ry,
+  };
+
+  return {segments: [leftSegment, arcSegment, rightSegment]};
+}
+
+//Quadratic & EllipseArc
+// export function intersectArcQuadBezier(arc, bezier, samples = 1000) {
+//   const [P0, P1, P2] = bezier.points;
+//   const { startP, endP, centerP, rx, ry } = arc;
+//   const result = [];
+
+//   const startAngle = getAngleOnEllipse(startP, centerP.x, centerP.y, rx, ry);
+//   const endAngle = getAngleOnEllipse(endP, centerP.x, centerP.y, rx, ry);
+
+//   // Bước 2: Xác định hướng cung elip
+//   let delta = endAngle - startAngle;
+//   if (delta < 0) delta += 2 * Math.PI;
+//   const isClockwise = delta > Math.PI;
+
+//   for (let i = 0; i <= samples; i++) {
+//     const t = i / samples;
+//     const x = (1 - t) ** 2 * P0.x + 2 * (1 - t) * t * P1.x + t ** 2 * P2.x;
+//     const y = (1 - t) ** 2 * P0.y + 2 * (1 - t) * t * P1.y + t ** 2 * P2.y;
+
+//     const pointAngle = getAngleOnEllipse({x, y}, centerP.x, centerP.y, rx, ry);
+
+//     if (isPointOnEllipseArc(pointAngle, startAngle, endAngle, isClockwise)) {
+//       result.push({ x, y });
+//     }
+//   }
+
+//   const unique = [];
+//   const threshold = 1; // khoảng cách tối thiểu giữa 2 điểm để coi là khác nhau
+
+//   for (const p of result) {
+//     if (!unique.some(q => Math.hypot(q.x - p.x, q.y - p.y) < threshold)) {
+//       unique.push(p);
+//     }
+//   }
+
+//   return unique;
+// }
+
+export function  intersectEllipseArcQuadBezier(arc, bezier, samples = 1000) {
+  const [P0, P1, P2] = bezier.points;
+  const result = [];
+
+  for (let i = 0; i <= samples; i++) {
+    const t = i / samples;
+
+    // Tính điểm trên đường Bezier tại t
+    const x = (1 - t) ** 2 * P0.x + 2 * (1 - t) * t * P1.x + t ** 2 * P2.x;
+    const y = (1 - t) ** 2 * P0.y + 2 * (1 - t) * t * P1.y + t ** 2 * P2.y;
+
+    const pt = { x, y };
+
+    if (isPointOnEllipseArc(pt, arc)) {
+      // Kiểm tra trùng lặp (nếu điểm gần điểm trước đó thì bỏ qua)
+      const last = result[result.length - 1];
+      if (!last || Math.hypot(last.x - x, last.y - y) > 1e-3) {
+        result.push(pt);
+      }
+    }
+  }
+
+  console.log(result)
+
+  return result;
 }

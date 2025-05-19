@@ -402,6 +402,7 @@ function getPerpendicularToArc(arc, mouse) {
 
 function getEllipticalArcQuadrantPoints(uline) {
   const { rx, ry, bottomP } = uline;
+  const { segments } = utils.getULineSegments(uline);
 
   // Tạo các điểm quadrant
   const anglesDeg = [0, 90, 180, 270];
@@ -414,6 +415,8 @@ function getEllipticalArcQuadrantPoints(uline) {
   });
 
   //Lọc các điểm nằm trên Arc
-  return utils.filterPointOnEllipseArc(uline, quadrantPoints);
+  return quadrantPoints.filter(p => 
+     utils.isPointOnEllipseArc(p, segments[1])
+);
 }
 

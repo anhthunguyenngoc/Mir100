@@ -72,6 +72,7 @@ export const LeftSidebar = ({
             height="1px"
             color="white"
             borderRadius="2px"
+            isVisible={true}
           />
           <CanvasComponents.DropdownList
             title="Shapes"

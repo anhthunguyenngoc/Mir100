@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import * as Const from '../../constant';
 import * as Comp from '../../components';
+import { isVisible } from '@testing-library/user-event/dist/utils';
 
 const getOptionByType = (type, name) => {
   const options = Object.values(Const.LineName).includes(name)
@@ -145,6 +146,7 @@ const horizonLineProps = {
   height: '1px',
   color: 'white',
   borderRadius: '2px',
+  isVisible: true,
 };
 
 export const RightSidebar = ({
@@ -438,16 +440,20 @@ const ShapeComponent = ({
                 handleDropdownOpen={handleDropdownOpen}
                 onSelectItem={(item) => {
                   if (item?.value) {
-                    onSelectItem(item.value);
+                    onSelectItem(item.value, {
+                      startP: { x: item.value.x, y: item.value.y },
+                    });
                   }
                 }}
                 onHoverItem={(item) => {
                   if (item?.value) {
-                    onHoverItem(item.value);
+                    onHoverItem(item.value, {
+                      startP: { x: item.value.x, y: item.value.y },
+                    });
                   }
                 }}
               />
-              <div className="flex row gap-15px">
+              <div className="flex row gap-5px">
                 <InputNumber
                   placeholder="Start X"
                   value={shape.startP.x}
@@ -481,29 +487,49 @@ const ShapeComponent = ({
         shape.endP && (
           <div className="flex col gap-5px">
             End
-            <div className="flex row gap-15px">
-              <InputNumber
-                placeholder="End X"
-                value={shape.endP.x}
-                onChange={(e) => {
-                  handleUpdateShape(shape.id, {
-                    endP: { ...shape.endP, x: Number(e.target.value) },
-                  });
-                  saveState();
+            <div className="flex col gap-5px">
+              <Comp.SearchableDropDown
+                dropdownData={dropdownData}
+                handleDropdownOpen={handleDropdownOpen}
+                onSelectItem={(item) => {
+                  if (item?.value) {
+                    onSelectItem(item.value, {
+                      endP: { x: item.value.x, y: item.value.y },
+                    });
+                  }
                 }}
-                imgSrc="letterX"
-              />
-              <InputNumber
-                placeholder="End Y"
-                value={shape.endP.y}
-                onChange={(e) => {
-                  handleUpdateShape(shape.id, {
-                    endP: { ...shape.endP, y: Number(e.target.value) },
-                  });
-                  saveState();
+                onHoverItem={(item) => {
+                  if (item?.value) {
+                    onHoverItem(item.value, {
+                      endP: { x: item.value.x, y: item.value.y },
+                    });
+                  }
                 }}
-                imgSrc="letterY"
               />
+              <div className="flex row gap-5px">
+                <InputNumber
+                  placeholder="End X"
+                  value={shape.endP.x}
+                  onChange={(e) => {
+                    handleUpdateShape(shape.id, {
+                      endP: { ...shape.endP, x: Number(e.target.value) },
+                    });
+                    saveState();
+                  }}
+                  imgSrc="letterX"
+                />
+                <InputNumber
+                  placeholder="End Y"
+                  value={shape.endP.y}
+                  onChange={(e) => {
+                    handleUpdateShape(shape.id, {
+                      endP: { ...shape.endP, y: Number(e.target.value) },
+                    });
+                    saveState();
+                  }}
+                  imgSrc="letterY"
+                />
+              </div>
             </div>
           </div>
         )

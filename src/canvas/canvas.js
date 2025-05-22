@@ -1347,7 +1347,7 @@ const Canvas = () => {
   };
 
   const drawHoverShape = (smartSnap, target) => {
-    console.log(newLine, smartSnap)
+    console.log(newLine, smartSnap);
     //Vẽ đường thẳng
     if (drawing && newLine && drawingMode === 'line') {
       setNewLine({
@@ -1464,7 +1464,6 @@ const Canvas = () => {
       //   const dx = smartSnap.x - center.x;
       //   const dy = smartSnap.y - center.y;
       //   const distance = Math.sqrt(dx * dx + dy * dy);
-
       //   if (Math.abs(distance - radius) <= 5) {
       //     setNewLine({
       //       ...lineProps({
@@ -1581,9 +1580,7 @@ const Canvas = () => {
         });
       }
     }
-
   };
-
 
   const handleStageLeftClick = (e) => {
     const target = e.target;
@@ -1757,7 +1754,7 @@ const Canvas = () => {
       setSelectionPoints((prev) => [...prev, smartSnap.x, smartSnap.y]);
     }
 
-    drawHoverShape(smartSnap, target)
+    drawHoverShape(smartSnap, target);
 
     //Thêm position
     if (drawingMode === 'add-pos' && createPos) {
@@ -2089,13 +2086,21 @@ const Canvas = () => {
       extension: false,
     };
 
-    const candidatesDict = Snap.getSnapCandidates(
+    const { end, mid, node, quadrant, intersection } = Snap.getSnapCandidates(
       enabledSnapModes,
       mouse,
       prevMouse,
       Utils.getAllShapesFromLayers(layers),
       gridSize
     );
+
+    const candidatesDict = {
+      end,
+      mid,
+      node,
+      quadrant,
+      intersection,
+    };
 
     // Gộp các candidates từ từng loại (mid, end, ...) thành 1 mảng
     const candidates = Object.values(candidatesDict).flat();
@@ -2190,17 +2195,24 @@ const Canvas = () => {
             dropdownData={dropdownData}
             handleDropdownOpen={handleDropdownOpen}
             onSelectItem={({ x, y, type }) => {
+              const { x: xRuler, y: yRuler } = Utils.revertPointerFromZoom(
+                zoom,
+                { x, y }
+              );
               setSnapPoint({ x, y, type });
-              setMousePos({ ...mousePos, x, y });
+              setMousePos({ xRuler, yRuler, x, y });
               drawShape({ x, y });
             }}
             onHoverItem={({ x, y, type }) => {
+              const { x: xRuler, y: yRuler } = Utils.revertPointerFromZoom(
+                zoom,
+                { x, y }
+              );
               setSnapPoint({ x, y, type });
-              setMousePos({ ...mousePos, x, y });
-              if(newLine) {
-drawHoverShape({ x, y });
+              setMousePos({ xRuler, yRuler, x, y });
+              if (newLine) {
+                drawHoverShape({ x, y });
               }
-              
             }}
             PathControl={
               <PathControl

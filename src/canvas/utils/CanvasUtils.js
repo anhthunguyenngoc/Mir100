@@ -67,6 +67,14 @@ export const adjustPointerForZoom = (zoom, pointer) => {
   };
 };
 
+export const revertPointerFromZoom = (zoom, adjustedPointer) => {
+  const zoomScale = zoom / 100;
+  return {
+    x: adjustedPointer.x * zoomScale + Const.RULER_SIZE,
+    y: adjustedPointer.y * zoomScale + Const.RULER_SIZE,
+  };
+};
+
 export const normalizeAbsolutePosition = (point) => {
   return {
     x: point.x - Const.RULER_SIZE,

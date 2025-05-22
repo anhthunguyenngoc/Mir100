@@ -84,7 +84,7 @@ function intersectLineSpline(line, spline, alpha = 0.0, numSamples = 20) {
   if (spline.mode.includes('p-')) {
     return intersectLinePSpline(line, spline);
   } else if (spline.mode.includes('cv-')) {
-    return intersectLineBSpline(line, spline); 
+    return intersectLineBSpline(line, spline);
   }
   return [];
 }
@@ -195,7 +195,7 @@ function intersectLineZLine(line, zline) {
     } else if (seg.type === 'quad') {
       inter = utils.intersectLineQuadBezier(line, seg);
     }
-    
+
     if (inter && inter.length > 0) {
       intersections.push(...inter);
     }
@@ -209,18 +209,14 @@ function intersectLineULine(line, uline) {
   const { segments } = utils.getULineSegments(uline);
 
   for (const seg of segments) {
-      if (seg.type === 'line') {
+    if (seg.type === 'line') {
       const inter = intersectLineLine(seg, line);
       if (inter.length > 0) results.push(...inter);
     } else if (seg.type === 'arc') {
-      const inter =  utils.intersectLineEllipseArc(
-    line,
-    seg
-  );
-      if(inter?.length && inter.length > 0)
-        results.push(...inter);
+      const inter = utils.intersectLineEllipseArc(line, seg);
+      if (inter?.length && inter.length > 0) results.push(...inter);
     }
-    }
+  }
 
   return results;
 }
@@ -231,25 +227,20 @@ function intersectArcULine(arc, uline) {
   const { segments } = utils.getULineSegments(uline);
 
   for (const seg of segments) {
-      if (seg.type === 'line') {
+    if (seg.type === 'line') {
       const inter = intersectLineArc(seg, arc);
       if (inter.length > 0) results.push(...inter);
     } else if (seg.type === 'arc') {
-      const inter =  utils.intersectEllipticalArcArc(
-    
-    seg,
-    arc
-  );
-      if(inter?.length && inter.length > 0)
-        results.push(...inter);
+      const inter = utils.intersectEllipticalArcArc(seg, arc);
+      if (inter?.length && inter.length > 0) results.push(...inter);
     }
-    }
+  }
 
   return results;
 }
 
 function intersectArcZLine(arc, zline) {
- const { segments } = utils.getZLineSegments(zline);
+  const { segments } = utils.getZLineSegments(zline);
   let intersections = [];
 
   for (const seg of segments) {
@@ -267,15 +258,14 @@ function intersectArcZLine(arc, zline) {
   return intersections;
 }
 
-
 function intersectZLineZLine(zline1, zline2) {
- const { segments: segments1 } = utils.getZLineSegments(zline1);
- const { segments: segments2 } = utils.getZLineSegments(zline2);
+  const { segments: segments1 } = utils.getZLineSegments(zline1);
+  const { segments: segments2 } = utils.getZLineSegments(zline2);
   let intersections = [];
 
   for (const seg1 of segments1) {
     for (const seg2 of segments2) {
-    let inter = [];
+      let inter = [];
       const key = `${seg1.type}-${seg2.type}`;
 
       switch (key) {
@@ -299,29 +289,27 @@ function intersectZLineZLine(zline1, zline2) {
       if (inter?.length) {
         intersections.push(...inter);
       }
-
-  }
+    }
   }
   return intersections;
 }
 
-//ongoing
 function intersectZLineULine(zline, uline) {
   const { segments: segments1 } = utils.getZLineSegments(zline);
- const { segments: segments2 } = utils.getULineSegments(uline);
+  const { segments: segments2 } = utils.getULineSegments(uline);
   let intersections = [];
-  console.log({segments1, segments2})
+
   for (const seg1 of segments1) {
     for (const seg2 of segments2) {
-    let inter = [];
+      let inter = [];
       const key = `${seg1.type}-${seg2.type}`;
-      // console.log({seg1, seg2})
+
       switch (key) {
         case 'line-line':
           inter = intersectLineLine(seg1, seg2);
           break;
         case 'line-arc':
-          inter = intersectLineArc(seg1, seg2);
+          inter = utils.intersectLineEllipseArc(seg1, seg2);
           break;
         case 'quad-line':
           inter = utils.intersectLineQuadBezier(seg2, seg1); // đảo lại
@@ -337,8 +325,43 @@ function intersectZLineULine(zline, uline) {
       if (inter?.length) {
         intersections.push(...inter);
       }
-
+    }
   }
+  return intersections;
+}
+
+//ongoing
+function intersectULineULine(uline1, uline2) {
+  const { segments: segments1 } = utils.getULineSegments(uline1);
+  const { segments: segments2 } = utils.getULineSegments(uline2);
+  let intersections = [];
+
+  for (const seg1 of segments1) {
+    for (const seg2 of segments2) {
+      let inter = [];
+      const key = `${seg1.type}-${seg2.type}`;
+      switch (key) {
+        case 'line-line':
+          inter = intersectLineLine(seg1, seg2);
+          break;
+        case 'line-arc':
+          inter = utils.intersectLineEllipseArc(seg1, seg2);
+          break;
+        case 'arc-line':
+          inter = utils.intersectLineEllipseArc(seg2, seg1); // đảo lại
+          break;
+        case 'arc-arc':
+          inter = utils.intersectEllipseArcEllipseArc(seg2, seg1);
+          break;
+        default:
+          console.warn(`Không xử lý được loại giao nhau: ${key}`);
+          break;
+      }
+
+      if (inter?.length) {
+        intersections.push(...inter);
+      }
+    }
   }
   return intersections;
 }
@@ -348,17 +371,11 @@ function intersectArcSpline(arc, spline) {
   return segments.flatMap((seg) => intersectLineArc(seg, arc));
 }
 
-
-
 function intersectZLineSpline(zline, spline) {
   const segments = utils.approximateSpline(spline);
   return zline.segments.flatMap((seg) =>
     segments.flatMap((s) => intersectLineLine(seg, s))
   );
-}
-
-function intersectULineULine(u1, u2) {
-  return u1.segments.flatMap((s1) => intersectLineULine(s1, u2));
 }
 
 function intersectULineSpline(uline, spline) {

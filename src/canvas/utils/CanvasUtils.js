@@ -456,9 +456,9 @@ export function convertToPointObjects(flatArray) {
   if (
     !Array.isArray(flatArray) ||
     flatArray.length % 2 !== 0 ||
-    !flatArray.every(n => typeof n === 'number' && isFinite(n))
+    !flatArray.every((n) => typeof n === 'number' && isFinite(n))
   ) {
-    return flatArray; 
+    return flatArray;
   }
 
   const result = [];

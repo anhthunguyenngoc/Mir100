@@ -8,6 +8,7 @@ export const LeftSidebar = ({
   handleUpdateShape,
   layers,
   setLayers,
+  sidebarHeight,
 }) => {
   const [visible, setVisible] = useState(true);
 
@@ -43,7 +44,10 @@ export const LeftSidebar = ({
   return (
     <div className="left-info-container">
       {!visible && (
-        <div className="left-info-showcontent">
+        <div
+          className="left-info-showcontent border-right"
+          style={{ height: sidebarHeight }}
+        >
           <div className="flex col" style={{ alignItems: 'flex-end' }}>
             <button
               className="left-sidebar-btn"
@@ -83,7 +87,7 @@ export const LeftSidebar = ({
       )}
 
       {visible && (
-        <div className="left-info-hidecontent">
+        <div className="left-info-hidecontent border">
           <button
             className="left-sidebar-btn"
             onClick={() => setVisible(false)}

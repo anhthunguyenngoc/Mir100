@@ -142,6 +142,14 @@ const Canvas = () => {
   }, []);
 
   useEffect(() => {
+    if (editable) {
+      setLineType(null);
+    } else {
+      setLineType('path');
+    }
+  }, [editable]);
+
+  useEffect(() => {
     if (!stageRef.current) return;
 
     layerRefs.current.forEach((layerRef, index) => {
@@ -923,7 +931,7 @@ const Canvas = () => {
     height: line.height
       ? line.height
       : line.endP && line.startP && Math.abs(line.endP.y - line.startP.y),
-    isDrawing: false,
+    isDrawing: drawing,
     onClick: (e) => {
       selectLine(line.id, e);
     },
@@ -1338,178 +1346,8 @@ const Canvas = () => {
     }
   };
 
-  const handleStageLeftClick = (e) => {
-    const target = e.target;
-    const stage = target.getStage();
-    const p = stage.getPointerPosition();
-
-    // Xóa line đang select
-    if (!target.name()) {
-      resetSelection();
-    }
-
-    const adjustedPointer = Utils.adjustPointerForZoom(zoom, p);
-    const smartSnap =
-      Snap.getSnapPoint(
-        enabledSnapModes,
-        adjustedPointer,
-        newLine?.startP,
-        Utils.getAllShapesFromLayers(layers),
-        gridSize
-      ) || adjustedPointer;
-    setSnapPoint(smartSnap);
-
-    // Selection bắt đầu
-    if (drawingMode === 'rect-selection' && !selectionBox) {
-      setStartPoint(smartSnap);
-      setSelectionBox({ x: smartSnap.x, y: smartSnap.y, width: 0, height: 0 });
-    } else if (drawingMode === 'free-selection') {
-      setSelectionPoints([smartSnap.x, smartSnap.y]);
-    }
-
-    // Click thứ 2 - xác nhận vùng chọn
-    if (drawingMode === 'rect-selection' && selectionBox) {
-      // Hàm đệ quy để kiểm tra selected cho shape và group lồng nhau
-      const updateShapeSelection = (shape) => {
-        const node = groupRefs.current[shape.id];
-        if (!node) return shape;
-
-        if (
-          shape.name === Const.ShapeName.GROUP &&
-          Array.isArray(shape.shapes)
-        ) {
-          const updatedChildren = shape.shapes.map(updateShapeSelection);
-          const isGroupSelected = updatedChildren.some((s) => s.selected);
-          return {
-            ...shape,
-            shapes: updatedChildren,
-            selected: isGroupSelected,
-          };
-        }
-
-        const isSelected = isGroupInSelection(node, selectionBox);
-        return {
-          ...shape,
-          selected: isSelected,
-        };
-      };
-
-      // Cập nhật toàn bộ shapes của layer
-      const updatedShapes = selectedLayer.shapes.map(updateShapeSelection);
-
-      // Cập nhật layer
-      replaceShapesInLayer(selectedLayer.id, updatedShapes);
-      setSelectionBox(null);
-    } else if (drawingMode === 'free-selection' && selectionPoints) {
-      setSelectionPoints([]);
-    }
-
-    //
-
-    if (!drawingMode) return;
-
-    if (!isContinuosLine) {
-      setIsContinuosLine(true);
-    }
-
-    drawShape(smartSnap);
-
-    //Thêm position
-    if (drawingMode === 'add-pos') {
-      if (!createPos) {
-        setCreatePos({
-          pos_x: smartSnap.x,
-          pos_y: smartSnap.y,
-          orientation: 0,
-        });
-      } else {
-        const m = { pos_x: smartSnap.x, pos_y: smartSnap.y };
-        const realPos = Utils.getRealPosition(
-          Number(createPos.pos_x),
-          Number(createPos.pos_y),
-          map
-        );
-        const newPos = {
-          pos_x: realPos.x,
-          pos_y: realPos.y,
-          orientation: Utils.getAngleSigned(
-            createPos.pos_x,
-            createPos.pos_y,
-            m.pos_x,
-            m.pos_y
-          ),
-        };
-        setDrawingMode(null);
-        openCreatePosition(newPos, 1);
-        setCreatePos(null);
-      }
-    }
-
-    //Thêm marker
-    if (drawingMode === 'add-marker') {
-      if (!createMarker) {
-        setCreateMarker({
-          pos_x: smartSnap.x,
-          pos_y: smartSnap.y,
-          orientation: 0,
-        });
-      } else {
-        const m = { pos_x: smartSnap.x, pos_y: smartSnap.y };
-        setCreateMarker({
-          ...createMarker,
-          orientation: Utils.getAngleSigned(
-            createMarker.x,
-            createMarker.y,
-            m.pos_x,
-            m.pos_y
-          ),
-        });
-        openCreateMarker(createMarker);
-        setCreateMarker(null);
-      }
-    }
-  };
-
-  const handleStageClick = (e) => {
-    if (e.evt.button === 0) {
-      // Chỉ xử lý chuột trái
-      handleStageLeftClick(e);
-    } else if (e.evt.button === 2) {
-      handleStageRightClick(e);
-    }
-  };
-
-  const handleStageMouseMove = (e) => {
-    const target = e.target;
-    const stage = target.getStage();
-    const p = stage.getPointerPosition();
-
-    const adjustedPointer = Utils.adjustPointerForZoom(zoom, p);
-    const smartSnap =
-      Snap.getSnapPoint(
-        enabledSnapModes,
-        adjustedPointer,
-        newLine?.startP,
-        Utils.getAllShapesFromLayers(layers),
-        gridSize
-      ) || adjustedPointer;
-    setSnapPoint(smartSnap);
-    setMousePos({ x: adjustedPointer.x, y: adjustedPointer.y, xRuler: p.x, yRuler: p.y });
-
-    //Selection
-    if (drawingMode === 'rect-selection') {
-      if (selectionBox) {
-        setSelectionBox({
-          x: Math.min(startPoint.x, smartSnap.x),
-          y: Math.min(startPoint.y, smartSnap.y),
-          width: Math.abs(startPoint.x - smartSnap.x),
-          height: Math.abs(startPoint.y - smartSnap.y),
-        });
-      }
-    } else if (drawingMode === 'free-selection' && selectionPoints) {
-      setSelectionPoints((prev) => [...prev, smartSnap.x, smartSnap.y]);
-    }
-
+  const drawHoverShape = (smartSnap, target) => {
+    console.log(newLine, smartSnap)
     //Vẽ đường thẳng
     if (drawing && newLine && drawingMode === 'line') {
       setNewLine({
@@ -1618,27 +1456,27 @@ const Canvas = () => {
 
     //Vẽ đường tiếp tuyến
     if (drawingMode === 'tangent') {
-      if (target.name() === Const.ShapeName.ARC) {
-        const { center, radius } = {
-          center: { x: target.attrs.x, y: target.attrs.y },
-          radius: target.attrs.outerRadius,
-        };
-        const dx = smartSnap.x - center.x;
-        const dy = smartSnap.y - center.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
+      // if (target.name() === Const.ShapeName.ARC) {
+      //   const { center, radius } = {
+      //     center: { x: target.attrs.x, y: target.attrs.y },
+      //     radius: target.attrs.outerRadius,
+      //   };
+      //   const dx = smartSnap.x - center.x;
+      //   const dy = smartSnap.y - center.y;
+      //   const distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (Math.abs(distance - radius) <= 5) {
-          setNewLine({
-            ...lineProps({
-              type: lineType,
-              name: Const.ShapeName.TANGENT,
-              points: [],
-            }),
-            contactPoint: smartSnap,
-            arc: { center, radius },
-          });
-        }
-      }
+      //   if (Math.abs(distance - radius) <= 5) {
+      //     setNewLine({
+      //       ...lineProps({
+      //         type: lineType,
+      //         name: Const.ShapeName.TANGENT,
+      //         points: [],
+      //       }),
+      //       contactPoint: smartSnap,
+      //       arc: { center, radius },
+      //     });
+      //   }
+      // }
     }
 
     //Vẽ đường chữ U
@@ -1743,6 +1581,183 @@ const Canvas = () => {
         });
       }
     }
+
+  };
+
+
+  const handleStageLeftClick = (e) => {
+    const target = e.target;
+    const stage = target.getStage();
+    const p = stage.getPointerPosition();
+
+    // Xóa line đang select
+    if (!target.name()) {
+      resetSelection();
+    }
+
+    const adjustedPointer = Utils.adjustPointerForZoom(zoom, p);
+    const smartSnap =
+      Snap.getSnapPoint(
+        enabledSnapModes,
+        adjustedPointer,
+        newLine?.startP,
+        Utils.getAllShapesFromLayers(layers),
+        gridSize
+      ) || adjustedPointer;
+    setSnapPoint(smartSnap);
+
+    // Selection bắt đầu
+    if (drawingMode === 'rect-selection' && !selectionBox) {
+      setStartPoint(smartSnap);
+      setSelectionBox({ x: smartSnap.x, y: smartSnap.y, width: 0, height: 0 });
+    } else if (drawingMode === 'free-selection') {
+      setSelectionPoints([smartSnap.x, smartSnap.y]);
+    }
+
+    // Click thứ 2 - xác nhận vùng chọn
+    if (drawingMode === 'rect-selection' && selectionBox) {
+      // Hàm đệ quy để kiểm tra selected cho shape và group lồng nhau
+      const updateShapeSelection = (shape) => {
+        const node = groupRefs.current[shape.id];
+        if (!node) return shape;
+
+        if (
+          shape.name === Const.ShapeName.GROUP &&
+          Array.isArray(shape.shapes)
+        ) {
+          const updatedChildren = shape.shapes.map(updateShapeSelection);
+          const isGroupSelected = updatedChildren.some((s) => s.selected);
+          return {
+            ...shape,
+            shapes: updatedChildren,
+            selected: isGroupSelected,
+          };
+        }
+
+        const isSelected = isGroupInSelection(node, selectionBox);
+        return {
+          ...shape,
+          selected: isSelected,
+        };
+      };
+
+      // Cập nhật toàn bộ shapes của layer
+      const updatedShapes = selectedLayer.shapes.map(updateShapeSelection);
+
+      // Cập nhật layer
+      replaceShapesInLayer(selectedLayer.id, updatedShapes);
+      setSelectionBox(null);
+    } else if (drawingMode === 'free-selection' && selectionPoints) {
+      setSelectionPoints([]);
+    }
+
+    //
+
+    if (!drawingMode) return;
+
+    // if (!isContinuosLine) {
+    //   setIsContinuosLine(true);
+    // }
+
+    drawShape(smartSnap);
+
+    //Thêm position
+    if (drawingMode === 'add-pos') {
+      if (!createPos) {
+        setCreatePos({
+          pos_x: smartSnap.x,
+          pos_y: smartSnap.y,
+          orientation: 0,
+        });
+      } else {
+        const m = { pos_x: smartSnap.x, pos_y: smartSnap.y };
+        const realPos = Utils.getRealPosition(
+          Number(createPos.pos_x),
+          Number(createPos.pos_y),
+          map
+        );
+        const newPos = {
+          pos_x: realPos.x,
+          pos_y: realPos.y,
+          orientation: Utils.getAngleSigned(
+            createPos.pos_x,
+            createPos.pos_y,
+            m.pos_x,
+            m.pos_y
+          ),
+        };
+        setDrawingMode(null);
+        openCreatePosition(newPos, 1);
+        setCreatePos(null);
+      }
+    }
+
+    //Thêm marker
+    if (drawingMode === 'add-marker') {
+      if (!createMarker) {
+        setCreateMarker({
+          pos_x: smartSnap.x,
+          pos_y: smartSnap.y,
+          orientation: 0,
+        });
+      } else {
+        const m = { pos_x: smartSnap.x, pos_y: smartSnap.y };
+        setCreateMarker({
+          ...createMarker,
+          orientation: Utils.getAngleSigned(
+            createMarker.x,
+            createMarker.y,
+            m.pos_x,
+            m.pos_y
+          ),
+        });
+        openCreateMarker(createMarker);
+        setCreateMarker(null);
+      }
+    }
+  };
+
+  const handleStageClick = (e) => {
+    if (e.evt.button === 0) {
+      // Chỉ xử lý chuột trái
+      handleStageLeftClick(e);
+    } else if (e.evt.button === 2) {
+      handleStageRightClick(e);
+    }
+  };
+
+  const handleStageMouseMove = (e) => {
+    const target = e.target;
+    const stage = target.getStage();
+    const p = stage.getPointerPosition();
+
+    const adjustedPointer = Utils.adjustPointerForZoom(zoom, p);
+    const smartSnap =
+      Snap.getSnapPoint(
+        enabledSnapModes,
+        adjustedPointer,
+        newLine?.startP,
+        Utils.getAllShapesFromLayers(layers),
+        gridSize
+      ) || adjustedPointer;
+    setSnapPoint(smartSnap);
+    setMousePos({ x: smartSnap.x, y: smartSnap.y, xRuler: p.x, yRuler: p.y });
+
+    //Selection
+    if (drawingMode === 'rect-selection') {
+      if (selectionBox) {
+        setSelectionBox({
+          x: Math.min(startPoint.x, smartSnap.x),
+          y: Math.min(startPoint.y, smartSnap.y),
+          width: Math.abs(startPoint.x - smartSnap.x),
+          height: Math.abs(startPoint.y - smartSnap.y),
+        });
+      }
+    } else if (drawingMode === 'free-selection' && selectionPoints) {
+      setSelectionPoints((prev) => [...prev, smartSnap.x, smartSnap.y]);
+    }
+
+    drawHoverShape(smartSnap, target)
 
     //Thêm position
     if (drawingMode === 'add-pos' && createPos) {
@@ -2055,6 +2070,65 @@ const Canvas = () => {
     setIsClickVisible(true);
   };
 
+  const [dropdownData, setDropdownData] = useState([]);
+  const handleDropdownOpen = () => {
+    const mouse = { x: mousePos.xRuler, y: mousePos.yRuler }; // lấy mouse position hiện tại
+    const prevMouse = newLine?.startP; // hoặc null
+    const enabledSnapModes = {
+      grid: false,
+      end: true,
+      mid: true,
+      nearest: false,
+      geometricCenter: true,
+      node: true,
+      quadrant: true,
+      intersection: true,
+      perpendicular: false,
+      tangent: false,
+      parallel: false,
+      extension: false,
+    };
+
+    const candidatesDict = Snap.getSnapCandidates(
+      enabledSnapModes,
+      mouse,
+      prevMouse,
+      Utils.getAllShapesFromLayers(layers),
+      gridSize
+    );
+
+    // Gộp các candidates từ từng loại (mid, end, ...) thành 1 mảng
+    const candidates = Object.values(candidatesDict).flat();
+
+    if (candidates.length <= 0) {
+      setDropdownData([]);
+      return;
+    }
+
+    // Gom nhóm theo loại
+    const groupByType = {};
+    for (const [type, points] of Object.entries(candidatesDict)) {
+      if (points.length > 0) {
+        groupByType[type] = points.map(
+          (c) => `(${c.x.toFixed(1)}, ${c.y.toFixed(1)})`
+        );
+      }
+    }
+
+    // Biến thành mảng để truyền vào dropdown
+    const groupedData = Object.entries(candidatesDict).map(
+      ([type, points]) => ({
+        title: type,
+        items: points.map((c) => ({
+          label: `(${c.x.toFixed(1)}, ${c.y.toFixed(1)})`,
+          value: { x: c.x, y: c.y, type },
+        })),
+      })
+    );
+
+    setDropdownData(groupedData);
+  };
+
   return (
     <div className="full-height flex col" onContextMenu={handleRightClick}>
       <CanvasComponent.CanvasToolbar
@@ -2081,29 +2155,52 @@ const Canvas = () => {
       />
       <div className="full-height" style={{ position: 'relative' }}>
         <CanvasComponent.Zoom zoom={zoom} setZoom={setZoom} />
-        {editable && (
-          <CanvasComponent.LeftSidebar
-            shapes={selectedLayer.shapes}
-            layers={layers}
-            setLayers={setLayers}
-            handleUpdateShape={(id, newProps) =>
-              handleUpdateShape(selectedLayer.id, id, newProps)
-            }
-          />
-        )}
+
+        <CanvasComponent.LeftSidebar
+          shapes={selectedLayer.shapes}
+          layers={layers}
+          setLayers={setLayers}
+          handleUpdateShape={(id, newProps) =>
+            handleUpdateShape(selectedLayer.id, id, newProps)
+          }
+          sidebarHeight={dimensions.height - Const.RULER_SIZE}
+        />
+
         {
           <CanvasComponent.RightSidebar
-            shape={selectedShape}
+            shape={
+              selectedShape ||
+              newLine || {
+                name: Const.ShapeName.LINE,
+                type: lineType,
+                startP: mousePos,
+              }
+            }
             handleUpdateShape={(id, newProps) =>
               handleUpdateShape(selectedLayer.id, id, newProps)
             }
             saveState={saveState}
-            sidebarHeight={dimensions.height}
-            editable={editable}
+            sidebarHeight={dimensions.height - Const.RULER_SIZE}
+            editable={true}
             speedInfo={{
               baseSpeed: 0.1,
               linearSpeed: speed.linear,
               angularSpeed: speed.angular,
+            }}
+            dropdownData={dropdownData}
+            handleDropdownOpen={handleDropdownOpen}
+            onSelectItem={({ x, y, type }) => {
+              setSnapPoint({ x, y, type });
+              setMousePos({ ...mousePos, x, y });
+              drawShape({ x, y });
+            }}
+            onHoverItem={({ x, y, type }) => {
+              setSnapPoint({ x, y, type });
+              setMousePos({ ...mousePos, x, y });
+              if(newLine) {
+drawHoverShape({ x, y });
+              }
+              
             }}
             PathControl={
               <PathControl

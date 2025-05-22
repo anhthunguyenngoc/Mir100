@@ -60,7 +60,15 @@ const AlignmentSection = () => {
   );
 };
 
-const PositionSection = ({ shape, handleUpdateShape, saveState }) => {
+const PositionSection = ({
+  shape,
+  handleUpdateShape,
+  saveState,
+  dropdownData,
+  handleDropdownOpen,
+  onSelectItem,
+  onHoverItem,
+}) => {
   return (
     <div className="flex col gap-15px">
       {componentKeyList(shape.name).map((key) => {
@@ -70,6 +78,10 @@ const PositionSection = ({ shape, handleUpdateShape, saveState }) => {
             componentKey={key}
             handleUpdateShape={handleUpdateShape}
             saveState={saveState}
+            dropdownData={dropdownData}
+            handleDropdownOpen={handleDropdownOpen}
+            onSelectItem={onSelectItem}
+            onHoverItem={onHoverItem}
           />
         );
       })}
@@ -143,6 +155,10 @@ export const RightSidebar = ({
   editable,
   PathControl,
   speedInfo,
+  dropdownData,
+  handleDropdownOpen,
+  onSelectItem,
+  onHoverItem,
 }) => {
   const [visible, setVisible] = useState(true);
   const { baseSpeed, linearSpeed, angularSpeed } = speedInfo;
@@ -152,7 +168,7 @@ export const RightSidebar = ({
       {!visible &&
         (shape ? (
           <div
-            className="right-info-showcontent"
+            className="right-info-showcontent border-left"
             style={{ height: sidebarHeight }}
           >
             <div className="flex col">
@@ -163,32 +179,55 @@ export const RightSidebar = ({
                 onClick={() => setVisible(true)}
               />
             </div>
-            <TypeSection name={shape.name} type={shape.type} />
-            <Comp.HorizonLine {...horizonLineProps} />
-            <AlignmentSection />
-            <Comp.HorizonLine {...horizonLineProps} />
+            {shape.type && shape.name && (
+              <>
+                <TypeSection name={shape.name} type={shape.type} />
+                <Comp.HorizonLine {...horizonLineProps} />
+              </>
+            )}
+            {shape.startP && shape.endP && shape.isDrawing && (
+              <>
+                <AlignmentSection />
+                <Comp.HorizonLine {...horizonLineProps} />
+              </>
+            )}
 
-            <PositionSection
-              shape={shape}
-              handleUpdateShape={handleUpdateShape}
-              saveState={saveState}
-            />
+            {shape.startP && (
+              <>
+                <PositionSection
+                  shape={shape}
+                  handleUpdateShape={handleUpdateShape}
+                  saveState={saveState}
+                  dropdownData={dropdownData}
+                  handleDropdownOpen={handleDropdownOpen}
+                  onSelectItem={onSelectItem}
+                  onHoverItem={onHoverItem}
+                />
 
-            <Comp.HorizonLine {...horizonLineProps} />
+                <Comp.HorizonLine {...horizonLineProps} />
+              </>
+            )}
 
-            <DimensionsSection
-              shape={shape}
-              handleUpdateShape={handleUpdateShape}
-              saveState={saveState}
-            />
+            {shape.width && shape.height && (
+              <>
+                <DimensionsSection
+                  shape={shape}
+                  handleUpdateShape={handleUpdateShape}
+                  saveState={saveState}
+                />
 
-            <Comp.HorizonLine {...horizonLineProps} />
-
-            <DirectionSection
-              shape={shape}
-              handleUpdateShape={handleUpdateShape}
-              saveState={saveState}
-            />
+                <Comp.HorizonLine {...horizonLineProps} />
+              </>
+            )}
+            {shape.type && (
+              <>
+                <DirectionSection
+                  shape={shape}
+                  handleUpdateShape={handleUpdateShape}
+                  saveState={saveState}
+                />
+              </>
+            )}
           </div>
         ) : (
           <div className="right-info-showcontent">
@@ -204,7 +243,7 @@ export const RightSidebar = ({
         ))}
 
       {visible && (
-        <div className="right-info-hidecontent">
+        <div className="right-info-hidecontent border">
           <Comp.ImageButton
             className="left-sidebar-btn"
             onClick={() => setVisible(false)}
@@ -382,6 +421,10 @@ const ShapeComponent = ({
   componentKey,
   handleUpdateShape,
   saveState,
+  dropdownData,
+  handleDropdownOpen,
+  onSelectItem,
+  onHoverItem,
 }) => {
   switch (componentKey) {
     case SCK.STARTP:
@@ -389,29 +432,45 @@ const ShapeComponent = ({
         shape.startP && (
           <div className="flex col gap-5px">
             Start
-            <div className="flex row gap-15px">
-              <InputNumber
-                placeholder="Start X"
-                value={shape.startP.x}
-                onChange={(e) => {
-                  handleUpdateShape(shape.id, {
-                    startP: { ...shape.startP, x: Number(e.target.value) },
-                  });
-                  saveState();
+            <div className="flex col gap-5px">
+              <Comp.SearchableDropDown
+                dropdownData={dropdownData}
+                handleDropdownOpen={handleDropdownOpen}
+                onSelectItem={(item) => {
+                  if (item?.value) {
+                    onSelectItem(item.value);
+                  }
                 }}
-                imgSrc="letterX"
-              />
-              <InputNumber
-                placeholder="Start Y"
-                value={shape.startP.y}
-                onChange={(e) => {
-                  handleUpdateShape(shape.id, {
-                    startP: { ...shape.startP, y: Number(e.target.value) },
-                  });
-                  saveState();
+                onHoverItem={(item) => {
+                  if (item?.value) {
+                    onHoverItem(item.value);
+                  }
                 }}
-                imgSrc="letterY"
               />
+              <div className="flex row gap-15px">
+                <InputNumber
+                  placeholder="Start X"
+                  value={shape.startP.x}
+                  onChange={(e) => {
+                    handleUpdateShape(shape.id, {
+                      startP: { ...shape.startP, x: Number(e.target.value) },
+                    });
+                    saveState();
+                  }}
+                  imgSrc="letterX"
+                />
+                <InputNumber
+                  placeholder="Start Y"
+                  value={shape.startP.y}
+                  onChange={(e) => {
+                    handleUpdateShape(shape.id, {
+                      startP: { ...shape.startP, y: Number(e.target.value) },
+                    });
+                    saveState();
+                  }}
+                  imgSrc="letterY"
+                />
+              </div>
             </div>
           </div>
         )

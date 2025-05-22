@@ -3962,7 +3962,6 @@
 
 //   const startTime = performance.now(); // ⏱️ Bắt đầu đo thời gian
 
-
 //   for (let i = 0; i < points.length - 1; i++) {
 //     const p0 = points[i - 1] || points[i];
 //     const p1 = points[i];
@@ -3986,3 +3985,203 @@
 
 //   return intersections;
 // }
+
+// export const getSnapPoint = (
+//   enabledSnapModes,
+//   mouse,
+//   prevMouse,
+//   shapes,
+//   gridSize = 20
+// ) => {
+//   // Tạo các mảng riêng biệt cho từng loại điểm theo thứ tự ưu tiên
+//   let midPointCandidates = [];
+//   let endPointCandidates = [];
+//   let intersectionCandidates = [];
+//   let nodePointCandidates = [];
+//   let quadrantPointCandidates = [];
+//   let perpendicularPointCandidates = [];
+//   let tangentPointCandidates = [];
+//   let nearestPointCandidates = [];
+//   let gridPointCandidates = [];
+
+//   // Thu thập tất cả các loại điểm từ shapes
+//   for (const shape of shapes) {
+//     const { id: shapeId, startP, endP, points } = shape;
+
+//     // Mid points (ưu tiên cao nhất)
+//     if (enabledSnapModes.mid && startP && endP) {
+//       midPointCandidates.push({
+//         x: (startP.x + endP.x) / 2,
+//         y: (startP.y + endP.y) / 2,
+//         type: 'mid',
+//         shapeId,
+//       });
+//     }
+
+//     // End points (ưu tiên thứ ba)
+//     if (enabledSnapModes.end && endP && startP) {
+//       endPointCandidates.push({ ...endP, type: 'end', shapeId });
+//       endPointCandidates.push({ ...startP, type: 'end', shapeId });
+//     }
+
+//     // Nearest points (ưu tiên thấp)
+//     if (enabledSnapModes.nearest && points?.length >= 2) {
+//       const nearest = getClosestPointOnPolyline(points, mouse);
+//       if (nearest) {
+//         nearestPointCandidates.push({ ...nearest, type: 'nearest', shapeId });
+//       }
+//     }
+
+//     // Node points (ưu tiên thứ năm)
+//     if (enabledSnapModes.node) {
+//       utils
+//         .convertToPointObjects(points)
+//         .forEach((p) =>
+//           nodePointCandidates.push({ ...p, type: 'node', shapeId })
+//         );
+//     }
+
+//     if (enabledSnapModes.quadrant) {
+//       shapes.forEach((shape) => {
+//         if (shape.name.includes('arc') && shape.centerP) {
+//           const points = getQuadrantPoints(shape);
+//           points.forEach((p) =>
+//             quadrantPointCandidates.push({ ...p, type: 'quadrant', shapeId })
+//           );
+//         } else if (shape.name === 'uline') {
+//           const points = getEllipticalArcQuadrantPoints(shape);
+//           points.forEach((p) =>
+//             quadrantPointCandidates.push({ ...p, type: 'quadrant', shapeId })
+//           );
+//         }
+//       });
+//     }
+
+//     if (enabledSnapModes.perpendicular && prevMouse) {
+//       const perp =
+//         shape.name === 'line'
+//           ? getPerpendicularPoint(shape, prevMouse)
+//           : shape.name.includes('arc')
+//             ? getPerpendicularToArc(shape, prevMouse)
+//             : null;
+//       if (perp) {
+//         perpendicularPointCandidates.push({
+//           ...perp,
+//           type: 'perpendicular',
+//           shapeId,
+//         });
+//       }
+//     }
+
+//     if (enabledSnapModes.tangent && prevMouse) {
+//       if (shape.name.includes('arc') && shape.centerP) {
+//         const tangent = getTangentPoints(shape, prevMouse);
+//         if (tangent.length > 0) {
+//           tangent.forEach((p) =>
+//             tangentPointCandidates.push({ ...p, type: 'tangent', shapeId })
+//           );
+//         }
+//       }
+//     }
+//   }
+
+//   // Intersection points (ưu tiên thứ tư)
+//   if (enabledSnapModes.intersection) {
+//     const intersections = getAllIntersections(shapes);
+//     if (intersections && intersections.length > 0) {
+//       intersections.forEach((p) =>
+//         intersectionCandidates.push({ ...p, type: 'intersection' })
+//       );
+//     }
+//   }
+
+//   // Grid points (ưu tiên thấp nhất)
+//   if (enabledSnapModes.grid) {
+//     const gridP = getNearestGridPoint(mouse, gridSize);
+//     gridPointCandidates.push({ ...gridP, type: 'grid' });
+//   }
+
+//   // Kiểm tra theo thứ tự ưu tiên
+//   // 1. Mid points
+//   const closestMidPoint = getClosestSnapPoint(
+//     mouse,
+//     midPointCandidates,
+//     SNAP_THRESHOLD
+//   );
+//   if (closestMidPoint) {
+//     return closestMidPoint;
+//   }
+
+//   // 3. End points
+//   const closestEndPoint = getClosestSnapPoint(
+//     mouse,
+//     endPointCandidates,
+//     SNAP_THRESHOLD
+//   );
+//   if (closestEndPoint) {
+//     return closestEndPoint;
+//   }
+
+//   // 4. Intersection points
+//   const closestIntersection = getClosestSnapPoint(
+//     mouse,
+//     intersectionCandidates,
+//     SNAP_THRESHOLD
+//   );
+//   if (closestIntersection) {
+//     return closestIntersection;
+//   }
+
+//   // 5. Node points
+//   const closestNodePoint = getClosestSnapPoint(
+//     mouse,
+//     nodePointCandidates,
+//     SNAP_THRESHOLD
+//   );
+//   if (closestNodePoint) {
+//     return closestNodePoint;
+//   }
+
+//   // 5. Quadrant points
+//   const closestQuadrantPoint = getClosestSnapPoint(
+//     mouse,
+//     quadrantPointCandidates,
+//     SNAP_THRESHOLD
+//   );
+//   if (closestQuadrantPoint) {
+//     return closestQuadrantPoint;
+//   }
+
+//   // 5. Perpendicular points
+//   const closestPerpendicularPoint = getClosestSnapPoint(
+//     mouse,
+//     perpendicularPointCandidates,
+//     SNAP_THRESHOLD
+//   );
+//   if (closestPerpendicularPoint) {
+//     return closestPerpendicularPoint;
+//   }
+
+//   // 5. Tangent points
+//   const closestTangentPoint = getClosestSnapPoint(
+//     mouse,
+//     tangentPointCandidates,
+//     SNAP_THRESHOLD
+//   );
+//   if (closestTangentPoint) {
+//     return closestTangentPoint;
+//   }
+
+//   // 5. Nearest points
+//   const closestNearestPoint = getClosestSnapPoint(
+//     mouse,
+//     nearestPointCandidates,
+//     SNAP_THRESHOLD
+//   );
+//   if (closestNearestPoint) {
+//     return closestNearestPoint;
+//   }
+
+//   // 6. Grid points (ưu tiên thấp nhất)
+//   return getClosestSnapPoint(mouse, gridPointCandidates, SNAP_THRESHOLD);
+// };

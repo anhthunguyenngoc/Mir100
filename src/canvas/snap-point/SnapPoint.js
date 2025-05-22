@@ -15,31 +15,28 @@ function getClosestSnapPoint(mouse, points, threshold) {
   return closest;
 }
 
-export const getSnapPoint = (
+export const getSnapCandidates = (
   enabledSnapModes,
   mouse,
   prevMouse,
   shapes,
   gridSize = 20
 ) => {
-  // Tạo các mảng riêng biệt cho từng loại điểm theo thứ tự ưu tiên
-  let midPointCandidates = [];
-  let endPointCandidates = [];
-  let intersectionCandidates = [];
-  let nodePointCandidates = [];
-  let quadrantPointCandidates = [];
-  let perpendicularPointCandidates = [];
-  let tangentPointCandidates = [];
-  let nearestPointCandidates = [];
-  let gridPointCandidates = [];
+  const mid = [];
+  const end = [];
+  const intersection = [];
+  const node = [];
+  const quadrant = [];
+  const perpendicular = [];
+  const tangent = [];
+  const nearest = [];
+  const grid = [];
 
-  // Thu thập tất cả các loại điểm từ shapes
   for (const shape of shapes) {
     const { id: shapeId, startP, endP, points } = shape;
 
-    // Mid points (ưu tiên cao nhất)
     if (enabledSnapModes.mid && startP && endP) {
-      midPointCandidates.push({
+      mid.push({
         x: (startP.x + endP.x) / 2,
         y: (startP.y + endP.y) / 2,
         type: 'mid',
@@ -47,41 +44,34 @@ export const getSnapPoint = (
       });
     }
 
-    // End points (ưu tiên thứ ba)
     if (enabledSnapModes.end && endP && startP) {
-      endPointCandidates.push({ ...endP, type: 'end', shapeId });
-      endPointCandidates.push({ ...startP, type: 'end', shapeId });
+      end.push({ ...endP, type: 'end', shapeId });
+      end.push({ ...startP, type: 'end', shapeId });
     }
 
-    // Nearest points (ưu tiên thấp)
     if (enabledSnapModes.nearest && points?.length >= 2) {
-      const nearest = getClosestPointOnPolyline(points, mouse);
-      if (nearest) {
-        nearestPointCandidates.push({ ...nearest, type: 'nearest', shapeId });
+      const nearestPoint = getClosestPointOnPolyline(points, mouse);
+      if (nearestPoint) {
+        nearest.push({ ...nearestPoint, type: 'nearest', shapeId });
       }
     }
 
-    // Node points (ưu tiên thứ năm)
     if (enabledSnapModes.node) {
-      utils.convertToPointObjects(points).forEach((p) =>
-            nodePointCandidates.push({ ...p, type: 'node', shapeId })
-          );
+      utils
+        .convertToPointObjects(points)
+        .forEach((p) => node.push({ ...p, type: 'node', shapeId }));
     }
 
     if (enabledSnapModes.quadrant) {
-      shapes.forEach((shape) => {
-        if (shape.name.includes('arc') && shape.centerP) {
-          const points = getQuadrantPoints(shape);
-          points.forEach((p) =>
-            quadrantPointCandidates.push({ ...p, type: 'quadrant', shapeId })
-          );
-        } else if (shape.name === 'uline') {
-          const points = getEllipticalArcQuadrantPoints(shape);
-          points.forEach((p) =>
-            quadrantPointCandidates.push({ ...p, type: 'quadrant', shapeId })
-          );
-        }
-      });
+      if (shape.name.includes('arc') && shape.centerP) {
+        getQuadrantPoints(shape).forEach((p) =>
+          quadrant.push({ ...p, type: 'quadrant', shapeId })
+        );
+      } else if (shape.name === 'uline') {
+        getEllipticalArcQuadrantPoints(shape).forEach((p) =>
+          quadrant.push({ ...p, type: 'quadrant', shapeId })
+        );
+      }
     }
 
     if (enabledSnapModes.perpendicular && prevMouse) {
@@ -92,125 +82,69 @@ export const getSnapPoint = (
             ? getPerpendicularToArc(shape, prevMouse)
             : null;
       if (perp) {
-        perpendicularPointCandidates.push({
-          ...perp,
-          type: 'perpendicular',
-          shapeId,
-        });
+        perpendicular.push({ ...perp, type: 'perpendicular', shapeId });
       }
     }
 
     if (enabledSnapModes.tangent && prevMouse) {
       if (shape.name.includes('arc') && shape.centerP) {
-        const tangent = getTangentPoints(shape, prevMouse);
-        if (tangent.length > 0) {
-          tangent.forEach((p) =>
-            tangentPointCandidates.push({ ...p, type: 'tangent', shapeId })
-          );
-        }
+        getTangentPoints(shape, prevMouse).forEach((p) =>
+          tangent.push({ ...p, type: 'tangent', shapeId })
+        );
       }
     }
   }
 
-  // Intersection points (ưu tiên thứ tư)
   if (enabledSnapModes.intersection) {
-    const intersections = getAllIntersections(shapes);
-    if (intersections && intersections.length > 0) {
-      intersections.forEach((p) =>
-        intersectionCandidates.push({ ...p, type: 'intersection' })
-      );
-    }
+    getAllIntersections(shapes)?.forEach((p) =>
+      intersection.push({ ...p, type: 'intersection' })
+    );
   }
 
-  // Grid points (ưu tiên thấp nhất)
   if (enabledSnapModes.grid) {
     const gridP = getNearestGridPoint(mouse, gridSize);
-    gridPointCandidates.push({ ...gridP, type: 'grid' });
+    grid.push({ ...gridP, type: 'grid' });
   }
 
-  // Kiểm tra theo thứ tự ưu tiên
-  // 1. Mid points
-  const closestMidPoint = getClosestSnapPoint(
+  return {
+    mid,
+    end,
+    intersection,
+    node,
+    quadrant,
+    perpendicular,
+    tangent,
+    nearest,
+    grid,
+  };
+};
+
+export const getSnapPoint = (
+  enabledSnapModes,
+  mouse,
+  prevMouse,
+  shapes,
+  gridSize = 20
+) => {
+  const candidates = getSnapCandidates(
+    enabledSnapModes,
     mouse,
-    midPointCandidates,
-    SNAP_THRESHOLD
+    prevMouse,
+    shapes,
+    gridSize
   );
-  if (closestMidPoint) {
-    return closestMidPoint;
-  }
 
-  // 3. End points
-  const closestEndPoint = getClosestSnapPoint(
-    mouse,
-    endPointCandidates,
-    SNAP_THRESHOLD
+  return (
+    getClosestSnapPoint(mouse, candidates.mid, SNAP_THRESHOLD) ||
+    getClosestSnapPoint(mouse, candidates.end, SNAP_THRESHOLD) ||
+    getClosestSnapPoint(mouse, candidates.intersection, SNAP_THRESHOLD) ||
+    getClosestSnapPoint(mouse, candidates.node, SNAP_THRESHOLD) ||
+    getClosestSnapPoint(mouse, candidates.quadrant, SNAP_THRESHOLD) ||
+    getClosestSnapPoint(mouse, candidates.perpendicular, SNAP_THRESHOLD) ||
+    getClosestSnapPoint(mouse, candidates.tangent, SNAP_THRESHOLD) ||
+    getClosestSnapPoint(mouse, candidates.nearest, SNAP_THRESHOLD) ||
+    getClosestSnapPoint(mouse, candidates.grid, SNAP_THRESHOLD)
   );
-  if (closestEndPoint) {
-    return closestEndPoint;
-  }
-
-  // 4. Intersection points
-  const closestIntersection = getClosestSnapPoint(
-    mouse,
-    intersectionCandidates,
-    SNAP_THRESHOLD
-  );
-  if (closestIntersection) {
-    return closestIntersection;
-  }
-
-  // 5. Node points
-  const closestNodePoint = getClosestSnapPoint(
-    mouse,
-    nodePointCandidates,
-    SNAP_THRESHOLD
-  );
-  if (closestNodePoint) {
-    return closestNodePoint;
-  }
-
-  // 5. Quadrant points
-  const closestQuadrantPoint = getClosestSnapPoint(
-    mouse,
-    quadrantPointCandidates,
-    SNAP_THRESHOLD
-  );
-  if (closestQuadrantPoint) {
-    return closestQuadrantPoint;
-  }
-
-  // 5. Perpendicular points
-  const closestPerpendicularPoint = getClosestSnapPoint(
-    mouse,
-    perpendicularPointCandidates,
-    SNAP_THRESHOLD
-  );
-  if (closestPerpendicularPoint) {
-    return closestPerpendicularPoint;
-  }
-
-  // 5. Tangent points
-  const closestTangentPoint = getClosestSnapPoint(
-    mouse,
-    tangentPointCandidates,
-    SNAP_THRESHOLD
-  );
-  if (closestTangentPoint) {
-    return closestTangentPoint;
-  }
-
-  // 5. Nearest points
-  const closestNearestPoint = getClosestSnapPoint(
-    mouse,
-    nearestPointCandidates,
-    SNAP_THRESHOLD
-  );
-  if (closestNearestPoint) {
-    return closestNearestPoint;
-  }
-
-  // 6. Grid points (ưu tiên thấp nhất)
-  return getClosestSnapPoint(mouse, gridPointCandidates, SNAP_THRESHOLD);
 };
 
 function getNearestGridPoint({ x, y }, gridSize) {
@@ -406,7 +340,7 @@ function getEllipticalArcQuadrantPoints(uline) {
 
   // Tạo các điểm quadrant
   const anglesDeg = [0, 90, 180, 270];
-  const quadrantPoints = anglesDeg.map(deg => {
+  const quadrantPoints = anglesDeg.map((deg) => {
     const rad = (deg * Math.PI) / 180;
     return {
       x: bottomP.x + rx * Math.cos(rad),
@@ -415,8 +349,7 @@ function getEllipticalArcQuadrantPoints(uline) {
   });
 
   //Lọc các điểm nằm trên Arc
-  return quadrantPoints.filter(p => 
-     utils.isPointOnEllipseArc(p, segments[1])
-);
+  return quadrantPoints.filter((p) =>
+    utils.isPointOnEllipseArc(p, segments[1])
+  );
 }
-

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Line, Group, Arrow } from 'react-konva';
 import { MyCircle } from './MyCircle';
 import { LineDirection } from '../../constant';
-import * as utils from '../utils'
+import * as utils from '../utils';
 
 const getArrowRotation = (points, direction) => {
   const start =

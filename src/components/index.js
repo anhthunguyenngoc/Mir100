@@ -10,3 +10,4 @@ export * from './Tooltip';
 export * from './Toggle';
 export * from './Checkbox';
 export * from './SelectionDropUp';
+export * from './SearchableDropDown';

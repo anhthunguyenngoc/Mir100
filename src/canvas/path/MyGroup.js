@@ -138,8 +138,8 @@ export const MyGroup = ({
       <Rect
         {...rectProps}
         stroke="red"
-        strokeWidth={hovered ? strokeWidth + 1 : strokeWidth}
-        dash={[5, 5]}
+        strokeWidth={hovered ? strokeWidth + 2 : strokeWidth + 1}
+        dash={[10, 10]}
         visible={hovered || selected}
       />
 

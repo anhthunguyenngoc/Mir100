@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import * as Constant from '../../constant';
 import * as Components from '../../components';
 import * as CanvasComponents from '../../canvas/component';
+import * as Utils from '../utils';
 
 export const LeftSidebar = ({
   shapes,
@@ -22,11 +23,11 @@ export const LeftSidebar = ({
     );
   };
 
-  const handleShapeClick = (shapeId) => {
-    shapes.map((shape) => {
+  const handleShapeClick = (shapeId, selected) => {
+    Utils.getAllShapesFromLayers(layers).map((shape) => {
       handleUpdateShape(shape.id, { selected: false });
     });
-    handleUpdateShape(shapeId, { selected: true });
+    handleUpdateShape(shapeId, { selected: selected });
   };
 
   // Thêm một lớp mới
@@ -63,7 +64,10 @@ export const LeftSidebar = ({
           </div>
           <CanvasComponents.DropdownList
             title="Layers"
-            datalist={layers}
+            datalist={layers.map((layer) => ({
+              ...layer,
+              itemName: layer.name,
+            }))}
             addBtnVisible={true}
             addBtnOnClick={addLayer}
             itemOnClick={handleLayerClick}
@@ -78,8 +82,10 @@ export const LeftSidebar = ({
             title="Shapes"
             datalist={shapes.map((shape) => ({
               id: shape.id,
-              name: shape.groupName + ' ' + shape.id,
+              name: shape.name,
+              itemName: shape.groupName + ' ' + shape.id,
               selected: shape.selected,
+              shapes: shape?.shapes,
             }))}
             addBtnVisible={false}
             itemOnClick={handleShapeClick}

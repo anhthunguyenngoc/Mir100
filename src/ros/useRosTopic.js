@@ -11,8 +11,8 @@ export function useRosTopic({ rosInstance, name, messageType, rest = {} }) {
       ros: rosInstance,
       name,
       messageType,
-      ...rest,
       throttle_rate: 3000,
+      ...rest,
     });
 
     listener.subscribe((msg) => {

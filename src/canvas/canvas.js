@@ -16,6 +16,8 @@ import * as api from '../api';
 import { useRosTopic, useRosConnection } from 'ros';
 import { PathControl } from './path-control';
 
+import { mapWorkerCode } from './find-path';
+
 const Canvas = () => {
   /** @type { api.TGetStatus } */
   const { robotStatus } = Context.useAppContext();
@@ -55,6 +57,8 @@ const Canvas = () => {
       shapes: [],
     },
   ]);
+
+  const [mapArray, setMapArray] = useState(null);
   const [editable, setEditable] = useState(false);
   const [drawing, setDrawing] = useState(false);
   const [clipboard, setClipboard] = useState([]);
@@ -317,39 +321,42 @@ const Canvas = () => {
     const lines = [];
 
     //!!!!
-    // // Lặp qua các zones trong layers
-    // for (const zones in map?.metadata.layers) {
-    //   // Lấy shapes của từng zone
-    //   const shapes = map?.metadata.layers[zones].shapes;
+    // Lặp qua các zones trong layers
+    for (const zones in map?.metadata.layers) {
+      // Lấy shapes của từng zone
+      if(!map?.metadata.layers[zones]) continue;
+      const shapes = map?.metadata.layers[zones].shapes;
+      // Nếu có shapes, lặp qua các shape để tạo các Line
+      for (let i = 0; i < shapes.length; i++) {
+        const zone = shapes[i];
+        if (!zone) continue;
 
-    //   // Nếu có shapes, lặp qua các shape để tạo các Line
-    //   shapes.forEach((zone, index) => {
-    //     lines.push(
-    //       <Line
-    //         points={zone.polygon.flatMap((point) => [point.x, point.y])}
-    //         stroke={zone.color}
-    //         strokeWidth={zone.brushsize}
-    //         closed={shapes[0]?.type === 'shape'} // Giữ `false` nếu không muốn tạo đa giác kín
-    //         fill={zone.color}
-    //       />
-    //     );
-    //   });
-    // }
-
-    //$$$Test */
-    Object.entries(Const.metadata).forEach(([key, zones]) => {
-      zones.forEach((zone) => {
         lines.push(
           <Line
             points={zone.polygon.flatMap((point) => [point.x, point.y])}
             stroke={zone.color}
             strokeWidth={zone.brushsize}
-            closed={zone.type === 'shape'}
+            closed={shapes[0]?.type === 'shape'} // Giữ `false` nếu không muốn tạo đa giác kín
             fill={zone.color}
           />
         );
-      });
-    });
+      };
+    }
+
+    //$$$Test */
+    // Object.entries(Const.metadata).forEach(([key, zones]) => {
+    //   zones.forEach((zone) => {
+    //     lines.push(
+    //       <Line
+    //         points={zone.polygon.flatMap((point) => [point.x, point.y])}
+    //         stroke={zone.color}
+    //         strokeWidth={zone.brushsize}
+    //         closed={zone.type === 'shape'}
+    //         fill={zone.color}
+    //       />
+    //     );
+    //   });
+    // });
 
     // Trả về mảng các phần tử Line
     return lines;
@@ -392,100 +399,12 @@ const Canvas = () => {
 
   const renderPositions = () => {
     //!!!
-    // if (!mapPositions) return;
+    if (!mapPositions) return;
 
-    // return mapPositions.map((position) => {
-    //   const p = Utils.getCanvasPosition(position.pos_x, position.pos_y, map);
-    //   return (
-    //     <ShapeComp.MyImage
-    //       x={p.x}
-    //       y={p.y}
-    //       rotation={position.orientation}
-    //       imageSrc={Const.getPositionImage(position.type_id)}
-    //       width={20}
-    //       height={20}
-    //       onDblClick={(e, x, y) => {
-    //         setPositionDialog({
-    //           isVisible: true,
-    //           name: position.name,
-    //           type_id: position.type_id,
-    //           id: position.guid,
-    //         });
-    //         setIsClickVisible(false);
-    //       }}
-    //       onClick={(e, x, y) => {
-    //         setPositionDialog({
-    //           isVisible: false,
-    //           name: position.name,
-    //           type_id: position.type_id,
-    //           id: position.guid,
-    //         });
-    //         handlePositionClick(e, x, y);
-    //         setTooltipContent(
-    //           <div className="flex row" style={{ gap: '2px' }}>
-    //             {[
-    //               actionList.GOTO,
-    //               actionList.CREATE_PATH,
-    //               actionList.MOVE,
-    //               actionList.EDIT,
-    //               actionList.DELETE,
-    //             ].map((action, index) => {
-    //               return (
-    //                 <Comp.Tooltip hoverContent={action.alt}>
-    //                   <Comp.SmallToolButton
-    //                     imageSrc={action.imageSrc}
-    //                     showExpand={false}
-    //                     alt={action.alt}
-    //                     onClick={() => action?.onClick(position.guid)}
-    //                     buttonStyle={{
-    //                       borderRadius: '0',
-    //                       ...(index === 0 && {
-    //                         borderTopLeftRadius: '5px',
-    //                         borderBottomLeftRadius: '5px',
-    //                       }),
-    //                       ...(index === 4 && {
-    //                         borderTopRightRadius: '5px',
-    //                         borderBottomRightRadius: '5px',
-    //                       }),
-    //                     }}
-    //                   />
-    //                 </Comp.Tooltip>
-    //               );
-    //             })}
-    //           </div>
-    //         );
-    //       }}
-    //       onMouseEnter={(e, x, y) => {
-    //         handlePositionHover(e, x, y);
-    //         setTooltipContent(
-    //           <div
-    //             className="radius-5px"
-    //             style={{
-    //               padding: '5px 10px',
-    //               backgroundColor: Const.Color.BUTTON,
-    //             }}
-    //           >
-    //             {position.name}
-    //           </div>
-    //         );
-    //       }}
-    //       onMouseLeave={() => {
-    //         setIsHoverVisible(false);
-    //       }}
-    //     />
-    //   );
-    // });
-
-    return fakeMapPositions.map((position) => {
-      const p = Utils.getCanvasPosition(position.pos_x, position.pos_y, {
-        metadata: { height: 568 },
-        resolution: 0.05,
-        origin_x: 0,
-        origin_y: 0,
-      });
+    return mapPositions.map((position) => {
+      const p = Utils.getCanvasPosition(position.pos_x, position.pos_y, map);
       return (
         <ShapeComp.MyImage
-          ref={imageRef}
           x={p.x}
           y={p.y}
           rotation={position.orientation}
@@ -502,13 +421,13 @@ const Canvas = () => {
             setIsClickVisible(false);
           }}
           onClick={(e, x, y) => {
-            handlePositionClick(e, x, y);
             setPositionDialog({
               isVisible: false,
               name: position.name,
               type_id: position.type_id,
               id: position.guid,
             });
+            handlePositionClick(e, x, y);
             setTooltipContent(
               <div className="flex row" style={{ gap: '2px' }}>
                 {[
@@ -524,14 +443,14 @@ const Canvas = () => {
                         imageSrc={action.imageSrc}
                         showExpand={false}
                         alt={action.alt}
-                        onClick={action?.onClick}
+                        onClick={() => action?.onClick(position.guid)}
                         buttonStyle={{
                           borderRadius: '0',
                           ...(index === 0 && {
                             borderTopLeftRadius: '5px',
                             borderBottomLeftRadius: '5px',
                           }),
-                          ...(index === 2 && {
+                          ...(index === 4 && {
                             borderTopRightRadius: '5px',
                             borderBottomRightRadius: '5px',
                           }),
@@ -563,6 +482,94 @@ const Canvas = () => {
         />
       );
     });
+
+  //   return fakeMapPositions.map((position) => {
+  //     const p = Utils.getCanvasPosition(position.pos_x, position.pos_y, {
+  //       metadata: { height: 568 },
+  //       resolution: 0.05,
+  //       origin_x: 0,
+  //       origin_y: 0,
+  //     });
+  //     return (
+  //       <ShapeComp.MyImage
+  //         ref={imageRef}
+  //         x={p.x}
+  //         y={p.y}
+  //         rotation={position.orientation}
+  //         imageSrc={Const.getPositionImage(position.type_id)}
+  //         width={20}
+  //         height={20}
+  //         onDblClick={(e, x, y) => {
+  //           setPositionDialog({
+  //             isVisible: true,
+  //             name: position.name,
+  //             type_id: position.type_id,
+  //             id: position.guid,
+  //           });
+  //           setIsClickVisible(false);
+  //         }}
+  //         onClick={(e, x, y) => {
+  //           handlePositionClick(e, x, y);
+  //           setPositionDialog({
+  //             isVisible: false,
+  //             name: position.name,
+  //             type_id: position.type_id,
+  //             id: position.guid,
+  //           });
+  //           setTooltipContent(
+  //             <div className="flex row" style={{ gap: '2px' }}>
+  //               {[
+  //                 actionList.GOTO,
+  //                 actionList.CREATE_PATH,
+  //                 actionList.MOVE,
+  //                 actionList.EDIT,
+  //                 actionList.DELETE,
+  //               ].map((action, index) => {
+  //                 return (
+  //                   <Comp.Tooltip hoverContent={action.alt}>
+  //                     <Comp.SmallToolButton
+  //                       imageSrc={action.imageSrc}
+  //                       showExpand={false}
+  //                       alt={action.alt}
+  //                       onClick={action?.onClick}
+  //                       buttonStyle={{
+  //                         borderRadius: '0',
+  //                         ...(index === 0 && {
+  //                           borderTopLeftRadius: '5px',
+  //                           borderBottomLeftRadius: '5px',
+  //                         }),
+  //                         ...(index === 2 && {
+  //                           borderTopRightRadius: '5px',
+  //                           borderBottomRightRadius: '5px',
+  //                         }),
+  //                       }}
+  //                     />
+  //                   </Comp.Tooltip>
+  //                 );
+  //               })}
+  //             </div>
+  //           );
+  //         }}
+  //         onMouseEnter={(e, x, y) => {
+  //           handlePositionHover(e, x, y);
+  //           setTooltipContent(
+  //             <div
+  //               className="radius-5px"
+  //               style={{
+  //                 padding: '5px 10px',
+  //                 backgroundColor: Const.Color.BUTTON,
+  //               }}
+  //             >
+  //               {position.name}
+  //             </div>
+  //           );
+  //         }}
+  //         onMouseLeave={() => {
+  //           setIsHoverVisible(false);
+  //         }}
+  //       />
+  //     );
+  //   });
   };
 
   const renderCreatePosition = () => {
@@ -602,22 +609,44 @@ const Canvas = () => {
       if (!point || !point.x || !point.y) return;
 
       return (
+        // <Circle key={index} x={point.x + 233} y={point.y - 132} radius={0.5} fill={'red'} />
         <Circle key={index} x={point.x} y={point.y} radius={0.5} fill={'red'} />
       );
     });
   };
 
-  const renderMap = () => {
-    if (!obstacles) return;
+  const fillColors = {
+  floor: '#fff',
+  wall: '#000',
+};
 
-    return obstacles.map((point, index) => {
-      if (!point || !point.x || !point.y) return;
+  function renderMapArray() {
+  if (!mapArray) return null;
 
-      return (
-        <Circle key={index} x={point.x} y={point.y} radius={1} fill={'red'} />
-      );
-    });
-  };
+  return (
+    <>
+      {Object.entries(mapArray).flatMap(([key, polygons]) =>
+        polygons.map((points, i) => {
+          const canvasPoints = Utils.transformPointsToCanvas(points, map);
+
+          return (
+            <Line
+              key={`${key}-${i}`}
+              points={canvasPoints}
+              closed={key == 'floor'}
+              fill={fillColors[key] || '#888'}
+              stroke={key == 'walls' ? "#000" : ''}
+              strokeWidth={1}
+              listening={false}
+            />
+          );
+        })
+      )}
+    </>
+  );
+}
+
+const renderedMapArray = React.useMemo(() => renderMapArray(), [layers, zoom, mapArray]);
 
   const getLineComponent = (line) => {
     switch (line.name) {
@@ -908,6 +937,7 @@ const Canvas = () => {
   const baseShapeProps = (line) => ({
     ref: (node) => (groupRefs.current[line.id] = node),
     id: line.id,
+    groupId: line.groupId,
     name: line.name,
     type: line.type,
     groupName: line.name,
@@ -1100,7 +1130,63 @@ const Canvas = () => {
     }
   };
 
+    const addLineToExistedGroup = (newShape, groupId) => {
+  for (const layer of layers) {
+    const findAndUpdateGroup = (shapes) => {
+      for (const shape of shapes) {
+        if (shape.name === Const.ShapeName.GROUP && shape.id === groupId) {
+          const updatedGroup = {
+            ...shape,
+            shapes: [...shape.shapes, { ...newShape, groupId: groupId }],
+            points: [...shape.points, ...newShape.points], // nếu muốn group gom điểm của tất cả shape
+          };
+          handleUpdateShape(layer.id, groupId, updatedGroup);
+          return true;
+        }
+
+        // Đệ quy nếu trong group có group con
+        if (shape.name === Const.ShapeName.GROUP && Array.isArray(shape.shapes)) {
+          const found = findAndUpdateGroup(shape.shapes);
+          if (found) return true;
+        }
+      }
+      return false;
+    };
+
+    if (Array.isArray(layer.shapes)) {
+      const updated = findAndUpdateGroup(layer.shapes);
+      if (updated) break;
+    }
+  }
+
+  if (isContinuosLine) {
+      initLine(newShape.endP);
+    } else {
+      setNewLine(null);
+    }
+};
+
+  useEffect(() => {
+    if (!isContinuosLine && newPath && newPath.length > 0) {
+      addPathToLayer();
+    }
+  }, [newPath]);
+
+  const addLine = (foundGroup) => {
+    if(foundGroup || newLine.groupId) {
+            addLineToExistedGroup({ ...shapeProps(newLine) }, foundGroup?.id || newLine.groupId);
+          } else {
+            addLineToPath({ ...shapeProps(newLine) });
+          }
+  }
+
   const drawShape = (pointer) => {
+    let foundGroup;
+    if (pointer.groupId) {
+      foundGroup = Utils.getAllGroupsFromLayers(layers)
+        .find((shape) => shape.name === Const.ShapeName.GROUP && shape.id === pointer.groupId);
+    }
+
     switch (true) {
       case drawingMode === 'line':
         if (!newLine) {
@@ -1113,9 +1199,10 @@ const Canvas = () => {
             height: null,
             startP: { x: pointer.x, y: pointer.y },
             endP: { x: pointer.x, y: pointer.y },
+            groupId: foundGroup ? foundGroup.id : undefined,
           });
         } else {
-          addLineToPath({ ...shapeProps(newLine) });
+          addLine(foundGroup)
           setDrawing(true);
         }
         break;
@@ -1144,7 +1231,7 @@ const Canvas = () => {
             endP: pointer,
           });
         } else {
-          addLineToPath({ ...shapeProps(newLine) });
+          addLine(foundGroup);
         }
         break;
 
@@ -1187,14 +1274,14 @@ const Canvas = () => {
           newLine.endP &&
           adjustingRadius
         ) {
-          addLineToPath({ ...shapeProps(newLine) });
+          addLine(foundGroup);
           setAdjustingRadius(false); // Ngừng điều chỉnh radius
         }
         break;
 
       case drawingMode === 'tangent':
         if (newLine) {
-          addLineToPath({ ...shapeProps(newLine) });
+          addLine(foundGroup);
         }
         break;
 
@@ -1221,7 +1308,7 @@ const Canvas = () => {
           setAdjustingRadius(true);
         } else {
           // Khi click lần thứ 3, lưu đường U vào danh sách
-          addLineToPath({ ...shapeProps(newLine) });
+          addLine(foundGroup);
           setAdjustingRadius(false);
         }
         break;
@@ -1347,7 +1434,6 @@ const Canvas = () => {
   };
 
   const drawHoverShape = (smartSnap, target) => {
-    console.log(newLine, smartSnap);
     //Vẽ đường thẳng
     if (drawing && newLine && drawingMode === 'line') {
       setNewLine({
@@ -1828,8 +1914,14 @@ const Canvas = () => {
       setNewFreeShape(null);
     }
 
+    addPathToLayer();
+  };
+
+  const addPathToLayer = () => {
     if (newPath && newPath.length > 0) {
-      setIsContinuosLine(false);
+      // setIsContinuosLine(false);
+
+      const newGroupId = Date.now();
 
       const newGroup = {
         ...lineProps({
@@ -1837,10 +1929,17 @@ const Canvas = () => {
           name: Const.ShapeName.GROUP,
           points: newPath.flatMap((shape) => shape.points),
         }),
-        shapes: newPath,
+        id: newGroupId, // gán ID trước
+        shapes: newPath.map((shape) => ({
+          ...shape,
+          groupId: newGroupId, // gán groupId cho từng shape
+        })),
         sharedPoints: sharedPoints,
       };
-      addShapeToLayer(selectedLayer.id, { ...shapeProps(newGroup) });
+
+      addShapeToLayer(selectedLayer.id, {
+        ...shapeProps(newGroup),
+      });
 
       setNewPath([]);
       setSharedPoints(new Map());
@@ -1944,32 +2043,6 @@ const Canvas = () => {
     return lines;
   };
 
-  // Hàm chính
-  const renderIntersection = () => {
-    // const allLines = [];
-    // for (const layer of layers) {
-    //   allLines.push(...collectAllLines(layer.shapes || []));
-    // }
-    // const intersections = [];
-    // if(allLines.length < 2) return;
-    // for (let i = 0; i < allLines.length; i++) {
-    //   for (let j = i + 1; j < allLines.length; j++) {
-    //     const intersect = Intersections.intersectLineLine(allLines[i], allLines[2]);
-    //     if (intersect) intersections.push(intersect);
-    //   }
-    // }
-    // console.log(allLines, intersections)
-    // return intersections.map((pt, idx) => (
-    //   <Circle
-    //     key={`intersect-${idx}`}
-    //     x={pt.x}
-    //     y={pt.y}
-    //     radius={5}
-    //     fill="red"
-    //   />
-    // ));
-  };
-
   const saveEditMap = async () => {
     const allShapes = layers.flatMap((layer) => extractAllShapes(layer.shapes));
     const converted = allShapes.map((shape) => {
@@ -2004,8 +2077,24 @@ const Canvas = () => {
     messageType: 'tf2_msgs/TFMessage',
   });
 
+const lidarOrigin = useRosTopic({
+    rosInstance: ros,
+    name: '/mirwebapp/laser_map_metadata',
+    messageType: 'mirMsgs/LocalMapStat',
+  });
+
+  // //cập nhật mỗi 30 phút
+  const mapRos = useRosTopic({
+    rosInstance: ros,
+    name: '/map',
+    messageType: 'nav_msgs/OccupancyGrid',
+    rest: {
+      throttle_rate: 1800000
+    }
+  });
+
   useEffect(() => {
-    if (!lidarMapPoints && !transforms) return;
+    if (!lidarMapPoints || !transforms || !lidarOrigin) return;
 
     const points = Utils.processLidarData(lidarPoints, transforms?.transforms);
 
@@ -2013,12 +2102,42 @@ const Canvas = () => {
 
     const lidarMapP = points.map((p) => {
       return {
-        x: (p.x - map?.origin_x) / map?.resolution,
-        y: map?.metadata.height - (p.y - map?.origin_y) / map?.resolution,
+        x: (p.x - map?.origin_x) / map?.resolution + lidarOrigin.x,
+        y: map?.metadata.height - (p.y - map?.origin_y) / map?.resolution + lidarOrigin.y,
       };
     });
     setLidarMapPoints(lidarMapP);
-  }, [lidarPoints, transforms]);
+  }, [lidarPoints, transforms, lidarOrigin]);
+
+  useEffect(() => {
+  if (!mapRos) return;
+
+   const blob = new Blob([mapWorkerCode], {
+        type: 'application/javascript',
+      });
+      const workerMap = new Worker(URL.createObjectURL(blob));
+
+  workerMap.postMessage({
+  mapData: mapRos.data,
+  rows: mapRos.info.height,
+  cols: mapRos.info.width,
+  targetValues: [0, -32], // gửi mảng nhiều giá trị
+  resolution: mapRos.info.resolution,
+});
+
+workerMap.onmessage = (e) => {
+  const data = e.data;
+
+  setMapArray(prev => ({
+    ...prev,
+    floor: data[0],
+    walls: data[-32],
+  }));
+
+  workerMap.terminate();
+};
+
+}, [mapRos]);
 
   //======Test
   const [simPose, setSimPose] = useState({
@@ -2032,13 +2151,13 @@ const Canvas = () => {
   }, [pathPoints]);
 
   const obstacles = [
-    map?.metadata.layers.areaprefs_forbidden.shapes,
-    map?.metadata.layers.walls.shapes,
+    map?.metadata.layers?.areaprefs_forbidden.shapes,
+    map?.metadata.layers?.walls.shapes,
   ];
 
   const metadata = {
-    walls: map?.metadata.layers.walls.shapes,
-    forbiddenZone: map?.metadata.layers.areaprefs_forbidden.shapes,
+    walls: map?.metadata.layers?.walls.shapes,
+    forbiddenZone: map?.metadata.layers?.areaprefs_forbidden.shapes,
   };
 
   // const obstacles = Const.obstacles;
@@ -2245,6 +2364,15 @@ const Canvas = () => {
           onDblClick={handleStageDblClick}
           className="full-height"
         >
+          <Layer>
+           <Rect
+          x={0}
+          y={0}
+          width={dimensions.width - 50}
+          height={dimensions.height}
+          fill="#F0F9F9"  // màu nền bạn muốn
+        />
+        </Layer>
           {/* =============================================Layer chính để vẽ============================================== */}
 
           {layers.map((layer) => (
@@ -2256,11 +2384,12 @@ const Canvas = () => {
               scaleY={zoom / 100}
               opacity={layer.selected ? 1 : 0.6}
             >
-              {/* {renderlidarMapPoints()} */}
 
               {renderMetadata()}
 
-              {/* {renderMap()}  */}
+              {renderedMapArray} 
+
+              {renderlidarMapPoints()}
 
               {renderPositions()}
 
@@ -2277,8 +2406,6 @@ const Canvas = () => {
               {drawSelection()}
 
               {renderPathPoints()}
-
-              {renderIntersection()}
 
               {robotStatus && (
                 <ShapeComp.MyImage

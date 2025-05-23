@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import './default-dashboard.css';
 import { CanvasView } from 'canvas';
 import * as Context from 'context';
-import * as api from '../../../api';
 
 export const DefaultDashboard = () => {
   const { robotStatus } = Context.useAppContext();

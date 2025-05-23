@@ -350,7 +350,7 @@ const InputNumber = ({
         type="number"
         placeholder={placeholder}
         defaultValue={defaultValue}
-        value={value ? value.toFixed(2) : undefined}
+        value={value ? value.toFixed(2) : '--'}
         onChange={(e) => onChange?.(e)}
         readOnly={readOnly}
       />
@@ -484,55 +484,57 @@ const ShapeComponent = ({
 
     case SCK.ENDP:
       return (
-        shape.endP && (
+        <div className="flex col gap-5px">
+          End
           <div className="flex col gap-5px">
-            End
-            <div className="flex col gap-5px">
-              <Comp.SearchableDropDown
-                dropdownData={dropdownData}
-                handleDropdownOpen={handleDropdownOpen}
-                onSelectItem={(item) => {
-                  if (item?.value) {
-                    onSelectItem(item.value, {
-                      endP: { x: item.value.x, y: item.value.y },
-                    });
-                  }
-                }}
-                onHoverItem={(item) => {
-                  if (item?.value) {
-                    onHoverItem(item.value, {
-                      endP: { x: item.value.x, y: item.value.y },
-                    });
-                  }
-                }}
-              />
-              <div className="flex row gap-5px">
-                <InputNumber
-                  placeholder="End X"
-                  value={shape.endP.x}
-                  onChange={(e) => {
+            <Comp.SearchableDropDown
+              dropdownData={dropdownData}
+              handleDropdownOpen={handleDropdownOpen}
+              onSelectItem={(item) => {
+                if (item?.value) {
+                  onSelectItem(item.value, {
+                    endP: { x: item.value.x, y: item.value.y },
+                  });
+                }
+              }}
+              onHoverItem={(item) => {
+                if (item?.value) {
+                  onHoverItem(item.value, {
+                    endP: { x: item.value.x, y: item.value.y },
+                  });
+                }
+              }}
+            />
+            <div className="flex row gap-5px">
+              <InputNumber
+                placeholder="End X"
+                value={shape.endP?.x}
+                onChange={(e) => {
+                  if (shape.endP) {
                     handleUpdateShape(shape.id, {
                       endP: { ...shape.endP, x: Number(e.target.value) },
                     });
                     saveState();
-                  }}
-                  imgSrc="letterX"
-                />
-                <InputNumber
-                  placeholder="End Y"
-                  value={shape.endP.y}
-                  onChange={(e) => {
+                  }
+                }}
+                imgSrc="letterX"
+              />
+              <InputNumber
+                placeholder="End Y"
+                value={shape.endP?.y}
+                onChange={(e) => {
+                  if (shape.endP) {
                     handleUpdateShape(shape.id, {
                       endP: { ...shape.endP, y: Number(e.target.value) },
                     });
                     saveState();
-                  }}
-                  imgSrc="letterY"
-                />
-              </div>
+                  }
+                }}
+                imgSrc="letterY"
+              />
             </div>
           </div>
-        )
+        </div>
       );
 
     case SCK.CENTERP:

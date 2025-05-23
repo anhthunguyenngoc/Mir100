@@ -33,43 +33,43 @@ export const getSnapCandidates = (
   const grid = [];
 
   for (const shape of shapes) {
-    const { id: shapeId, startP, endP, points } = shape;
+    const { groupId, startP, endP, points } = shape;
 
     if (enabledSnapModes.mid && startP && endP) {
       mid.push({
         x: (startP.x + endP.x) / 2,
         y: (startP.y + endP.y) / 2,
         type: 'mid',
-        shapeId,
+        groupId,
       });
     }
 
     if (enabledSnapModes.end && endP && startP) {
-      end.push({ ...endP, type: 'end', shapeId });
-      end.push({ ...startP, type: 'end', shapeId });
+      end.push({ ...endP, type: 'end', groupId });
+      end.push({ ...startP, type: 'end', groupId });
     }
 
     if (enabledSnapModes.nearest && points?.length >= 2) {
       const nearestPoint = getClosestPointOnPolyline(points, mouse);
       if (nearestPoint) {
-        nearest.push({ ...nearestPoint, type: 'nearest', shapeId });
+        nearest.push({ ...nearestPoint, type: 'nearest', groupId });
       }
     }
 
     if (enabledSnapModes.node) {
       utils
         .convertToPointObjects(points)
-        .forEach((p) => node.push({ ...p, type: 'node', shapeId }));
+        .forEach((p) => node.push({ ...p, type: 'node', groupId }));
     }
 
     if (enabledSnapModes.quadrant) {
       if (shape.name.includes('arc') && shape.centerP) {
         getQuadrantPoints(shape).forEach((p) =>
-          quadrant.push({ ...p, type: 'quadrant', shapeId })
+          quadrant.push({ ...p, type: 'quadrant', groupId })
         );
       } else if (shape.name === 'uline') {
         getEllipticalArcQuadrantPoints(shape).forEach((p) =>
-          quadrant.push({ ...p, type: 'quadrant', shapeId })
+          quadrant.push({ ...p, type: 'quadrant', groupId })
         );
       }
     }
@@ -82,14 +82,14 @@ export const getSnapCandidates = (
             ? getPerpendicularToArc(shape, prevMouse)
             : null;
       if (perp) {
-        perpendicular.push({ ...perp, type: 'perpendicular', shapeId });
+        perpendicular.push({ ...perp, type: 'perpendicular', groupId });
       }
     }
 
     if (enabledSnapModes.tangent && prevMouse) {
       if (shape.name.includes('arc') && shape.centerP) {
         getTangentPoints(shape, prevMouse).forEach((p) =>
-          tangent.push({ ...p, type: 'tangent', shapeId })
+          tangent.push({ ...p, type: 'tangent', groupId })
         );
       }
     }

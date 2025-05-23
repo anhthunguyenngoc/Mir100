@@ -133,6 +133,18 @@ export function getCanvasPosition(realX, realY, map) {
   return { x, y };
 }
 
+export function transformPointsToCanvas(points, map) {
+  const canvasPoints = [];
+  for (let i = 0; i < points.length; i += 2) {
+    const realX = points[i];
+    const realY = points[i + 1];
+    const { x: canvasX, y: canvasY } = getCanvasPosition(realX, realY, map);
+    canvasPoints.push(canvasX, canvasY);
+  }
+  return canvasPoints;
+}
+
+
 /**
  * Trả về các điểm trên đường path zigzag với khoảng cách đều nhau.
  *
@@ -454,6 +466,30 @@ export function getAllShapesFromLayers(layers) {
   return result;
 }
 
+export const getAllGroupsFromLayers = (layers) => {
+  const allGroups = [];
+
+  const findGroupsInShapes = (shapes) => {
+    for (const shape of shapes) {
+      if (shape.name === Const.ShapeName.GROUP) {
+        allGroups.push(shape);
+        // Đệ quy tiếp nếu group chứa shapes
+        if (Array.isArray(shape.shapes)) {
+          findGroupsInShapes(shape.shapes);
+        }
+      }
+    }
+  };
+
+  for (const layer of layers) {
+    if (Array.isArray(layer.shapes)) {
+      findGroupsInShapes(layer.shapes);
+    }
+  }
+
+  return allGroups;
+};
+
 /**
  * Chuyển mảng số dạng [x, y, x, y, ...] thành mảng đối tượng [{x, y}, ...]
  * Chỉ thực hiện nếu mảng hợp lệ (có độ dài chẵn và toàn số)
@@ -474,4 +510,95 @@ export function convertToPointObjects(flatArray) {
     result.push({ x: flatArray[i], y: flatArray[i + 1] });
   }
   return result;
+}
+
+// Chuyển mảng 1D ROS thành ma trận 2D
+const DIRS = [
+  [0, 1],   // phải
+  [1, 0],   // xuống
+  [0, -1],  // trái
+  [-1, 0],  // lên
+];
+
+// Tạo lưới nhị phân hiệu suất cao (dạng Uint8Array)
+function convertTo2D(mapData, rows, cols, targetValue) {
+  const grid = new Uint8Array(rows * cols);
+  for (let i = 0; i < mapData.length; i++) {
+    grid[i] = mapData[i] === targetValue ? 1 : 0;
+  }
+  return grid;
+}
+
+// Tìm polygon biên dựa trên Marching Squares đơn giản
+function marchingSquares(grid, rows, cols) {
+  const visited = new Uint8Array(rows * cols);
+  const polygons = [];
+
+  function traceBoundary(sr, sc) {
+    let x = sr;
+    let y = sc;
+    let dir = 0;
+    const path = [];
+
+    do {
+      path.push([y, x]); // lưu theo (x, y)
+      let found = false;
+
+      for (let i = 0; i < 4; i++) {
+        const newDir = (dir + i) % 4;
+        const [dr, dc] = DIRS[newDir];
+        const nr = x + dr;
+        const nc = y + dc;
+
+        if (nr >= 0 && nr < rows && nc >= 0 && nc < cols) {
+          const index = nr * cols + nc;
+          if (grid[index] === 1 && visited[index] === 0) {
+            visited[index] = 1;
+            x = nr;
+            y = nc;
+            dir = (newDir + 3) % 4;
+            found = true;
+            break;
+          }
+        }
+      }
+
+      if (!found) break; // không đi tiếp được
+    } while (!(x === sr && y === sc));
+
+    return path;
+  }
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const index = r * cols + c;
+      if (grid[index] === 1 && visited[index] === 0) {
+        visited[index] = 1;
+        const poly = traceBoundary(r, c);
+        if (poly.length > 2) {
+          polygons.push(poly);
+        }
+      }
+    }
+  }
+
+  return polygons;
+}
+
+// Hàm chính: Trích xuất polygons từ ROS map data
+export function extractPolygons(mapData, rows, cols, targetValue, resolution = 1) {
+  const grid = convertTo2D(mapData, rows, cols, targetValue);
+  const rawPolygons = marchingSquares(grid, rows, cols);
+
+  // Tối ưu chuyển điểm + flatten
+  const polygons = [];
+  for (const poly of rawPolygons) {
+    const flat = [];
+    for (const [x, y] of poly) {
+      flat.push(x * resolution, y * resolution);
+    }
+    polygons.push(flat);
+  }
+
+  return polygons;
 }

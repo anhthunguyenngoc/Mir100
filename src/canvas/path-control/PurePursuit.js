@@ -205,25 +205,50 @@ export function getNextVelocity(
 
   let linear = 0;
 
+  // // Điều chỉnh vận tốc tuyến tính dựa trên góc lệch
+  // if (Math.abs(angleDiff) < Math.PI / 6) {
+  //   // Góc lệch nhỏ, có thể di chuyển và xoay đồng thời
+  //   linear = clamp(
+  //     K_linear * distance * anglePenalty * turnPenalty,
+  //     0, // Không đi lùi
+  //     linearBase
+  //   );
+  // } else if (Math.abs(angleDiff) < Math.PI / 3) {
+  //   // Góc lệch trung bình, giảm tốc mạnh
+  //   linear = clamp(
+  //     K_linear * distance * 0.3 * turnPenalty,
+  //     0,
+  //     linearBase * 0.5
+  //   );
+  // } else {
+  //   // Góc lệch lớn, chỉ xoay tại chỗ
+  //   linear = 0;
+  // }
+
   // Điều chỉnh vận tốc tuyến tính dựa trên góc lệch
-  if (Math.abs(angleDiff) < Math.PI / 6) {
-    // Góc lệch nhỏ, có thể di chuyển và xoay đồng thời
-    linear = clamp(
-      K_linear * distance * anglePenalty * turnPenalty,
-      0, // Không đi lùi
-      linearBase
-    );
-  } else if (Math.abs(angleDiff) < Math.PI / 3) {
-    // Góc lệch trung bình, giảm tốc mạnh
-    linear = clamp(
-      K_linear * distance * 0.3 * turnPenalty,
-      0,
-      linearBase * 0.5
-    );
-  } else {
-    // Góc lệch lớn, chỉ xoay tại chỗ
-    linear = 0;
-  }
+if (Math.abs(angleDiff) < Math.PI / 6) {
+  // Góc lệch nhỏ, có thể di chuyển và xoay đồng thời
+  linear = clamp(
+    K_linear * distance * anglePenalty * turnPenalty,
+    0,
+    linearBase
+  );
+} else if (Math.abs(angleDiff) < Math.PI / 3) {
+  // Góc lệch trung bình, giảm tốc mạnh
+  linear = clamp(
+    K_linear * distance * 0.3 * turnPenalty,
+    0,
+    linearBase * 0.5
+  );
+} else {
+  // Góc lệch lớn, vẫn tiến chậm để tránh xoay tại chỗ
+  linear = clamp(
+    K_linear * distance * 0.1 * turnPenalty,
+    0,
+    linearBase * 0.2
+  );
+}
+
 
   // Điều chỉnh hệ số góc dựa trên tốc độ tiến
   const angularGain = linear > 0 ? K_angular : K_angular * 1.5;

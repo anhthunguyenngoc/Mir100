@@ -23,7 +23,7 @@ export const MyImage = ({
     const img = new window.Image();
     img.src = imageSrc;
     img.onload = () => {
-      if (img.width > 0 && img.height > 0) {
+      if (img.naturalWidth > 0 && img.naturalHeight > 0) {
         setImage(img);
       } else {
         console.warn('Loaded image has 0 width or height:', imageSrc);
@@ -34,8 +34,17 @@ export const MyImage = ({
     };
   }, [imageSrc]);
 
-  if (!image || !width || !height || x === undefined || y === undefined)
-    return null;
+  if (
+  !image ||
+  typeof x !== 'number' ||
+  typeof y !== 'number' ||
+  typeof width !== 'number' ||
+  typeof height !== 'number' ||
+  width <= 0 ||
+  height <= 0
+) {
+  return null;
+}
 
   const handleOnClick = (e) => {
     const currentX = e.target.x(); // Lấy tọa độ X hiện tại của Image

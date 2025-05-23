@@ -8,7 +8,7 @@
 //   useEffect(() => {
 //     let protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
 //     let port = window.location.protocol === 'https:' ? '443' : '9090';
-//     let ip = '192.168.0.173';
+//     let ip = '192.168.0.172';
 
 //     const rosInstance = new ROSLIB.Ros({
 //       url: `${protocol}${ip}:${port}`,

@@ -102,8 +102,8 @@ export const CreatPath = ({ isVisible, setVisible, positionId }) => {
   // const obstacles = Const.obstacles; //Test
 
   const obstacles = [
-    map?.metadata.layers.areaprefs_forbidden.shapes,
-    map?.metadata.layers.walls.shapes,
+    map?.metadata.layers?.areaprefs_forbidden.shapes,
+    map?.metadata.layers?.walls.shapes,
   ]; //!!!
 
   //  const metadata = {

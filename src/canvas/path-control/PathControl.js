@@ -100,7 +100,7 @@ export const PathControl = ({
       [...pathPoints],
       SPEED,
       SPEED,
-      map?.metadata.layers.areaprefs_forbidden.shapes.map((wall) => ({
+      map?.metadata.layers?.areaprefs_forbidden.shapes.map((wall) => ({
         ...wall,
         polygon: wall.polygon.map(
           (p) => Utils.getRealPosition(p.x, p.y, map) //!!!
@@ -108,13 +108,13 @@ export const PathControl = ({
       })),
       [],
 
-      map?.metadata.layers.walls.shapes.map((wall) => ({
+      map?.metadata.layers?.walls.shapes.map((wall) => ({
         ...wall,
         polygon: wall.polygon.map(
           (p) => Utils.getRealPosition(p.x, p.y, map) //!!!
         ),
       })),
-      0.3
+      0.1
     );
 
     if (!result) return;

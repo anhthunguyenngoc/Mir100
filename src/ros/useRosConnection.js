@@ -14,7 +14,7 @@ export function useRosConnection() {
 
     const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
     const port = window.location.protocol === 'https:' ? '443' : '9090';
-    const ip = '192.168.0.172';
+    const ip = '172.20.10.2';
 
     const ros = new ROSLIB.Ros({
       url: `${protocol}${ip}:${port}`,

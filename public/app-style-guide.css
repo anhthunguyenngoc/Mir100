@@ -23,8 +23,8 @@
   --heading3: var(--heading3-min);
   --sidebar-font-size: var(--sidebar-font-size-min);
   /* Colors */
-  --color-mode-1-button: #00474f;
-  --color-mode-1-button-hover: #006d75;
+  --color-mode-1-button: #006d75;
+  --color-mode-1-button-hover: #00474F;
   --color-mode-1-button-selected: #08979c;
   --color-mode-1-subsidebar-background: #9cd6d3;
   --color-mode-1-header: #2a7378;

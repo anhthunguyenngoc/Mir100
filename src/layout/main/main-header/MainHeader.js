@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+
 import './main-header.css';
 import { ImageSrc } from '../../../constant/ImageSrc';
 import * as Context from 'context';
@@ -6,7 +8,7 @@ import * as Icons from 'components/icons/Icons';
 import * as Const from 'constant';
 
 export const MainHeader = ({ pageInfo }) => {
-  const { robotStatus } = Context.useAppContext();
+  const { robotStatus, pathname } = Context.useAppContext();
 
   function toggleHidden(elementId) {
     var element = document.getElementById(elementId);
@@ -26,7 +28,18 @@ export const MainHeader = ({ pageInfo }) => {
           'var(--padding-frame) var(--padding-frame) 0 var(--padding-frame)',
       }}
     >
-      <h1>{pageInfo.name}</h1>
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={pathname} // key để nhận diện khi chuyển trang
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }} // nếu bạn không muốn fade out, có thể xóa dòng này
+          transition={{ duration: 0.5 }}
+          className="flex align-center"
+        >
+          <h1>{pageInfo.name}</h1>
+        </motion.div>
+      </AnimatePresence>
       <ul id="right-header-list" className="gap-10px">
         <li
           id="startRobot"

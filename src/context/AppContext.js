@@ -1,4 +1,6 @@
 import { useState, useEffect, createContext, useContext } from 'react';
+import { useLocation } from 'react-router-dom';
+
 import { ConfirmDialog } from '../components';
 import * as api from '../api';
 
@@ -7,6 +9,8 @@ const AppContext = createContext();
 export const useAppContext = () => useContext(AppContext);
 
 export const AppProvider = ({ children }) => {
+  const location = useLocation();
+  const { pathname } = location;
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState({});
 
@@ -49,7 +53,9 @@ export const AppProvider = ({ children }) => {
   };
 
   return (
-    <AppContext.Provider value={{ showDialog, robotStatus, fetchRobotStatus }}>
+    <AppContext.Provider
+      value={{ showDialog, robotStatus, fetchRobotStatus, pathname }}
+    >
       {children}
       <ConfirmDialog
         open={open}

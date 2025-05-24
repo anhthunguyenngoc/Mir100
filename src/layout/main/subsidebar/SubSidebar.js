@@ -8,12 +8,12 @@ export const SubSidebar = ({ sidebarIndex }) => {
 
   return (
     <div className="left-subsidebar-list">
-      <h2 className="subsidebar-title">{sidebarItem.name}</h2>
-      <Navigation
+      {/* <h2 className="subsidebar-title">{sidebarItem.name}</h2> */}
+      {/* <Navigation
         navList={SUB_SIDEBAR_ROUTER[sidebarItem.key]}
         ulStyle="subsidebar-button-list"
         liStyle="subsidebar-button"
-      />
+      /> */}
     </div>
   );
 };

@@ -23,7 +23,7 @@ function App() {
             <Route
               key={e.key}
               path={e.path}
-              element={<MainLayout defaultIndex={0}>{e.element}</MainLayout>}
+              element={<MainLayout>{e.element}</MainLayout>}
             />
           ))}
         </Routes>

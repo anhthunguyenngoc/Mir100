@@ -144,7 +144,6 @@ export function transformPointsToCanvas(points, map) {
   return canvasPoints;
 }
 
-
 /**
  * Trả về các điểm trên đường path zigzag với khoảng cách đều nhau.
  *
@@ -514,10 +513,10 @@ export function convertToPointObjects(flatArray) {
 
 // Chuyển mảng 1D ROS thành ma trận 2D
 const DIRS = [
-  [0, 1],   // phải
-  [1, 0],   // xuống
-  [0, -1],  // trái
-  [-1, 0],  // lên
+  [0, 1], // phải
+  [1, 0], // xuống
+  [0, -1], // trái
+  [-1, 0], // lên
 ];
 
 // Tạo lưới nhị phân hiệu suất cao (dạng Uint8Array)
@@ -586,7 +585,13 @@ function marchingSquares(grid, rows, cols) {
 }
 
 // Hàm chính: Trích xuất polygons từ ROS map data
-export function extractPolygons(mapData, rows, cols, targetValue, resolution = 1) {
+export function extractPolygons(
+  mapData,
+  rows,
+  cols,
+  targetValue,
+  resolution = 1
+) {
   const grid = convertTo2D(mapData, rows, cols, targetValue);
   const rawPolygons = marchingSquares(grid, rows, cols);
 

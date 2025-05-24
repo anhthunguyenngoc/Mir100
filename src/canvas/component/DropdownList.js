@@ -19,7 +19,9 @@ const DropdownItem = ({ item, itemOnClick }) => {
         }
       }}
     >
-      <div className={`flex row gap-5px layer-list-item align-center ${item.selected ? 'selected' : ''}`}> 
+      <div
+        className={`flex row gap-5px layer-list-item align-center ${item.selected ? 'selected' : ''}`}
+      >
         {isGroup && (
           <img
             className="size-10px"
@@ -41,12 +43,12 @@ const DropdownItem = ({ item, itemOnClick }) => {
             <DropdownItem
               key={subItem.id}
               item={{
-              id: subItem.id,
-              name: subItem.name,
-              itemName: subItem.groupName + ' ' + subItem.id,
-              selected: subItem.selected,
-              shapes: subItem?.shapes,
-            }}
+                id: subItem.id,
+                name: subItem.name,
+                itemName: subItem.groupName + ' ' + subItem.id,
+                selected: subItem.selected,
+                shapes: subItem?.shapes,
+              }}
               itemOnClick={itemOnClick}
             />
           ))}

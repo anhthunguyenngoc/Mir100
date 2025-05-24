@@ -50,57 +50,43 @@ export const Map = () => {
 
   return (
     <div id="map-content" className="content">
-      <div className="flex row full-width align-center space-between">
-        <div className="flex col gap-5px">
-          <h1>Maps</h1>
-          <div className="row-5px">
-            Create and edit maps.
-            <button className="button help-btn">
-              <img
-                className="help-btn-img"
-                alt="Help"
-                src={Const.ImageSrc.help}
-                loading="lazy"
-              />
-            </button>
-          </div>
-        </div>
-
-        <div className="row-5px">
-          <button
-            id="create-map"
-            className="button flex row gap-5px"
-            onClick={() => {
-              navigate(PATH.create_map);
-            }}
-          >
-            <img
-              className="plus-btn-img"
-              alt="Create map"
-              src={Const.ImageSrc.plus}
-              loading="lazy"
-            />
-            Create map
-          </button>
-          <button className="button flex row gap-5px outline-btn">
-            <Icons.ClearFilter iconColorClass={'fill-color-btn'} />
-            Clear filters
-          </button>
-        </div>
-      </div>
-
       <section>
-        <div id="filter-container">
+        <div id="filter-container" className="flex space-between full-width">
           <div className="row-5px">
-            <label for="filter">Filter:</label>
-            <input
-              id="filter"
-              placeholder="Write name to filter by..."
-              name="filter"
-              type="text"
-            />
+            <div className="row-5px">
+              <label for="filter">Filter:</label>
+              <input
+                id="filter"
+                placeholder="Write name to filter by..."
+                name="filter"
+                type="text"
+              />
+            </div>
+            <div id="number-of-item">Num item(s) found</div>
           </div>
-          <div id="number-of-item">Num item(s) found</div>
+          <div className="flex row align-center">
+            <div className="row-5px">
+              <button
+                id="create-map"
+                className="button flex row gap-5px"
+                onClick={() => {
+                  navigate(PATH.create_map);
+                }}
+              >
+                <img
+                  className="plus-btn-img"
+                  alt="Create map"
+                  src={Const.ImageSrc.plus}
+                  loading="lazy"
+                />
+                Create map
+              </button>
+              <button className="button flex row gap-5px outline-btn">
+                <Icons.ClearFilter iconColorClass={'fill-color-btn'} />
+                Clear filters
+              </button>
+            </div>
+          </div>
         </div>
 
         <table id="map-table">

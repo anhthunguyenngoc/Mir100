@@ -206,54 +206,37 @@ export const Mission = () => {
 
   return (
     <div id="mission-content" className="content flex">
-      <div className="flex row full-width align-center space-between">
-        <div className="flex col gap-5px">
-          <h1>Missions</h1>
-          <div className="row-5px">
-            Create and edit missions.
-            <button className="button help-btn">
-              <img
-                className="help-btn-img"
-                alt="Help"
-                src="../../../images/help.svg"
-                loading="lazy"
-              />
-            </button>
-          </div>
-        </div>
-
-        <button
-          id="create-mission"
-          className="flex row gap-5px button"
-          onClick={() => createMissionClick()}
-        >
-          <img
-            className="size-20px"
-            alt="Create mission"
-            src={Const.ImageSrc.plus}
-            loading="lazy"
-          />
-          Create mission
-        </button>
-      </div>
-
       <div className="full-width flex row gap-frame">
         <section className="flex col gap-frame" id="mission-list-container">
-          <div id="mission-list-top">
-            <div>Show missions:</div>
-            <div className="row-5px">
-              <select id="mission-groups-list" name="mission-groups-list">
-                {missionGroups.map((missionGroup) => (
-                  <option key={missionGroup.guid} value={missionGroup.name}>
-                    {missionGroup.name}
-                  </option>
-                ))}
-              </select>
+          <div className="flex row full-width space-between">
+            <div id="mission-list-top">
+              <div>Show missions:</div>
+              <div className="row-5px">
+                <select id="mission-groups-list" name="mission-groups-list">
+                  {missionGroups.map((missionGroup) => (
+                    <option key={missionGroup.guid} value={missionGroup.name}>
+                      {missionGroup.name}
+                    </option>
+                  ))}
+                </select>
 
-              <button className="button">Create / Edit groups</button>
+                <button className="button">Create / Edit groups</button>
+              </div>
             </div>
+            <button
+              id="create-mission"
+              className="flex row gap-5px button"
+              onClick={() => createMissionClick()}
+            >
+              <img
+                className="size-20px"
+                alt="Create mission"
+                src={Const.ImageSrc.plus}
+                loading="lazy"
+              />
+              Create mission
+            </button>
           </div>
-
           <ul className="flex col gap-5px" id="mission-list">
             {missions.map((mission) => (
               <li

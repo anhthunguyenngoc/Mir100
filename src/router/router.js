@@ -2,38 +2,12 @@ import {
   LoginByPass,
   LoginByCode,
   DefaultDashboard,
-  IOModule,
-  IOModuleCreate,
-  IOModuleEdit,
   Map,
   MapCreate,
   MapEdit,
   Mission,
   MissionCreate,
   MissionEdit,
-  Sound,
-  SoundEdit,
-  Transition,
-  TransitionCreate,
-  TransitionDelete,
-  TransitionEdit,
-  SetPermission,
-  UserGroup,
-  UserGroupCreate,
-  UserGroupDelete,
-  UserGroupEdit,
-  User,
-  UserCreate,
-  UserDelete,
-  UserEdit,
-  Path,
-  PathGuide,
-  Analytic,
-  ErrorLog,
-  HardwareHealth,
-  MissionLog,
-  SafetySystem,
-  SystemLog,
 } from '../pages';
 
 import { PATH } from './Path';
@@ -64,65 +38,13 @@ const DASHBOARD_ROUTER = [
   },
 ];
 
-const SUB_SETUP_ROUTER = [
+const MISSION_ROUTER = [
   {
-    key: 'missions',
+    key: 'mission',
     path: PATH.missions,
     element: <Mission />,
     name: 'Missions',
   },
-  {
-    key: 'maps',
-    path: PATH.maps,
-    element: <Map />,
-    name: 'Maps',
-  },
-  {
-    key: 'sounds',
-    path: '/sounds',
-    element: <Sound />,
-    name: 'Sounds',
-  },
-  {
-    key: 'transitions',
-    path: '/transitions',
-    element: <Transition />,
-    name: 'Transitions',
-  },
-  {
-    key: 'io-modules',
-    path: '/io-modules',
-    element: <IOModule />,
-    name: 'I/O Modules',
-  },
-  {
-    key: 'users',
-    path: '/users',
-    element: <User />,
-    name: 'Users',
-  },
-  {
-    key: 'user-groups',
-    path: '/user-groups',
-    element: <UserGroup />,
-    name: 'User Groups',
-  },
-  {
-    key: 'paths',
-    path: '/paths',
-    element: <Path />,
-    name: 'Paths',
-  },
-  {
-    key: 'path-guides',
-    path: '/path-guides',
-    element: <PathGuide />,
-    name: 'Path Guides',
-  },
-];
-
-const SETUP_ROUTER = [
-  ...SUB_SETUP_ROUTER,
   {
     key: 'create-mission',
     path: PATH.create_mission,
@@ -134,6 +56,15 @@ const SETUP_ROUTER = [
     path: PATH.edit_mission(),
     element: <MissionEdit />,
     name: 'Edit Mission',
+  },
+];
+
+const MAP_ROUTER = [
+  {
+    key: 'map',
+    path: PATH.maps,
+    element: <Map />,
+    name: 'Maps',
   },
   {
     key: 'create-map',
@@ -149,65 +80,8 @@ const SETUP_ROUTER = [
   },
 ];
 
-const SUB_MONITORING_ROUTER = [
-  {
-    key: 'analytics',
-    path: '/analytics',
-    element: <Analytic />,
-    name: 'Analytics',
-  },
-  {
-    key: 'system-log',
-    path: '/system-log',
-    element: <SystemLog />,
-    name: 'System Log',
-  },
-  {
-    key: 'error-logs',
-    path: '/error-logs',
-    element: <ErrorLog />,
-    name: 'Error Logs',
-  },
-  {
-    key: 'hardware-health',
-    path: '/hardware-health',
-    element: <HardwareHealth />,
-    name: 'Hardware Health',
-  },
-  {
-    key: 'safety-system',
-    path: '/safety-system',
-    element: <SafetySystem />,
-    name: 'Safety System',
-  },
-  {
-    key: 'mission-log',
-    path: '/mission-log',
-    element: <MissionLog />,
-    name: 'Mission Log',
-  },
-];
-
-const MONITORING_ROUTER = [...SUB_MONITORING_ROUTER];
-
-const SYSTEM_ROUTER = [];
-
-const HELP_ROUTER = [];
-
 export const PRIVATE_ROUTER = {
   dashboards: DASHBOARD_ROUTER,
-  setup: SETUP_ROUTER,
-  monitoring: MONITORING_ROUTER,
-  system: SYSTEM_ROUTER,
-  help: HELP_ROUTER,
-  signout: [],
-};
-
-export const SUB_SIDEBAR_ROUTER = {
-  dashboards: DASHBOARD_ROUTER,
-  setup: SUB_SETUP_ROUTER,
-  monitoring: SUB_MONITORING_ROUTER,
-  system: SYSTEM_ROUTER,
-  help: HELP_ROUTER,
-  signout: [],
+  mission: MISSION_ROUTER,
+  map: MAP_ROUTER,
 };

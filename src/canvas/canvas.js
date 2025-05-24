@@ -135,8 +135,18 @@ const Canvas = () => {
 
     const observer = new ResizeObserver(() => {
       const { offsetWidth } = container;
-      // Đặt chiều cao là 80vh
-      const height = window.innerHeight * 0.8;
+
+      // Lấy chiều cao header
+      const header = document.getElementById('main-header');
+      const headerHeight = header?.offsetHeight || 0;
+
+      const vw = window.innerWidth;
+      console.log(1.6 * vw);
+
+      // Tính chiều cao còn lại
+      const height =
+        window.innerHeight - headerHeight - 5 * 0.016 * vw - 45 - 37.6;
+
       setDimensions({ width: offsetWidth, height });
     });
 
@@ -324,7 +334,7 @@ const Canvas = () => {
     // Lặp qua các zones trong layers
     for (const zones in map?.metadata.layers) {
       // Lấy shapes của từng zone
-      if(!map?.metadata.layers[zones]) continue;
+      if (!map?.metadata.layers[zones]) continue;
       const shapes = map?.metadata.layers[zones].shapes;
       // Nếu có shapes, lặp qua các shape để tạo các Line
       for (let i = 0; i < shapes.length; i++) {
@@ -340,7 +350,7 @@ const Canvas = () => {
             fill={zone.color}
           />
         );
-      };
+      }
     }
 
     //$$$Test */
@@ -483,93 +493,93 @@ const Canvas = () => {
       );
     });
 
-  //   return fakeMapPositions.map((position) => {
-  //     const p = Utils.getCanvasPosition(position.pos_x, position.pos_y, {
-  //       metadata: { height: 568 },
-  //       resolution: 0.05,
-  //       origin_x: 0,
-  //       origin_y: 0,
-  //     });
-  //     return (
-  //       <ShapeComp.MyImage
-  //         ref={imageRef}
-  //         x={p.x}
-  //         y={p.y}
-  //         rotation={position.orientation}
-  //         imageSrc={Const.getPositionImage(position.type_id)}
-  //         width={20}
-  //         height={20}
-  //         onDblClick={(e, x, y) => {
-  //           setPositionDialog({
-  //             isVisible: true,
-  //             name: position.name,
-  //             type_id: position.type_id,
-  //             id: position.guid,
-  //           });
-  //           setIsClickVisible(false);
-  //         }}
-  //         onClick={(e, x, y) => {
-  //           handlePositionClick(e, x, y);
-  //           setPositionDialog({
-  //             isVisible: false,
-  //             name: position.name,
-  //             type_id: position.type_id,
-  //             id: position.guid,
-  //           });
-  //           setTooltipContent(
-  //             <div className="flex row" style={{ gap: '2px' }}>
-  //               {[
-  //                 actionList.GOTO,
-  //                 actionList.CREATE_PATH,
-  //                 actionList.MOVE,
-  //                 actionList.EDIT,
-  //                 actionList.DELETE,
-  //               ].map((action, index) => {
-  //                 return (
-  //                   <Comp.Tooltip hoverContent={action.alt}>
-  //                     <Comp.SmallToolButton
-  //                       imageSrc={action.imageSrc}
-  //                       showExpand={false}
-  //                       alt={action.alt}
-  //                       onClick={action?.onClick}
-  //                       buttonStyle={{
-  //                         borderRadius: '0',
-  //                         ...(index === 0 && {
-  //                           borderTopLeftRadius: '5px',
-  //                           borderBottomLeftRadius: '5px',
-  //                         }),
-  //                         ...(index === 2 && {
-  //                           borderTopRightRadius: '5px',
-  //                           borderBottomRightRadius: '5px',
-  //                         }),
-  //                       }}
-  //                     />
-  //                   </Comp.Tooltip>
-  //                 );
-  //               })}
-  //             </div>
-  //           );
-  //         }}
-  //         onMouseEnter={(e, x, y) => {
-  //           handlePositionHover(e, x, y);
-  //           setTooltipContent(
-  //             <div
-  //               className="radius-5px"
-  //               style={{
-  //                 padding: '5px 10px',
-  //                 backgroundColor: Const.Color.BUTTON,
-  //               }}
-  //             >
-  //               {position.name}
-  //             </div>
-  //           );
-  //         }}
-  //         onMouseLeave={() => {
-  //           setIsHoverVisible(false);
-  //         }}
-  //       />
-  //     );
-  //   });
+    //   return fakeMapPositions.map((position) => {
+    //     const p = Utils.getCanvasPosition(position.pos_x, position.pos_y, {
+    //       metadata: { height: 568 },
+    //       resolution: 0.05,
+    //       origin_x: 0,
+    //       origin_y: 0,
+    //     });
+    //     return (
+    //       <ShapeComp.MyImage
+    //         ref={imageRef}
+    //         x={p.x}
+    //         y={p.y}
+    //         rotation={position.orientation}
+    //         imageSrc={Const.getPositionImage(position.type_id)}
+    //         width={20}
+    //         height={20}
+    //         onDblClick={(e, x, y) => {
+    //           setPositionDialog({
+    //             isVisible: true,
+    //             name: position.name,
+    //             type_id: position.type_id,
+    //             id: position.guid,
+    //           });
+    //           setIsClickVisible(false);
+    //         }}
+    //         onClick={(e, x, y) => {
+    //           handlePositionClick(e, x, y);
+    //           setPositionDialog({
+    //             isVisible: false,
+    //             name: position.name,
+    //             type_id: position.type_id,
+    //             id: position.guid,
+    //           });
+    //           setTooltipContent(
+    //             <div className="flex row" style={{ gap: '2px' }}>
+    //               {[
+    //                 actionList.GOTO,
+    //                 actionList.CREATE_PATH,
+    //                 actionList.MOVE,
+    //                 actionList.EDIT,
+    //                 actionList.DELETE,
+    //               ].map((action, index) => {
+    //                 return (
+    //                   <Comp.Tooltip hoverContent={action.alt}>
+    //                     <Comp.SmallToolButton
+    //                       imageSrc={action.imageSrc}
+    //                       showExpand={false}
+    //                       alt={action.alt}
+    //                       onClick={action?.onClick}
+    //                       buttonStyle={{
+    //                         borderRadius: '0',
+    //                         ...(index === 0 && {
+    //                           borderTopLeftRadius: '5px',
+    //                           borderBottomLeftRadius: '5px',
+    //                         }),
+    //                         ...(index === 2 && {
+    //                           borderTopRightRadius: '5px',
+    //                           borderBottomRightRadius: '5px',
+    //                         }),
+    //                       }}
+    //                     />
+    //                   </Comp.Tooltip>
+    //                 );
+    //               })}
+    //             </div>
+    //           );
+    //         }}
+    //         onMouseEnter={(e, x, y) => {
+    //           handlePositionHover(e, x, y);
+    //           setTooltipContent(
+    //             <div
+    //               className="radius-5px"
+    //               style={{
+    //                 padding: '5px 10px',
+    //                 backgroundColor: Const.Color.BUTTON,
+    //               }}
+    //             >
+    //               {position.name}
+    //             </div>
+    //           );
+    //         }}
+    //         onMouseLeave={() => {
+    //           setIsHoverVisible(false);
+    //         }}
+    //       />
+    //     );
+    //   });
   };
 
   const renderCreatePosition = () => {
@@ -616,37 +626,40 @@ const Canvas = () => {
   };
 
   const fillColors = {
-  floor: '#fff',
-  wall: '#000',
-};
+    floor: '#fff',
+    wall: '#000',
+  };
 
   function renderMapArray() {
-  if (!mapArray) return null;
+    if (!mapArray) return null;
 
-  return (
-    <>
-      {Object.entries(mapArray).flatMap(([key, polygons]) =>
-        polygons.map((points, i) => {
-          const canvasPoints = Utils.transformPointsToCanvas(points, map);
+    return (
+      <>
+        {Object.entries(mapArray).flatMap(([key, polygons]) =>
+          polygons.map((points, i) => {
+            const canvasPoints = Utils.transformPointsToCanvas(points, map);
 
-          return (
-            <Line
-              key={`${key}-${i}`}
-              points={canvasPoints}
-              closed={key == 'floor'}
-              fill={fillColors[key] || '#888'}
-              stroke={key == 'walls' ? "#000" : ''}
-              strokeWidth={1}
-              listening={false}
-            />
-          );
-        })
-      )}
-    </>
+            return (
+              <Line
+                key={`${key}-${i}`}
+                points={canvasPoints}
+                closed={key == 'floor'}
+                fill={fillColors[key] || '#888'}
+                stroke={key == 'walls' ? '#000' : ''}
+                strokeWidth={1}
+                listening={false}
+              />
+            );
+          })
+        )}
+      </>
+    );
+  }
+
+  const renderedMapArray = React.useMemo(
+    () => renderMapArray(),
+    [layers, zoom, mapArray]
   );
-}
-
-const renderedMapArray = React.useMemo(() => renderMapArray(), [layers, zoom, mapArray]);
 
   const getLineComponent = (line) => {
     switch (line.name) {
@@ -1130,41 +1143,44 @@ const renderedMapArray = React.useMemo(() => renderMapArray(), [layers, zoom, ma
     }
   };
 
-    const addLineToExistedGroup = (newShape, groupId) => {
-  for (const layer of layers) {
-    const findAndUpdateGroup = (shapes) => {
-      for (const shape of shapes) {
-        if (shape.name === Const.ShapeName.GROUP && shape.id === groupId) {
-          const updatedGroup = {
-            ...shape,
-            shapes: [...shape.shapes, { ...newShape, groupId: groupId }],
-            points: [...shape.points, ...newShape.points], // nếu muốn group gom điểm của tất cả shape
-          };
-          handleUpdateShape(layer.id, groupId, updatedGroup);
-          return true;
-        }
+  const addLineToExistedGroup = (newShape, groupId) => {
+    for (const layer of layers) {
+      const findAndUpdateGroup = (shapes) => {
+        for (const shape of shapes) {
+          if (shape.name === Const.ShapeName.GROUP && shape.id === groupId) {
+            const updatedGroup = {
+              ...shape,
+              shapes: [...shape.shapes, { ...newShape, groupId: groupId }],
+              points: [...shape.points, ...newShape.points], // nếu muốn group gom điểm của tất cả shape
+            };
+            handleUpdateShape(layer.id, groupId, updatedGroup);
+            return true;
+          }
 
-        // Đệ quy nếu trong group có group con
-        if (shape.name === Const.ShapeName.GROUP && Array.isArray(shape.shapes)) {
-          const found = findAndUpdateGroup(shape.shapes);
-          if (found) return true;
+          // Đệ quy nếu trong group có group con
+          if (
+            shape.name === Const.ShapeName.GROUP &&
+            Array.isArray(shape.shapes)
+          ) {
+            const found = findAndUpdateGroup(shape.shapes);
+            if (found) return true;
+          }
         }
+        return false;
+      };
+
+      if (Array.isArray(layer.shapes)) {
+        const updated = findAndUpdateGroup(layer.shapes);
+        if (updated) break;
       }
-      return false;
-    };
-
-    if (Array.isArray(layer.shapes)) {
-      const updated = findAndUpdateGroup(layer.shapes);
-      if (updated) break;
     }
-  }
 
-  if (isContinuosLine) {
+    if (isContinuosLine) {
       initLine(newShape.endP);
     } else {
       setNewLine(null);
     }
-};
+  };
 
   useEffect(() => {
     if (!isContinuosLine && newPath && newPath.length > 0) {
@@ -1173,18 +1189,23 @@ const renderedMapArray = React.useMemo(() => renderMapArray(), [layers, zoom, ma
   }, [newPath]);
 
   const addLine = (foundGroup) => {
-    if(foundGroup || newLine.groupId) {
-            addLineToExistedGroup({ ...shapeProps(newLine) }, foundGroup?.id || newLine.groupId);
-          } else {
-            addLineToPath({ ...shapeProps(newLine) });
-          }
-  }
+    if (foundGroup || newLine.groupId) {
+      addLineToExistedGroup(
+        { ...shapeProps(newLine) },
+        foundGroup?.id || newLine.groupId
+      );
+    } else {
+      addLineToPath({ ...shapeProps(newLine) });
+    }
+  };
 
   const drawShape = (pointer) => {
     let foundGroup;
     if (pointer.groupId) {
-      foundGroup = Utils.getAllGroupsFromLayers(layers)
-        .find((shape) => shape.name === Const.ShapeName.GROUP && shape.id === pointer.groupId);
+      foundGroup = Utils.getAllGroupsFromLayers(layers).find(
+        (shape) =>
+          shape.name === Const.ShapeName.GROUP && shape.id === pointer.groupId
+      );
     }
 
     switch (true) {
@@ -1202,7 +1223,7 @@ const renderedMapArray = React.useMemo(() => renderMapArray(), [layers, zoom, ma
             groupId: foundGroup ? foundGroup.id : undefined,
           });
         } else {
-          addLine(foundGroup)
+          addLine(foundGroup);
           setDrawing(true);
         }
         break;
@@ -2077,7 +2098,7 @@ const renderedMapArray = React.useMemo(() => renderMapArray(), [layers, zoom, ma
     messageType: 'tf2_msgs/TFMessage',
   });
 
-const lidarOrigin = useRosTopic({
+  const lidarOrigin = useRosTopic({
     rosInstance: ros,
     name: '/mirwebapp/laser_map_metadata',
     messageType: 'mirMsgs/LocalMapStat',
@@ -2089,8 +2110,8 @@ const lidarOrigin = useRosTopic({
     name: '/map',
     messageType: 'nav_msgs/OccupancyGrid',
     rest: {
-      throttle_rate: 1800000
-    }
+      throttle_rate: 1800000,
+    },
   });
 
   useEffect(() => {
@@ -2103,41 +2124,43 @@ const lidarOrigin = useRosTopic({
     const lidarMapP = points.map((p) => {
       return {
         x: (p.x - map?.origin_x) / map?.resolution + lidarOrigin.x,
-        y: map?.metadata.height - (p.y - map?.origin_y) / map?.resolution + lidarOrigin.y,
+        y:
+          map?.metadata.height -
+          (p.y - map?.origin_y) / map?.resolution +
+          lidarOrigin.y,
       };
     });
     setLidarMapPoints(lidarMapP);
   }, [lidarPoints, transforms, lidarOrigin]);
 
   useEffect(() => {
-  if (!mapRos) return;
+    if (!mapRos) return;
 
-   const blob = new Blob([mapWorkerCode], {
-        type: 'application/javascript',
-      });
-      const workerMap = new Worker(URL.createObjectURL(blob));
+    const blob = new Blob([mapWorkerCode], {
+      type: 'application/javascript',
+    });
+    const workerMap = new Worker(URL.createObjectURL(blob));
 
-  workerMap.postMessage({
-  mapData: mapRos.data,
-  rows: mapRos.info.height,
-  cols: mapRos.info.width,
-  targetValues: [0, -32], // gửi mảng nhiều giá trị
-  resolution: mapRos.info.resolution,
-});
+    workerMap.postMessage({
+      mapData: mapRos.data,
+      rows: mapRos.info.height,
+      cols: mapRos.info.width,
+      targetValues: [0, -32], // gửi mảng nhiều giá trị
+      resolution: mapRos.info.resolution,
+    });
 
-workerMap.onmessage = (e) => {
-  const data = e.data;
+    workerMap.onmessage = (e) => {
+      const data = e.data;
 
-  setMapArray(prev => ({
-    ...prev,
-    floor: data[0],
-    walls: data[-32],
-  }));
+      setMapArray((prev) => ({
+        ...prev,
+        floor: data[0],
+        walls: data[-32],
+      }));
 
-  workerMap.terminate();
-};
-
-}, [mapRos]);
+      workerMap.terminate();
+    };
+  }, [mapRos]);
 
   //======Test
   const [simPose, setSimPose] = useState({
@@ -2365,14 +2388,14 @@ workerMap.onmessage = (e) => {
           className="full-height"
         >
           <Layer>
-           <Rect
-          x={0}
-          y={0}
-          width={dimensions.width - 50}
-          height={dimensions.height}
-          fill="#F0F9F9"  // màu nền bạn muốn
-        />
-        </Layer>
+            <Rect
+              x={0}
+              y={0}
+              width={dimensions.width - 50}
+              height={dimensions.height}
+              fill="#F0F9F9" // màu nền bạn muốn
+            />
+          </Layer>
           {/* =============================================Layer chính để vẽ============================================== */}
 
           {layers.map((layer) => (
@@ -2384,10 +2407,9 @@ workerMap.onmessage = (e) => {
               scaleY={zoom / 100}
               opacity={layer.selected ? 1 : 0.6}
             >
-
               {renderMetadata()}
 
-              {renderedMapArray} 
+              {renderedMapArray}
 
               {renderlidarMapPoints()}
 

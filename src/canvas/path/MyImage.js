@@ -35,16 +35,16 @@ export const MyImage = ({
   }, [imageSrc]);
 
   if (
-  !image ||
-  typeof x !== 'number' ||
-  typeof y !== 'number' ||
-  typeof width !== 'number' ||
-  typeof height !== 'number' ||
-  width <= 0 ||
-  height <= 0
-) {
-  return null;
-}
+    !image ||
+    typeof x !== 'number' ||
+    typeof y !== 'number' ||
+    typeof width !== 'number' ||
+    typeof height !== 'number' ||
+    width <= 0 ||
+    height <= 0
+  ) {
+    return null;
+  }
 
   const handleOnClick = (e) => {
     const currentX = e.target.x(); // Lấy tọa độ X hiện tại của Image

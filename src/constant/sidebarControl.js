@@ -1,40 +1,23 @@
 import { SIDEBAR_PATH } from '../router';
+import * as Icons from '../components/icons';
 
 export const sidebarControl = [
   {
     key: 'dashboards',
-    imgSrcKey: 'dashboard',
-    name: 'Dashboards',
+    icon: <Icons.Dashboard />,
+    name: 'Dashboard',
     path: SIDEBAR_PATH.dashboards,
   },
   {
-    key: 'setup',
-    imgSrcKey: 'setup',
-    name: 'Setup',
-    path: SIDEBAR_PATH.setup,
+    key: 'maps',
+    icon: <Icons.Map />,
+    name: 'Map',
+    path: SIDEBAR_PATH.maps,
   },
   {
-    key: 'monitoring',
-    imgSrcKey: 'monitoring',
-    name: 'Monitoring',
-    path: SIDEBAR_PATH.monitoring,
-  },
-  {
-    key: 'system',
-    imgSrcKey: 'setting',
-    name: 'System',
-    path: SIDEBAR_PATH.system,
-  },
-  {
-    key: 'help',
-    imgSrcKey: 'helpCircle',
-    name: 'Help',
-    path: SIDEBAR_PATH.help,
-  },
-  {
-    key: 'signout',
-    imgSrcKey: 'signout',
-    name: 'Sign out',
-    path: SIDEBAR_PATH.signout,
+    key: 'missions',
+    icon: <Icons.Mission />,
+    name: 'Mission',
+    path: SIDEBAR_PATH.missions,
   },
 ];

@@ -6,24 +6,6 @@
   background-color: var(--color-button);
 }
 
-.sidebar-button,
-.back-forward-button {
-  display: flex;
-  flex-direction: column;
-  width: 70px;
-  height: fit-content;
-  justify-content: center;
-  align-items: center;
-  color: #ffffff;
-  cursor: pointer;
-  padding: 10px 5px;
-  font-size: var(--sidebar-font-size);
-}
-
-.back-forward-button {
-  height: 40px;
-}
-
 .sidebar-button:hover {
   background-color: var(--color-button-hover);
 }

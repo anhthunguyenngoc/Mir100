@@ -7,20 +7,9 @@ export const DefaultDashboard = () => {
   const { robotStatus } = Context.useAppContext();
 
   return (
-    <div id="content" className="content flex">
-      <div className="content-header">
-        <div className="row-5px">
-          <div>Dashboard: Name</div>|<div>Contains: Number widget(s)</div>
-        </div>
-
-        <div className="row-5px">
-          <div className="link">Open in DashboardDesigner</div>|
-          <div className="link">Previous</div>|<div className="link">Next</div>
-        </div>
-      </div>
-
-      <div className="top-content">
-        <section id="robot-info">
+    <div id="content" className="content flex row">
+      <div className="flex col gap-content height-fit-content">
+        <section className="flex col height-fit-content">
           <ul>
             <li className="robot-info-title">
               <h2 id="robot-name">{robotStatus?.robot_name ?? '...'}</h2>
@@ -56,7 +45,7 @@ export const DefaultDashboard = () => {
           </ul>
         </section>
 
-        <section id="manual-control">
+        <section className="flex col full-height full-width">
           <div className="manual-control-text">
             Select Manual control to control the robot manually.
           </div>

@@ -141,8 +141,7 @@ const Canvas = () => {
       const headerHeight = header?.offsetHeight || 0;
 
       const vw = window.innerWidth;
-      console.log(1.6 * vw);
-
+      
       // Tính chiều cao còn lại
       const height =
         window.innerHeight - headerHeight - 5 * 0.016 * vw - 45 - 37.6;
@@ -2407,9 +2406,9 @@ const Canvas = () => {
               scaleY={zoom / 100}
               opacity={layer.selected ? 1 : 0.6}
             >
-              {renderMetadata()}
-
               {renderedMapArray}
+
+              {renderMetadata()}
 
               {renderlidarMapPoints()}
 

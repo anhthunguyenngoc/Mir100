@@ -44,15 +44,6 @@ export const DefaultDashboard = () => {
             </li>
           </ul>
         </section>
-
-        <section className="flex col full-height full-width">
-          <div className="manual-control-text">
-            Select Manual control to control the robot manually.
-          </div>
-          <button id="control-btn" className="button" onClick="controlClick()">
-            Manual control
-          </button>
-        </section>
       </div>
 
       <section id="map-canvas">

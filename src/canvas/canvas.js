@@ -141,10 +141,9 @@ const Canvas = () => {
       const headerHeight = header?.offsetHeight || 0;
 
       const vw = window.innerWidth;
-      
+
       // Tính chiều cao còn lại
-      const height =
-        window.innerHeight - headerHeight - 5 * 0.016 * vw - 45 - 37.6;
+      const height = window.innerHeight - headerHeight; //- 5 * 0.016 * vw - 45 - 37.6; // - 200;
 
       setDimensions({ width: offsetWidth, height });
     });

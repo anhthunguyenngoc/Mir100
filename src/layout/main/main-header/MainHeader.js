@@ -35,7 +35,7 @@ export const MainHeader = ({ pageInfo }) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }} // nếu bạn không muốn fade out, có thể xóa dòng này
           transition={{ duration: 0.5 }}
-          className="flex align-center"
+          className="title flex align-center"
         >
           <h1>{pageInfo.name}</h1>
         </motion.div>
@@ -47,7 +47,7 @@ export const MainHeader = ({ pageInfo }) => {
           onClick="toggleHidden('startRobot-section')"
         >
           <Icons.Start color={Const.Color.BUTTON} />
-          Paused
+          <span className="header-button-content">Paused</span>
         </li>
         <li
           id="status"
@@ -55,7 +55,7 @@ export const MainHeader = ({ pageInfo }) => {
           onClick="toggleHidden('status-section')"
         >
           <Icons.Tick color={Const.Color.BUTTON} />
-          All OK
+          <span className="header-button-content">All OK</span>
         </li>
         <li
           id="loggedInUser"
@@ -63,7 +63,7 @@ export const MainHeader = ({ pageInfo }) => {
           onClick="toggleHidden('loggedInUser-section')"
         >
           <Icons.User color={Const.Color.BUTTON} />
-          <span className="nowrap">Distributor</span>
+          <span className="header-button-content nowrap">Distributor</span>
           <section className="header-section hidden" id="loggedInUser-section">
             <svg
               className="img-35px"
@@ -139,7 +139,9 @@ export const MainHeader = ({ pageInfo }) => {
             isCharging={false}
             color={Const.Color.BUTTON}
           />
-          {Math.round(robotStatus?.battery_percentage)}%
+          <span className="header-button-content">
+            {Math.round(robotStatus?.battery_percentage)}%
+          </span>
         </li>
       </ul>
     </div>

@@ -41,20 +41,21 @@ const SnapModeSelector = ({ enabledSnapModes, onChange }) => {
     <Comp.SelectionDropUp
       items={Object.values(Const.snapMode)}
       renderItem={(item) => (
-        <>
+        <div className="flex row gap-5px snap-mode-item">
           <div style={styles.tick}>
             {enabledSnapModes[item.id] && <CheckIcon />}
           </div>
           <div style={styles.icon}>{item.icon}</div>
-          <div>{item.name}</div>
-        </>
+          <div className="name">{item.name}</div>
+        </div>
       )}
       renderSelectedDisplay={() => (
-        <div style={styles.selectedDisplay}>
+        <div className="snap-mode-container" style={styles.selectedDisplay}>
           <div style={styles.icon}>
             {Const.snapMode.grid.icon} {/* Use grid icon as default */}
           </div>
-          <div>Snap Modes ({enabledCount})</div>
+          <span className="content">Snap Modes</span>
+          <span>({enabledCount})</span>
         </div>
       )}
       onItemClick={handleSnapModeToggle}

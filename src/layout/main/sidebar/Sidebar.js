@@ -15,8 +15,8 @@ export const Sidebar = ({ defaultIndex, onSelect }) => {
 
   return (
     <div id="left-sidebar-list" className="padding-15px radius-15px">
-      <Icons.Logo width="80px" />
-      <ul className="flex col full-height gap-15px justify-center">
+      <Icons.Logo width="80px" className="logo-icon" />
+      <ul className="sidebar-button-list flex col full-height gap-15px justify-center">
         {sidebarControl.map((item, index) => (
           <li
             key={item.key}
@@ -24,7 +24,7 @@ export const Sidebar = ({ defaultIndex, onSelect }) => {
             style={{ fontSize: 'var(--sidebar-font-size)', color: '#ffffff' }}
             onClick={() => handleItemClick(index, item)}
           >
-            {item.icon}
+            <div className="sidebar-button-icon">{item.icon}</div>
             <span>{item.name}</span>
           </li>
         ))}

@@ -27,3 +27,127 @@
   height: 100%;
   overflow: hidden;
 }
+
+.responsive-btn-container > li:nth-of-type(1) {
+  display: none;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  #root {
+    height: fit-content;
+    background-color: var(--color-background);
+    height: 100%;
+  }
+  .main_layout {
+    flex-direction: column;
+    height: fit-content;
+    padding: 0 !important;
+    height: 100%;
+  }
+
+  .right_sidebar {
+    order: -1;
+
+    height: fit-content;
+  }
+
+  #left-sidebar-list {
+    order: 0;
+    flex-direction: row !important;
+    width: 100% !important;
+    border-radius: 0;
+    border-top-left-radius: 60px;
+    border-top-right-radius: 60px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    padding: 5px;
+    position: absolute;
+    bottom: 0;
+    height: fit-content !important;
+    z-index: 10;
+  }
+
+  .sidebar-button-list {
+    position: relative;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-evenly;
+  }
+
+  .logo-icon {
+    display: none;
+  }
+
+  .sidebar-button.selected {
+    background-color: transparent !important;
+    justify-content: end;
+  }
+
+  .sidebar-button.selected > .sidebar-button-icon {
+    z-index: 1;
+    top: -60%;
+    position: absolute;
+    border-radius: 100px;
+    border: 10px solid white;
+    padding: 15px;
+    background-color: var(--color-button-hover);
+  }
+  .sidebar-button span {
+    font-size: 16px;
+  }
+
+  .content {
+    flex-direction: column;
+  }
+
+  .tool-btn {
+    width: fit-content;
+  }
+
+  #control-btn {
+    width: fit-content;
+  }
+
+  #main-header > .title {
+    display: none;
+  }
+
+  .header-button > .header-button-content {
+    display: none;
+  }
+
+  .content-container {
+    height: fit-content !important;
+    overflow-y: auto;
+  }
+
+  .content-container > .content {
+    padding-bottom: 120px;
+  }
+
+  .waypoint-container {
+    display: none;
+  }
+
+  .draw-path-list {
+    display: none;
+  }
+
+  .responsive-btn-container > li:nth-of-type(1) {
+    display: flex;
+  }
+
+  .snap-mode-container > .content {
+    display: none;
+  }
+
+  .snap-mode-item > .name {
+    display: none;
+  }
+
+  .header-button,
+  .header-button > div:nth-of-type(1) {
+    padding: 5px !important;
+  }
+}

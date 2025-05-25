@@ -55,17 +55,20 @@
   #left-sidebar-list {
     order: 0;
     flex-direction: row !important;
-    width: 100% !important;
+    width: 90vw !important;
     border-radius: 0;
     border-top-left-radius: 60px;
     border-top-right-radius: 60px;
-    border-bottom-left-radius: 0px;
-    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 60px;
+    border-bottom-right-radius: 60px;
     padding: 5px;
     position: absolute;
     bottom: 0;
     height: fit-content !important;
     z-index: 10;
+    margin-left: 5vw;
+    margin-right: 5vw;
+    margin-bottom: 5vw;
   }
 
   .sidebar-button-list {
@@ -89,12 +92,12 @@
     top: -60%;
     position: absolute;
     border-radius: 100px;
-    border: 10px solid white;
-    padding: 15px;
+    border: 8px solid white;
+    padding: 8px;
     background-color: var(--color-button-hover);
   }
   .sidebar-button span {
-    font-size: 16px;
+    font-size: 12px;
   }
 
   .content {
@@ -149,5 +152,22 @@
   .header-button,
   .header-button > div:nth-of-type(1) {
     padding: 5px !important;
+  }
+
+  .gap-5px {
+    gap: 3px !important;
+  }
+
+  .gap-10px {
+    gap: 5px !important;
+  }
+
+  .sidebar-button-icon > svg:nth-of-type(1){
+    width: 20px;
+    height: 20px;
+  }
+
+  .padding-10px {
+    padding: 5px;
   }
 }

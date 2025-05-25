@@ -357,7 +357,7 @@ export const CanvasToolbar = ({
         </div>
       </div>
 
-      <div className="flex row" style={{ gap: '10px' }}>
+      <div className="flex row gap-10px">
         <div className="flex row" style={{ gap: '1px' }}>
           <SmallToolButton
             imageSrc="undo"

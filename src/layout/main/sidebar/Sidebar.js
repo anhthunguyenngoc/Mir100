@@ -29,7 +29,7 @@ export const Sidebar = ({ defaultIndex, onSelect }) => {
           </li>
         ))}
       </ul>
-      <div style={{ height: '80px' }}></div>
+      <div className="logo-icon" style={{ height: '80px' }}></div>
     </div>
   );
 };

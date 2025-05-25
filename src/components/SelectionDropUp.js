@@ -5,6 +5,7 @@ const styles = {
   container: {
     position: 'relative',
     width: '20%',
+    minWidth: 'fit-Content',
   },
   selector: {
     display: 'flex',
@@ -44,7 +45,6 @@ const styles = {
   },
   chevron: {
     transition: 'transform 0.2s',
-    marginLeft: '8px',
   },
   rotatedChevron: {
     transform: 'rotate(180deg)',
@@ -95,6 +95,7 @@ export const SelectionDropUp = ({
       <div
         style={{ ...styles.selector, ...style.selector }}
         onClick={toggleDropup}
+        className='gap-5px'
       >
         {renderSelectedDisplay ? (
           renderSelectedDisplay()

@@ -49,7 +49,10 @@ const SnapModeSelector = ({ enabledSnapModes, onChange }) => {
         </div>
       )}
       renderSelectedDisplay={() => (
-        <div className="snap-mode-container gap-5px" style={styles.selectedDisplay}>
+        <div
+          className="snap-mode-container gap-5px"
+          style={styles.selectedDisplay}
+        >
           <div style={styles.icon}>
             {Const.snapMode.grid.icon} {/* Use grid icon as default */}
           </div>

@@ -95,7 +95,7 @@ export const SelectionDropUp = ({
       <div
         style={{ ...styles.selector, ...style.selector }}
         onClick={toggleDropup}
-        className='gap-5px'
+        className="gap-5px"
       >
         {renderSelectedDisplay ? (
           renderSelectedDisplay()

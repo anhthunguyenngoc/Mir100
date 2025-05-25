@@ -113,3 +113,15 @@ input:checked + .slider:before {
 #angle {
   width: 60px;
 }
+
+.map-card {
+  background-color: var(--color-background);
+}
+
+.map-list {
+  gap: 2px;
+}
+
+.map-owner > .map-owner-label {
+  display: none;
+}

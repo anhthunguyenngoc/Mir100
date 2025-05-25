@@ -166,7 +166,7 @@ input {
   height: 25px;
   outline: none;
   border: 2px solid var(--color-background);
-  padding: 0 5px;
+  padding: 0 15px;
   border-radius: 3px;
   background-color: var(--color-background) !important;
 }
@@ -302,6 +302,10 @@ input:focus {
 
 .width-75per {
   width: 75%;
+}
+
+.width-70per {
+  width: 70%;
 }
 
 .width-50per {
@@ -605,4 +609,24 @@ a:visited,
 a:active {
   all: unset;
   cursor: pointer;
+}
+
+.padding-h-5px {
+  padding: 0 5px;
+}
+
+.padding-h-15px {
+  padding: 0 15px;
+}
+
+.padding-v-5px {
+  padding: 5px 0;
+}
+
+.padding-v-15px {
+  padding: 15px 0;
+}
+
+.radius-100px {
+  border-radius: 100px;
 }

@@ -5,6 +5,7 @@ import * as Const from '../../../constant';
 import { PATH } from '../../../router';
 import * as api from '../../../api';
 import * as Icons from '../../../components/icons/Icons';
+import * as Comp from '../../../components';
 
 export const Map = () => {
   const navigate = useNavigate();
@@ -44,112 +45,136 @@ export const Map = () => {
     }
   };
 
+  const verticalLineProps = {
+    width: '2px',
+    isVisible: true,
+    height: '100%',
+    color: Const.Color.WHITE,
+    borderRadius: '5px',
+  };
+
   useEffect(() => {
     fetchMaps();
   }, []);
 
   return (
     <div id="map-content" className="content">
-      <section>
+      <section className="gap-15px">
         <div id="filter-container" className="flex space-between full-width">
-          <div className="row-5px">
-            <div className="row-5px">
-              <label for="filter">Filter:</label>
-              <input
-                id="filter"
-                placeholder="Write name to filter by..."
-                name="filter"
-                type="text"
-              />
-            </div>
-            <div id="number-of-item">Num item(s) found</div>
+          <div className="flex row gap-5px search-container">
+            <input
+              style={{ height: 'auto' }}
+              placeholder="Write name to search by..."
+              name="search"
+              type="text"
+            />
+            <button className="button" onClick={() => {}}>
+              <Icons.Search width="20px" height="20px" />
+            </button>
           </div>
-          <div className="flex row align-center">
-            <div className="row-5px">
-              <button
-                id="create-map"
-                className="button flex row gap-5px"
-                onClick={() => {
-                  navigate(PATH.create_map);
-                }}
-              >
-                <img
-                  className="plus-btn-img"
-                  alt="Create map"
-                  src={Const.ImageSrc.plus}
-                  loading="lazy"
-                />
-                Create map
-              </button>
-              <button className="button flex row gap-5px outline-btn">
-                <Icons.ClearFilter iconColorClass={'fill-color-btn'} />
-                Clear filters
-              </button>
-            </div>
+          <div className="flex row gap-5px">
+            <button
+              id="create-map"
+              className="button flex row gap-5px"
+              onClick={() => {
+                navigate(PATH.create_map);
+              }}
+            >
+              <img
+                className="plus-btn-img"
+                alt="Create map"
+                src={Const.ImageSrc.plus}
+                loading="lazy"
+              />
+              <span>Create map</span>
+            </button>
           </div>
         </div>
 
-        <table id="map-table">
-          <thead>
-            <tr>
-              <th style={{ width: '50px' }}></th>
-              <th style={{ width: '70%' }}>Name</th>
-              <th style={{ width: '200px' }}>Created by</th>
-              <th style={{ width: '200px' }}>Functions</th>
-            </tr>
-          </thead>
-          <tbody id="list-map">
-            {maps.map((map) => (
-              <tr>
-                <td>
-                  <svg
-                    className="fill-color-btn stroke-color-btn plus-btn-img"
-                    width="64px"
-                    height="64px"
-                    viewBox="0 -32 576 576"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <g id="SVGRepo_bgCarrier" strokeWidth="0" />
-                    <g
-                      id="SVGRepo_tracerCarrier"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <g id="SVGRepo_iconCarrier">
-                      <path d="M288 0c-69.59 0-126 56.41-126 126 0 56.26 82.35 158.8 113.9 196.02 6.39 7.54 17.82 7.54 24.2 0C331.65 284.8 414 182.26 414 126 414 56.41 357.59 0 288 0zm0 168c-23.2 0-42-18.8-42-42s18.8-42 42-42 42 18.8 42 42-18.8 42-42 42zM20.12 215.95A32.006 32.006 0 0 0 0 245.66v250.32c0 11.32 11.43 19.06 21.94 14.86L160 448V214.92c-8.84-15.98-16.07-31.54-21.25-46.42L20.12 215.95zM288 359.67c-14.07 0-27.38-6.18-36.51-16.96-19.66-23.2-40.57-49.62-59.49-76.72v182l192 64V266c-18.92 27.09-39.82 53.52-59.49 76.72-9.13 10.77-22.44 16.95-36.51 16.95zm266.06-198.51L416 224v288l139.88-55.95A31.996 31.996 0 0 0 576 426.34V176.02c0-11.32-11.43-19.06-21.94-14.86z" />
-                    </g>
-                  </svg>
-                </td>
-                <td>{map.name}</td>
-                <td style={{ textAlign: 'center' }}>Username</td>
-                <td>
-                  <div className="row-5px">
-                    <button
-                      id="edit-map"
-                      className="button"
-                      onClick={() => navigate(PATH.edit_map(map.guid))}
-                    >
-                      <img
-                        className="size-20px"
-                        alt="Edit mission"
-                        src={Const.ImageSrc.edit}
-                        loading="lazy"
-                      />
-                    </button>
-                    <button className="button del-btn" id="del-map">
-                      <img
-                        className="size-20px"
-                        alt="Create map groups"
-                        src={Const.ImageSrc.delete}
-                        loading="lazy"
-                      />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="map-list flex col">
+          <div className="map-card map-card-title flex row align-center radius-5px">
+            <div className="map-icon padding-h-15px">
+              <div className="fill-color-btn stroke-color-btn plus-btn-img" />
+            </div>
+            <Comp.VerticalLine {...verticalLineProps} />
+            <div className="map-name width-70per padding-5px">
+              <strong>Name</strong>
+            </div>
+            <Comp.VerticalLine {...verticalLineProps} />
+            <div className="map-owner width-30per padding-5px flex justify-center">
+              <span style={{ width: '70px', textAlign: 'center' }}>
+                <strong>Created by</strong>
+              </span>
+            </div>
+            <Comp.VerticalLine {...verticalLineProps} />
+            <div className="map-actions flex row padding-15px gap-5px">
+              <span style={{ width: '60px', textAlign: 'center' }}>
+                <strong>Actions</strong>
+              </span>
+            </div>
+          </div>
+          {[
+            {
+              guid: '1a2b3c',
+              name: 'City Map - Downtown',
+              createdBy: 'alice',
+            },
+            {
+              guid: '4d5e6f',
+              name: 'Mountain Adventure',
+              createdBy: 'bob',
+            },
+            {
+              guid: '7g8h9i',
+              name: 'Island Explorer',
+              createdBy: 'charlie',
+            },
+            {
+              guid: '0j1k2l',
+              name: 'Desert Storm',
+              createdBy: 'david',
+            },
+            {
+              guid: '3m4n5o',
+              name: 'Forest Maze',
+              createdBy: 'eve',
+            },
+          ].map((map) => (
+            <div
+              className="map-card flex row align-center radius-5px"
+              key={map.guid}
+            >
+              <div className="map-icon padding-h-15px">
+                <Icons.MapItem className="fill-color-btn stroke-color-btn plus-btn-img" />
+              </div>
+              <Comp.VerticalLine {...verticalLineProps} />
+              <div className="map-name width-70per padding-5px">{map.name}</div>
+              <Comp.VerticalLine {...verticalLineProps} />
+              <div className="map-owner width-30per padding-5px flex justify-center">
+                <span className="map-owner-label">Created by:</span>
+                <span style={{ minWidth: '70px', textAlign: 'center' }}>
+                  {map.createdBy}
+                </span>
+              </div>
+              <Comp.VerticalLine {...verticalLineProps} />
+              <div
+                className="map-actions flex row padding-15px gap-10px flex justify-center"
+                style={{ minWidth: '90px' }}
+              >
+                <Icons.Edit
+                  width="25px"
+                  height="25px"
+                  onClick={() => navigate(PATH.edit_map(map.guid))}
+                />
+                <Icons.Delete
+                  width="25px"
+                  height="25px"
+                  color={Const.Color.ERROR}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
       </section>
     </div>
   );

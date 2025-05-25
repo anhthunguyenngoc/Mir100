@@ -8,6 +8,7 @@ export const VerticalLine = ({
 }) => {
   return (
     <div
+      className="vertical-divider"
       style={{
         width,
         height,

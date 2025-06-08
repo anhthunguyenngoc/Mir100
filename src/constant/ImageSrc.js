@@ -47,6 +47,7 @@ export const ImageSrc = {
   hideLeftbar: '/images/hide-leftbar.svg',
   showLeftbar: '/images/show-leftbar.svg',
   plus: '/images/plus.svg',
+  more: '/images/more.svg',
   addLayer: '/images/add-layer.svg',
   canvasExpand: '/images/canvas-expand.svg',
   arrowLeft: '/images/arrow-left.svg',

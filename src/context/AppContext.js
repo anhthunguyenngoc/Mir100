@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 
 import { ConfirmDialog } from '../components';
 import * as api from '../api';
+import { useRosConnection } from 'ros';
 
 const AppContext = createContext();
 
@@ -13,6 +14,8 @@ export const AppProvider = ({ children }) => {
   const { pathname } = location;
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState({});
+
+  const ros = useRosConnection(); // chỉ 1 connection chung
 
   /** @type {[api.TGetStatus, Function]} */
   const [robotStatus, setRobotStatus] = useState(null);
@@ -54,7 +57,7 @@ export const AppProvider = ({ children }) => {
 
   return (
     <AppContext.Provider
-      value={{ showDialog, robotStatus, fetchRobotStatus, pathname }}
+      value={{ showDialog, robotStatus, fetchRobotStatus, pathname, ros }}
     >
       {children}
       <ConfirmDialog

@@ -164,11 +164,11 @@ export const path = [
     showExpand: true,
     options: arc,
   },
-  {
-    ...(tangent.find((item) => item.isActived) || tangent[0]),
-    alt: 'Tangent',
-    showExpand: false,
-  },
+  // {
+  //   ...(tangent.find((item) => item.isActived) || tangent[0]),
+  //   alt: 'Tangent',
+  //   showExpand: false,
+  // },
   {
     ...(spline.find((item) => item.isActived) || spline[0]),
     alt: 'Spline',
@@ -211,15 +211,15 @@ export const selection = [
     isActived: false,
     showExpand: false,
   },
-  {
-    id: 'trim',
-    imgSrc: 'trim',
-    alt: 'Trim',
-    name: '',
-    shortcut: '',
-    isActived: false,
-    showExpand: false,
-  },
+  // {
+  //   id: 'trim',
+  //   imgSrc: 'trim',
+  //   alt: 'Trim',
+  //   name: '',
+  //   shortcut: '',
+  //   isActived: false,
+  //   showExpand: false,
+  // },
 ];
 
 export const clipBoard = [

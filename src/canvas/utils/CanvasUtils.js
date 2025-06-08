@@ -607,3 +607,30 @@ export function extractPolygons(
 
   return polygons;
 }
+
+export function filterMirconstMissionGroups(missionGroups) {
+  return missionGroups.filter((group) => group.guid.startsWith('mirconst'));
+}
+
+export function extractMentionedParameters(actionDetail) {
+  const { description, parameters } = actionDetail;
+  if (!description || !Array.isArray(parameters)) return [];
+
+  // Tìm tất cả các chuỗi dạng %(parameter_id) trong description
+  const regex = /%\(([^)]+)\)/g;
+  const mentionedIds = [];
+  let match;
+
+  while ((match = regex.exec(description)) !== null) {
+    mentionedIds.push(match[1]); // match[1] là parameter_id
+  }
+
+  // Lọc các parameter có id nằm trong danh sách mentioned
+  return parameters.filter((param) => mentionedIds.includes(param.id));
+}
+
+export function getMissionGroupIdFromGuid(guid) {
+  // Giả sử guid dạng "mirconst-guid-0000-0001-missiongroup"
+  const matches = guid.match(/(\d{4}-\d{4})/);
+  return matches ? matches[1] : null;
+}

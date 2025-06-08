@@ -59,7 +59,7 @@ export const Map = () => {
 
   return (
     <div id="map-content" className="content">
-      <section className="gap-15px">
+      <section className="gap-15px full-height">
         <div id="filter-container" className="flex space-between full-width">
           <div className="flex row gap-5px search-container">
             <input
@@ -91,7 +91,10 @@ export const Map = () => {
           </div>
         </div>
 
-        <div className="map-list flex col">
+        <div
+          className="map-list flex col full-height"
+          style={{ overflowY: 'auto' }}
+        >
           <div className="map-card map-card-title flex row align-center radius-5px">
             <div className="map-icon padding-h-15px">
               <div className="fill-color-btn stroke-color-btn plus-btn-img" />
@@ -113,33 +116,7 @@ export const Map = () => {
               </span>
             </div>
           </div>
-          {[
-            {
-              guid: '1a2b3c',
-              name: 'City Map - Downtown',
-              createdBy: 'alice',
-            },
-            {
-              guid: '4d5e6f',
-              name: 'Mountain Adventure',
-              createdBy: 'bob',
-            },
-            {
-              guid: '7g8h9i',
-              name: 'Island Explorer',
-              createdBy: 'charlie',
-            },
-            {
-              guid: '0j1k2l',
-              name: 'Desert Storm',
-              createdBy: 'david',
-            },
-            {
-              guid: '3m4n5o',
-              name: 'Forest Maze',
-              createdBy: 'eve',
-            },
-          ].map((map) => (
+          {maps.map((map) => (
             <div
               className="map-card flex row align-center radius-5px"
               key={map.guid}
@@ -153,7 +130,7 @@ export const Map = () => {
               <div className="map-owner width-30per padding-5px flex justify-center">
                 <span className="map-owner-label">Created by:</span>
                 <span style={{ minWidth: '70px', textAlign: 'center' }}>
-                  {map.createdBy}
+                  {map.created_by_name}
                 </span>
               </div>
               <Comp.VerticalLine {...verticalLineProps} />

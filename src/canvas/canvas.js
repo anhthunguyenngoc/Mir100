@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useMemo, use } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { Stage, Layer, Rect, Line, Text, Circle } from 'react-konva';
 
 import './canvas.css';
@@ -8,24 +8,22 @@ import * as Utils from './utils';
 import * as ShapeComp from '../canvas/path';
 import * as Context from '../context';
 import * as Comp from '../components';
-import * as Intersections from './find-intersections';
 import * as Snap from './snap-point/SnapPoint';
+import { PathControl } from './path-control';
 
 //Api
 import * as api from '../api';
-import { useRosTopic, useRosConnection } from 'ros';
-import { PathControl } from './path-control';
+import { useRosTopic } from 'ros';
 
 import { mapWorkerCode } from './find-path';
 
-const Canvas = () => {
+const Canvas = ({ isSpeedVisible }) => {
   /** @type { api.TGetStatus } */
-  const { robotStatus } = Context.useAppContext();
+  const { robotStatus, ros } = Context.useAppContext();
   const {
     setPositionDialog,
     openCreatePosition,
     openCreateMarker,
-    mapId,
     map,
     setDrawingMode,
     drawingMode,
@@ -34,14 +32,10 @@ const Canvas = () => {
     pathPoints,
     enabledSnapModes,
   } = Context.useCanvasContext();
-
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-
-  const [mousePos, setMousePos] = useState({
-    x: 0,
-    y: 0,
-    xRuler: 0,
-    yRuler: 0,
+  const [speed, setSpeed] = useState({
+    baseSpeed: 0.1,
+    linearSpeed: 0,
+    angularSpeed: 0,
   });
   const [layers, setLayers] = useState([
     {
@@ -57,6 +51,15 @@ const Canvas = () => {
       shapes: [],
     },
   ]);
+
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+  const [mousePos, setMousePos] = useState({
+    x: 0,
+    y: 0,
+    xRuler: 0,
+    yRuler: 0,
+  });
 
   const [mapArray, setMapArray] = useState(null);
   const [editable, setEditable] = useState(false);
@@ -101,8 +104,6 @@ const Canvas = () => {
   const [createPos, setCreatePos] = useState(null);
   const [createMarker, setCreateMarker] = useState(null);
 
-  const [speed, setSpeed] = useState({ linear: 0, angular: 0 });
-
   const selectedLayer = useMemo(() => {
     return layers.find((layer) => layer.selected) || null;
   }, [layers]);
@@ -143,7 +144,8 @@ const Canvas = () => {
       const vw = window.innerWidth;
 
       // Tính chiều cao còn lại
-      const height = window.innerHeight - headerHeight; //- 5 * 0.016 * vw - 45 - 37.6; // - 200;
+      const height =
+        window.innerHeight - headerHeight - 5 * 0.016 * vw - 45 - 37.6; // - 200;
 
       setDimensions({ width: offsetWidth, height });
     });
@@ -330,41 +332,41 @@ const Canvas = () => {
 
     //!!!!
     // Lặp qua các zones trong layers
-    for (const zones in map?.metadata.layers) {
-      // Lấy shapes của từng zone
-      if (!map?.metadata.layers[zones]) continue;
-      const shapes = map?.metadata.layers[zones].shapes;
-      // Nếu có shapes, lặp qua các shape để tạo các Line
-      for (let i = 0; i < shapes.length; i++) {
-        const zone = shapes[i];
-        if (!zone) continue;
+    // for (const zones in map?.metadata.layers) {
+    //   // Lấy shapes của từng zone
+    //   if (!map?.metadata.layers[zones]) continue;
+    //   const shapes = map?.metadata.layers[zones].shapes;
+    //   // Nếu có shapes, lặp qua các shape để tạo các Line
+    //   for (let i = 0; i < shapes.length; i++) {
+    //     const zone = shapes[i];
+    //     if (!zone) continue;
 
-        lines.push(
-          <Line
-            points={zone.polygon.flatMap((point) => [point.x, point.y])}
-            stroke={zone.color}
-            strokeWidth={zone.brushsize}
-            closed={shapes[0]?.type === 'shape'} // Giữ `false` nếu không muốn tạo đa giác kín
-            fill={zone.color}
-          />
-        );
-      }
-    }
-
-    //$$$Test */
-    // Object.entries(Const.metadata).forEach(([key, zones]) => {
-    //   zones.forEach((zone) => {
     //     lines.push(
     //       <Line
     //         points={zone.polygon.flatMap((point) => [point.x, point.y])}
     //         stroke={zone.color}
     //         strokeWidth={zone.brushsize}
-    //         closed={zone.type === 'shape'}
+    //         closed={shapes[0]?.type === 'shape'} // Giữ `false` nếu không muốn tạo đa giác kín
     //         fill={zone.color}
     //       />
     //     );
-    //   });
-    // });
+    //   }
+    // }
+
+    //$$$Test */
+    Object.entries(Const.metadata).forEach(([key, zones]) => {
+      zones.forEach((zone) => {
+        lines.push(
+          <Line
+            points={zone.polygon.flatMap((point) => [point.x, point.y])}
+            stroke={zone.color}
+            strokeWidth={zone.brushsize}
+            closed={zone.type === 'shape'}
+            fill={zone.color}
+          />
+        );
+      });
+    });
 
     // Trả về mảng các phần tử Line
     return lines;
@@ -417,8 +419,8 @@ const Canvas = () => {
           y={p.y}
           rotation={position.orientation}
           imageSrc={Const.getPositionImage(position.type_id)}
-          width={20}
-          height={20}
+          width={10}
+          height={10}
           onDblClick={(e, x, y) => {
             setPositionDialog({
               isVisible: true,
@@ -491,93 +493,94 @@ const Canvas = () => {
       );
     });
 
-    //   return fakeMapPositions.map((position) => {
-    //     const p = Utils.getCanvasPosition(position.pos_x, position.pos_y, {
-    //       metadata: { height: 568 },
-    //       resolution: 0.05,
-    //       origin_x: 0,
-    //       origin_y: 0,
+    //Test
+    //     return fakeMapPositions.map((position) => {
+    //       const p = Utils.getCanvasPosition(position.pos_x, position.pos_y, {
+    //         metadata: { height: 568 },
+    //         resolution: 0.05,
+    //         origin_x: 0,
+    //         origin_y: 0,
+    //       });
+    //       return (
+    //         <ShapeComp.MyImage
+    //           ref={imageRef}
+    //           x={p.x}
+    //           y={p.y}
+    //           rotation={position.orientation}
+    //           imageSrc={Const.getPositionImage(position.type_id)}
+    //           width={20}
+    //           height={20}
+    //           onDblClick={(e, x, y) => {
+    //             setPositionDialog({
+    //               isVisible: true,
+    //               name: position.name,
+    //               type_id: position.type_id,
+    //               id: position.guid,
+    //             });
+    //             setIsClickVisible(false);
+    //           }}
+    //           onClick={(e, x, y) => {
+    //             handlePositionClick(e, x, y);
+    //             setPositionDialog({
+    //               isVisible: false,
+    //               name: position.name,
+    //               type_id: position.type_id,
+    //               id: position.guid,
+    //             });
+    //             setTooltipContent(
+    //               <div className="flex row" style={{ gap: '2px' }}>
+    //                 {[
+    //                   actionList.GOTO,
+    //                   actionList.CREATE_PATH,
+    //                   actionList.MOVE,
+    //                   actionList.EDIT,
+    //                   actionList.DELETE,
+    //                 ].map((action, index) => {
+    //                   return (
+    //                     <Comp.Tooltip hoverContent={action.alt}>
+    //                       <Comp.SmallToolButton
+    //                         imageSrc={action.imageSrc}
+    //                         showExpand={false}
+    //                         alt={action.alt}
+    //                         onClick={action?.onClick}
+    //                         buttonStyle={{
+    //                           borderRadius: '0',
+    //                           ...(index === 0 && {
+    //                             borderTopLeftRadius: '5px',
+    //                             borderBottomLeftRadius: '5px',
+    //                           }),
+    //                           ...(index === 4 && {
+    //                             borderTopRightRadius: '5px',
+    //                             borderBottomRightRadius: '5px',
+    //                           }),
+    //                         }}
+    //                       />
+    //                     </Comp.Tooltip>
+    //                   );
+    //                 })}
+    //               </div>
+    //             );
+    //           }}
+    //           onMouseEnter={(e, x, y) => {
+    //             handlePositionHover(e, x, y);
+    //             setTooltipContent(
+    //               <div
+    //                 className="radius-5px"
+    //                 style={{
+    //                   padding: '5px 10px',
+    //                   backgroundColor: Const.Color.BUTTON,
+    //                 }}
+    //               >
+    //                 {position.name}
+    //               </div>
+    //             );
+    //           }}
+    //           onMouseLeave={() => {
+    //             setIsHoverVisible(false);
+    //           }}
+    //         />
+    //       );
     //     });
-    //     return (
-    //       <ShapeComp.MyImage
-    //         ref={imageRef}
-    //         x={p.x}
-    //         y={p.y}
-    //         rotation={position.orientation}
-    //         imageSrc={Const.getPositionImage(position.type_id)}
-    //         width={20}
-    //         height={20}
-    //         onDblClick={(e, x, y) => {
-    //           setPositionDialog({
-    //             isVisible: true,
-    //             name: position.name,
-    //             type_id: position.type_id,
-    //             id: position.guid,
-    //           });
-    //           setIsClickVisible(false);
-    //         }}
-    //         onClick={(e, x, y) => {
-    //           handlePositionClick(e, x, y);
-    //           setPositionDialog({
-    //             isVisible: false,
-    //             name: position.name,
-    //             type_id: position.type_id,
-    //             id: position.guid,
-    //           });
-    //           setTooltipContent(
-    //             <div className="flex row" style={{ gap: '2px' }}>
-    //               {[
-    //                 actionList.GOTO,
-    //                 actionList.CREATE_PATH,
-    //                 actionList.MOVE,
-    //                 actionList.EDIT,
-    //                 actionList.DELETE,
-    //               ].map((action, index) => {
-    //                 return (
-    //                   <Comp.Tooltip hoverContent={action.alt}>
-    //                     <Comp.SmallToolButton
-    //                       imageSrc={action.imageSrc}
-    //                       showExpand={false}
-    //                       alt={action.alt}
-    //                       onClick={action?.onClick}
-    //                       buttonStyle={{
-    //                         borderRadius: '0',
-    //                         ...(index === 0 && {
-    //                           borderTopLeftRadius: '5px',
-    //                           borderBottomLeftRadius: '5px',
-    //                         }),
-    //                         ...(index === 2 && {
-    //                           borderTopRightRadius: '5px',
-    //                           borderBottomRightRadius: '5px',
-    //                         }),
-    //                       }}
-    //                     />
-    //                   </Comp.Tooltip>
-    //                 );
-    //               })}
-    //             </div>
-    //           );
-    //         }}
-    //         onMouseEnter={(e, x, y) => {
-    //           handlePositionHover(e, x, y);
-    //           setTooltipContent(
-    //             <div
-    //               className="radius-5px"
-    //               style={{
-    //                 padding: '5px 10px',
-    //                 backgroundColor: Const.Color.BUTTON,
-    //               }}
-    //             >
-    //               {position.name}
-    //             </div>
-    //           );
-    //         }}
-    //         onMouseLeave={() => {
-    //           setIsHoverVisible(false);
-    //         }}
-    //       />
-    //     );
-    //   });
   };
 
   const renderCreatePosition = () => {
@@ -2011,15 +2014,15 @@ const Canvas = () => {
     if (!pathPoints) return;
 
     return pathPoints.map((p) => {
-      const canvasP = Utils.getCanvasPosition(p.x, p.y, map); //!!!
+      // const canvasP = Utils.getCanvasPosition(p.x, p.y, map); //!!!
 
       //$$$ Test
-      // const canvasP = Utils.getCanvasPosition(p.x, p.y, {
-      //   metadata: { height: 568 },
-      //   resolution: 0.05,
-      //   origin_x: 0,
-      //   origin_y: 0,
-      // });
+      const canvasP = Utils.getCanvasPosition(p.x, p.y, {
+        metadata: { height: 568 },
+        resolution: 0.05,
+        origin_x: 0,
+        origin_y: 0,
+      });
 
       return (
         canvasP && <Circle x={canvasP.x} y={canvasP.y} fill="red" radius={2} />
@@ -2081,8 +2084,6 @@ const Canvas = () => {
   };
 
   //===========================================CALL API============================================
-
-  const ros = useRosConnection(); // chỉ 1 connection chung
 
   const lidarPoints = useRosTopic({
     rosInstance: ros,
@@ -2171,19 +2172,19 @@ const Canvas = () => {
     console.log(pathPoints);
   }, [pathPoints]);
 
-  const obstacles = [
-    map?.metadata.layers?.areaprefs_forbidden.shapes,
-    map?.metadata.layers?.walls.shapes,
-  ];
+  // const obstacles = [
+  //   map?.metadata.layers?.areaprefs_forbidden.shapes,
+  //   map?.metadata.layers?.walls.shapes,
+  // ];
 
-  const metadata = {
-    walls: map?.metadata.layers?.walls.shapes,
-    forbiddenZone: map?.metadata.layers?.areaprefs_forbidden.shapes,
-  };
+  // const metadata = {
+  //   walls: map?.metadata.layers?.walls.shapes,
+  //   forbiddenZone: map?.metadata.layers?.areaprefs_forbidden.shapes,
+  // };
 
-  // const obstacles = Const.obstacles;
+  const obstacles = Const.obstacles;
 
-  // const metadata = Const.metadata;
+  const metadata = Const.metadata;
 
   const [isHoverVisible, setIsHoverVisible] = useState(false);
   const [isClickVisible, setIsClickVisible] = useState(false);
@@ -2275,7 +2276,61 @@ const Canvas = () => {
   };
 
   return (
-    <div className="full-height flex col" onContextMenu={handleRightClick}>
+    <div className="full-height flex-wrap" onContextMenu={handleRightClick}>
+      {isSpeedVisible && (
+        <Comp.DraggableSection
+          initialPosition={{ x: 25, y: 267 }}
+          style={{ width: '21.77%' }}
+        >
+          <PathControl
+            simPose={simPose}
+            setSimPose={setSimPose}
+            layers={layers}
+            baseSpeed={speed.baseSpeed}
+            setSpeed={(value) => {
+              setSpeed({
+                ...speed,
+                linearSpeed: value.linear,
+                angularSpeed: value.angular,
+              });
+            }}
+            metadata={metadata}
+            obstacles={obstacles}
+          />
+
+          <div className="flex col gap-5px" style={{ marginTop: '12px' }}>
+            Base speed
+            <div className="flex row gap-15px">
+              <Comp.InputNumber
+                placeholder="Base speed"
+                value={speed.baseSpeed}
+                onChange={(e) => {
+                  setSpeed({
+                    ...speed,
+                    baseSpeed: Number(e.target.value),
+                  });
+                }}
+                width={100}
+                imgSrc="letterB"
+              />
+            </div>
+          </div>
+
+          <div className="flex col gap-5px" style={{ marginTop: '12px' }}>
+            Robot speed
+            <div className="flex row gap-15px">
+              <div className="width-50per flex row background radius-5px gap-10px padding-10px">
+                <img width="15px" height="15px" src={Const.ImageSrc.letterL} />{' '}
+                <span> {speed.linearSpeed.toFixed(2)} </span>
+              </div>
+              <div className="width-50per flex row background radius-5px gap-10px padding-10px">
+                <img width="15px" height="15px" src={Const.ImageSrc.letterA} />{' '}
+                <span> {speed.angularSpeed.toFixed(2)} </span>
+              </div>
+            </div>
+          </div>
+        </Comp.DraggableSection>
+      )}
       <CanvasComponent.CanvasToolbar
         toggleMode={toggleDrawingMode}
         defaultCursor={defaultCursor}
@@ -2327,11 +2382,6 @@ const Canvas = () => {
             saveState={saveState}
             sidebarHeight={dimensions.height - Const.RULER_SIZE}
             editable={true}
-            speedInfo={{
-              baseSpeed: 0.1,
-              linearSpeed: speed.linear,
-              angularSpeed: speed.angular,
-            }}
             dropdownData={dropdownData}
             handleDropdownOpen={handleDropdownOpen}
             onSelectItem={({ x, y, type }) => {
@@ -2354,17 +2404,6 @@ const Canvas = () => {
                 drawHoverShape({ x, y });
               }
             }}
-            PathControl={
-              <PathControl
-                rosInstance={ros}
-                simPose={simPose}
-                setSimPose={setSimPose}
-                layers={layers}
-                metadata={metadata}
-                obstacles={obstacles}
-                setSpeed={setSpeed}
-              />
-            }
           />
         }
         <Comp.PositionTooltip
@@ -2405,11 +2444,11 @@ const Canvas = () => {
               scaleY={zoom / 100}
               opacity={layer.selected ? 1 : 0.6}
             >
-              {renderedMapArray}
+              {/* {renderedMapArray} */}
 
               {renderMetadata()}
 
-              {renderlidarMapPoints()}
+              {/* {renderlidarMapPoints()} */}
 
               {renderPositions()}
 
@@ -2438,8 +2477,8 @@ const Canvas = () => {
                   }
                   rotation={robotStatus?.position.orientation}
                   imageSrc={Const.ImageSrc.robot}
-                  width={30}
-                  height={20}
+                  width={0.89 / map?.resolution}
+                  height={0.58 / map?.resolution}
                   opacity={0.1}
                 />
               )}

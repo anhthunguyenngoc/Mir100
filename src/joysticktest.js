@@ -8,7 +8,7 @@
 //   useEffect(() => {
 //     let protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
 //     let port = window.location.protocol === 'https:' ? '443' : '9090';
-//     let ip = '172.20.10.2';
+//     let ip = '192.168.0.172';
 
 //     const rosInstance = new ROSLIB.Ros({
 //       url: `${protocol}${ip}:${port}`,
@@ -182,139 +182,426 @@
 // //           </div>
 // //       </>);
 
-// src/App.jsx
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
-const robots = [
-  {
-    id: 'mir100-01',
-    status: 'Idle',
-    battery: 87,
-    position: { x: 23.2, y: 45.1 },
-    currentTask: 'Waiting for new mission',
-  },
-  {
-    id: 'mir100-02',
-    status: 'Error',
-    battery: 32,
-    position: { x: 58.7, y: 12.3 },
-    currentTask: 'Docking failed',
-  },
-  {
-    id: 'mir100-03',
-    status: 'Moving',
-    battery: 74,
-    position: { x: 12.0, y: 9.5 },
-    currentTask: 'Going to station A',
-  },
-];
+// Component HorizontalScrollContainer cải tiến - không giới hạn chiều rộng
+const HorizontalScrollContainer = ({
+  children,
+  height = '200px',
+  className = '',
+  showScrollbar = true,
+  dragToScroll = true,
+}) => {
+  const containerRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
 
-const statusColor = {
-  Idle: 'bg-green-100 text-green-800 border-green-200',
-  Moving: 'bg-blue-100 text-blue-800 border-blue-200',
-  Error: 'bg-red-100 text-red-800 border-red-200',
+  const handleMouseDown = (e) => {
+    if (!dragToScroll) return;
+
+    setIsDragging(true);
+    const container = containerRef.current;
+    setStartX(e.pageX - container.offsetLeft);
+    setScrollLeft(container.scrollLeft);
+  };
+
+  const handleMouseLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging || !dragToScroll) return;
+
+    e.preventDefault();
+    const container = containerRef.current;
+    const x = e.pageX - container.offsetLeft;
+    const walk = (x - startX) * 2;
+    container.scrollLeft = scrollLeft - walk;
+  };
+
+  // Style cho container - key changes
+  const containerStyle = {
+    width: '100%', // Cố định 100% width
+    height: height,
+    overflowX: 'auto',
+    overflowY: 'hidden',
+    cursor: dragToScroll ? (isDragging ? 'grabbing' : 'grab') : 'default',
+    scrollbarWidth: showScrollbar ? 'auto' : 'none',
+    msOverflowStyle: showScrollbar ? 'auto' : 'none',
+    WebkitScrollbar: showScrollbar ? {} : { display: 'none' },
+    // Đảm bảo container không co lại
+    flexShrink: 0,
+    minWidth: 0, // Cho phép shrink nhưng không dưới 0
+  };
+
+  // CSS để ẩn scrollbar trên webkit browsers
+  const scrollbarHideCSS = !showScrollbar
+    ? `
+    .horizontal-scroll-container::-webkit-scrollbar {
+      display: none;
+    }
+  `
+    : '';
+
+  return (
+    <>
+      {scrollbarHideCSS && <style>{scrollbarHideCSS}</style>}
+      <div
+        ref={containerRef}
+        className={`horizontal-scroll-container ${className}`}
+        style={containerStyle}
+        onMouseDown={handleMouseDown}
+        onMouseLeave={handleMouseLeave}
+        onMouseUp={handleMouseUp}
+        onMouseMove={handleMouseMove}
+      >
+        {children}
+      </div>
+    </>
+  );
 };
 
-export default function App() {
-  const [activeTab, setActiveTab] = useState('robots');
+// Component demo với nhiều ví dụ khác nhau
+const DemoApp = () => {
+  // Data cho các demo khác nhau
+  const colorCards = [
+    { id: 1, title: 'Red Card', color: '#ef4444' },
+    { id: 2, title: 'Blue Card', color: '#3b82f6' },
+    { id: 3, title: 'Green Card', color: '#22c55e' },
+    { id: 4, title: 'Purple Card', color: '#a855f7' },
+    { id: 5, title: 'Yellow Card', color: '#eab308' },
+    { id: 6, title: 'Pink Card', color: '#ec4899' },
+    { id: 7, title: 'Indigo Card', color: '#6366f1' },
+    { id: 8, title: 'Teal Card', color: '#14b8a6' },
+    { id: 9, title: 'Orange Card', color: '#f97316' },
+    { id: 10, title: 'Cyan Card', color: '#06b6d4' },
+  ];
 
-  const handleRefresh = (robotId) => {
-    console.log(`Refreshing status for ${robotId}`);
-    // Add refresh logic here
+  const products = [
+    { id: 1, name: 'MacBook Pro', price: '$2,499', image: '💻' },
+    { id: 2, name: 'iPhone 15', price: '$999', image: '📱' },
+    { id: 3, name: 'iPad Air', price: '$599', image: '📲' },
+    { id: 4, name: 'AirPods Pro', price: '$249', image: '🎧' },
+    { id: 5, name: 'Apple Watch', price: '$399', image: '⌚' },
+    { id: 6, name: 'iMac', price: '$1,299', image: '🖥️' },
+    { id: 7, name: 'Mac Mini', price: '$699', image: '⚡' },
+    { id: 8, name: 'Studio Display', price: '$1,599', image: '🖨️' },
+  ];
+
+  // Styles
+  const appStyle = {
+    padding: '24px',
+    backgroundColor: '#f8fafc',
+    minHeight: '100vh',
+    fontFamily:
+      '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+  };
+
+  const sectionStyle = {
+    marginBottom: '48px',
+  };
+
+  const titleStyle = {
+    fontSize: '2.5rem',
+    fontWeight: '800',
+    color: '#1e293b',
+    marginBottom: '8px',
+    background: 'linear-gradient(to right, #3b82f6, #8b5cf6)',
+    backgroundClip: 'text',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+  };
+
+  const subtitleStyle = {
+    fontSize: '1.125rem',
+    color: '#64748b',
+    marginBottom: '32px',
+  };
+
+  const sectionTitleStyle = {
+    fontSize: '1.5rem',
+    fontWeight: '700',
+    marginBottom: '16px',
+    color: '#334155',
+  };
+
+  const cardContainerStyle = {
+    display: 'flex',
+    gap: '20px',
+    paddingBottom: '16px', // Thêm padding để tránh cut-off
+    // Key: Không set width để cho phép mở rộng không giới hạn
+  };
+
+  const cardStyle = (color) => ({
+    backgroundColor: color,
+    color: 'white',
+    borderRadius: '12px',
+    padding: '24px',
+    minWidth: '200px', // Đảm bảo card có kích thước tối thiểu
+    height: '120px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontWeight: 'bold',
+    fontSize: '1.125rem',
+    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+    flexShrink: 0, // Không cho phép card bị co lại
+    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+    cursor: 'pointer',
+  });
+
+  const productCardStyle = {
+    background: 'white',
+    borderRadius: '16px',
+    padding: '20px',
+    minWidth: '180px',
+    height: '200px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+    border: '1px solid #e2e8f0',
+    flexShrink: 0,
+    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+    cursor: 'pointer',
+  };
+
+  const formContainerStyle = {
+    background: 'white',
+    borderRadius: '12px',
+    padding: '20px',
+    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+    border: '1px solid #e2e8f0',
+  };
+
+  const conditionRowStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    padding: '16px',
+    backgroundColor: '#f8fafc',
+    borderRadius: '8px',
+    border: '1px solid #e2e8f0',
+    minWidth: '600px', // Đảm bảo form có độ rộng tối thiểu
+    flexShrink: 0,
+  };
+
+  const selectStyle = {
+    padding: '8px 12px',
+    border: '1px solid #d1d5db',
+    borderRadius: '6px',
+    fontSize: '14px',
+    backgroundColor: 'white',
+    minWidth: '120px',
+  };
+
+  const inputStyle = {
+    padding: '8px 12px',
+    border: '1px solid #d1d5db',
+    borderRadius: '6px',
+    fontSize: '14px',
+    minWidth: '100px',
+  };
+
+  const buttonStyle = {
+    backgroundColor: '#ef4444',
+    color: 'white',
+    border: 'none',
+    padding: '8px 16px',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    fontSize: '14px',
+    fontWeight: '500',
+    transition: 'background-color 0.2s ease',
+  };
+
+  const infoBoxStyle = {
+    background: 'linear-gradient(to right, #dbeafe, #e0e7ff)',
+    border: '1px solid #3b82f6',
+    borderRadius: '12px',
+    padding: '20px',
+    marginBottom: '32px',
   };
 
   return (
-    <div className="min-h-screen p-6 bg-gray-50">
-      <h1 className="text-2xl font-bold mb-4">MiR Monitoring Dashboard</h1>
-
-      {/* Tabs */}
-      <div className="mb-4">
-        <div className="flex border-b border-gray-200">
-          <button
-            onClick={() => setActiveTab('robots')}
-            className={`px-4 py-2 font-medium text-sm border-b-2 ${
-              activeTab === 'robots'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
-            }`}
+    <div style={appStyle}>
+      <div>
+        {/* Demo 3: Complex Form */}
+        <div style={sectionStyle}>
+          <h2 style={sectionTitleStyle}>📝 Complex Form Demo</h2>
+          <HorizontalScrollContainer
+            height="140px"
+            showScrollbar={true}
+            dragToScroll={true}
           >
-            Robots
-          </button>
-          <button
-            onClick={() => setActiveTab('logs')}
-            className={`px-4 py-2 font-medium text-sm border-b-2 ${
-              activeTab === 'logs'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
-            }`}
-          >
-            Logs
-          </button>
-        </div>
-      </div>
-
-      {/* Tab Content */}
-      {activeTab === 'robots' && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-          {robots.map((robot) => (
-            <div
-              key={robot.id}
-              className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200"
-            >
-              <div className="p-4">
-                <div className="flex justify-between items-center mb-2">
-                  <h2 className="text-lg font-semibold">{robot.id}</h2>
+            <div style={formContainerStyle}>
+              <div
+                style={{ display: 'flex', gap: '16px', alignItems: 'center' }}
+              >
+                {/* Condition 1 */}
+                <div style={conditionRowStyle}>
+                  <span style={{ fontSize: '16px', fontWeight: '500' }}>(</span>
+                  <input
+                    type="checkbox"
+                    style={{ width: '18px', height: '18px' }}
+                  />
                   <span
-                    className={`px-2 py-1 rounded-full text-xs font-medium border ${statusColor[robot.status]}`}
+                    style={{
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      color: '#6b7280',
+                    }}
                   >
-                    {robot.status}
+                    !
                   </span>
+                  <select style={selectStyle}>
+                    <option value="">-- So sánh --</option>
+                    <option value="battery">battery</option>
+                    <option value="mission_queue_length">
+                      mission_queue_length
+                    </option>
+                    <option value="plc_register">plc_register</option>
+                    <option value="io_module">io_module</option>
+                  </select>
+                  <select style={selectStyle}>
+                    <option value="">-- Toán tử --</option>
+                    <option value="==">=</option>
+                    <option value="!=">!=</option>
+                    <option value=">">&gt;</option>
+                    <option value="<">&lt;</option>
+                    <option value=">=">&gt;=</option>
+                    <option value="<=">&lt;=</option>
+                  </select>
+                  <input
+                    placeholder="Giá trị..."
+                    type="text"
+                    style={inputStyle}
+                  />
+                  <button style={buttonStyle}>Xóa</button>
+                  <span style={{ fontSize: '16px', fontWeight: '500' }}>)</span>
                 </div>
-                <p className="mb-1">
-                  <strong>Battery:</strong> {robot.battery}%
-                </p>
-                <p className="mb-1">
-                  <strong>Position:</strong> ({robot.position.x},{' '}
-                  {robot.position.y})
-                </p>
-                <p className="mt-2 text-sm italic text-gray-600">
-                  {robot.currentTask}
-                </p>
-                <button
-                  onClick={() => handleRefresh(robot.id)}
-                  className="mt-4 w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+
+                {/* Logical Operator */}
+                <div
+                  style={{
+                    padding: '8px 16px',
+                    border: '2px solid #3b82f6',
+                    borderRadius: '20px',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    backgroundColor: '#dbeafe',
+                    color: '#1d4ed8',
+                    cursor: 'pointer',
+                  }}
                 >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+                  &&
+                </div>
+
+                {/* Condition 2 */}
+                <div style={conditionRowStyle}>
+                  <span style={{ fontSize: '16px', fontWeight: '500' }}>(</span>
+                  <input
+                    type="checkbox"
+                    style={{ width: '18px', height: '18px' }}
+                  />
+                  <span
+                    style={{
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      color: '#6b7280',
+                    }}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                    />
-                  </svg>
-                  Refresh Status
+                    !
+                  </span>
+                  <select style={selectStyle}>
+                    <option value="">-- So sánh --</option>
+                    <option value="battery">battery</option>
+                    <option value="mission_queue_length">
+                      mission_queue_length
+                    </option>
+                    <option value="plc_register">plc_register</option>
+                    <option value="io_module">io_module</option>
+                  </select>
+                  <select style={selectStyle}>
+                    <option value="">-- Toán tử --</option>
+                    <option value="==">=</option>
+                    <option value="!=">!=</option>
+                    <option value=">">&gt;</option>
+                    <option value="<">&lt;</option>
+                    <option value=">=">&gt;=</option>
+                    <option value="<=">&lt;=</option>
+                  </select>
+                  <input
+                    placeholder="Giá trị..."
+                    type="text"
+                    style={inputStyle}
+                  />
+                  <button style={buttonStyle}>Xóa</button>
+                  <span style={{ fontSize: '16px', fontWeight: '500' }}>)</span>
+                </div>
+
+                {/* Add More Button */}
+                <button
+                  style={{
+                    backgroundColor: '#22c55e',
+                    color: 'white',
+                    border: 'none',
+                    padding: '12px 20px',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    transition: 'background-color 0.2s ease',
+                    flexShrink: 0,
+                  }}
+                >
+                  + Thêm điều kiện
                 </button>
               </div>
             </div>
-          ))}
+          </HorizontalScrollContainer>
         </div>
-      )}
 
-      {activeTab === 'logs' && (
-        <div className="mt-4 bg-white rounded-lg border border-gray-200 shadow-sm">
-          <div className="p-4 text-gray-600 font-mono text-sm space-y-1">
-            <p>[10:12] mir100-01: Mission complete</p>
-            <p>[10:14] mir100-02: Docking failed</p>
-            <p>[10:17] mir100-03: Started mission to Station A</p>
-            <p>[10:20] mir100-02: Retrying docking procedure...</p>
+        {/* Code Example */}
+        <div style={sectionStyle}>
+          <h2 style={sectionTitleStyle}>💻 Usage Example</h2>
+          <div
+            style={{
+              background: '#1e293b',
+              color: '#e2e8f0',
+              padding: '20px',
+              borderRadius: '12px',
+              fontFamily: 'Monaco, Consolas, monospace',
+              fontSize: '14px',
+              lineHeight: '1.6',
+              overflow: 'auto',
+            }}
+          >
+            <pre>{`<HorizontalScrollContainer 
+  height="200px" 
+  showScrollbar={true}
+  dragToScroll={true}
+>
+  <div style={{ display: 'flex', gap: '16px' }}>
+    {/* Nội dung của bạn - có thể mở rộng không giới hạn */}
+    {items.map(item => (
+      <div key={item.id} style={{ minWidth: '200px', flexShrink: 0 }}>
+        {item.content}
+      </div>
+    ))}
+  </div>
+</HorizontalScrollContainer>`}</pre>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
-}
+};
+
+export default DemoApp;

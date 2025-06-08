@@ -12,6 +12,7 @@ export const SelectionDropdown = ({
   containerStyleClass,
   iconColor,
   defaultValue,
+  showExpand = true,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState(defaultValue || null);
@@ -46,12 +47,14 @@ export const SelectionDropdown = ({
           type="button"
         >
           <span>{selected?.name || placeHolderText}</span>
-          <Icons.Expand
-            width={15}
-            height={10}
-            color={iconColor}
-            style={{ transform: isOpen ? 'scaleY(-1)' : 'none' }}
-          />
+          {showExpand && (
+            <Icons.Expand
+              width={15}
+              height={10}
+              color={iconColor}
+              style={{ transform: isOpen ? 'scaleY(-1)' : 'none' }}
+            />
+          )}
         </button>
 
         <AnimatePresence>

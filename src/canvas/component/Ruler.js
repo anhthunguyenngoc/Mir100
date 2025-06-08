@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Layer, Line, Rect, Text } from 'react-konva';
 import * as CanvasConstant from '../../constant/CanvasConstant';
+import * as Context from '../../context';
 
 export const Ruler = ({
   stageSize,
@@ -12,7 +13,7 @@ export const Ruler = ({
   gridLayerRef,
 }) => {
   const [rulerData, setRulerData] = useState([]);
-
+  const { map } = Context.useCanvasContext();
   useEffect(() => {
     generateGridAndRuler();
   }, [gridSize, zoom, stageSize]);
@@ -116,7 +117,9 @@ export const Ruler = ({
             key={i}
             x={item.x}
             y={item.y}
-            text={item.text}
+            text={(item.text * (map?.resolution ? map?.resolution : 1)).toFixed(
+              2
+            )}
             fontSize={12}
             fill="black"
           />
@@ -130,7 +133,7 @@ export const Ruler = ({
         )
       )}
       <Text
-        text={`(${mousePos.x}, ${mousePos.y})`}
+        text={`(${(mousePos.x * (map?.resolution ? map?.resolution : 1)).toFixed(2)}, ${(mousePos.y * (map?.resolution ? map?.resolution : 1)).toFixed(2)})`}
         x={mousePos.xRuler + CanvasConstant.RULER_SIZE}
         y={mousePos.yRuler + CanvasConstant.RULER_SIZE}
         fontSize={14}

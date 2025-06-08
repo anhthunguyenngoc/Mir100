@@ -13,12 +13,15 @@ export const URL = {
   postMissionQueue: '/mission_queue',
   postMission: '/missions',
   postPositions: '/positions',
+  postMissionsActions: (mission_id) => `/missions/${mission_id}/actions`,
 
   putStatus: '/status',
   putPosition: (guid) => `/positions/${guid}`,
   putMap: (guid) => `/maps/${guid}`,
   putMissionQueue: (id) => `/mission_queue/${id}`,
   putMission: (guid) => `/missions/${guid}`,
+  putMissionAction: (mission_id, guid) =>
+    `/missions/${mission_id}/actions/${guid}`,
 
   getAreaEvents: '/area_events',
   getActions: '/actions',
@@ -37,9 +40,17 @@ export const URL = {
   getPositionType: (id) => `/position_types/${id}`,
   getPositions: '/positions',
   getPositionId: (guid) => `/positions/${guid}`,
+  getMission_groupsActions: (mission_group_id) =>
+    `/mission_groups/${mission_group_id}/actions`,
+  getMission_definition: (guid) => `/missions/${guid}/definition`,
+  getMission_actions: (mission_id) => `/missions/${mission_id}/actions`,
+  getMission_action: (mission_id, guid) =>
+    `/missions/${mission_id}/actions/${guid}`,
 
   deleteMission: (guid) => `/missions/${guid}`,
   deleteMissionQueue: '/mission_queue',
   deleteMissionQueueId: (id) => `/mission_queue/${id}`,
   deletePositionId: (guid) => `/positions/${guid}`,
+  deleteMissionAction: (mission_id, guid) =>
+    `/missions/${mission_id}/actions/${guid}`,
 };

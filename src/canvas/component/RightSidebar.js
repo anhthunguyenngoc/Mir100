@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import * as Const from '../../constant';
 import * as Comp from '../../components';
-import { isVisible } from '@testing-library/user-event/dist/utils';
 
 const getOptionByType = (type, name) => {
   const options = Object.values(Const.LineName).includes(name)
@@ -53,7 +52,7 @@ const AlignmentSection = () => {
       <div className="flex col gap-5px">
         <span>Transform</span>
         <div className="flex row gap-15px">
-          <InputNumber placeholder={'Rotation'} />
+          <Comp.InputNumber placeholder={'Rotation'} />
           <LeftSidebarBtnList arr={Const.transformOption} />
         </div>
       </div>
@@ -95,7 +94,7 @@ const DimensionsSection = ({ shape, handleUpdateShape, saveState }) => {
     <div className="flex col gap-5px">
       <span>Dimensions</span>
       <div className="flex row gap-15px">
-        <InputNumber
+        <Comp.InputNumber
           placeholder={'Width'}
           value={shape.width}
           onChange={(e) => {
@@ -106,7 +105,7 @@ const DimensionsSection = ({ shape, handleUpdateShape, saveState }) => {
           }}
           imgSrc="letterW"
         />
-        <InputNumber
+        <Comp.InputNumber
           placeholder={'Height'}
           value={shape.height}
           onChange={(e) => {
@@ -154,18 +153,14 @@ export const RightSidebar = ({
   handleUpdateShape,
   saveState,
   sidebarHeight,
-  editable,
-  PathControl,
-  speedInfo,
   dropdownData,
   handleDropdownOpen,
   onSelectItem,
   onHoverItem,
 }) => {
   const [visible, setVisible] = useState(true);
-  const { baseSpeed, linearSpeed, angularSpeed } = speedInfo;
 
-  return editable ? (
+  return (
     <div className="right-info-container">
       {!visible &&
         (shape ? (
@@ -221,7 +216,7 @@ export const RightSidebar = ({
                 <Comp.HorizonLine {...horizonLineProps} />
               </>
             )}
-            {shape.type && (
+            {shape.type == 'path' && (
               <>
                 <DirectionSection
                   shape={shape}
@@ -254,106 +249,6 @@ export const RightSidebar = ({
           />
         </div>
       )}
-    </div>
-  ) : (
-    <div className="right-info-container">
-      {!visible && (
-        <div
-          className="right-info-showcontent"
-          style={{ height: sidebarHeight }}
-        >
-          <div className="flex col">
-            <Comp.ImageButton
-              className="left-sidebar-btn"
-              imageId={'hideRightbar'}
-              imageclassName={'size-20px'}
-              onClick={() => setVisible(true)}
-            />
-          </div>
-          {PathControl}
-
-          <div className="flex col gap-5px">
-            Base speed
-            <div className="flex row gap-15px">
-              <InputNumber
-                placeholder="Base speed"
-                value={baseSpeed}
-                onChange={(e) => {
-                  // handleUpdateShape(shape.id, {
-                  //   startP: { ...shape.startP, x: Number(e.target.value) },
-                  // });
-                }}
-                width={100}
-                imgSrc="letterB"
-              />
-            </div>
-          </div>
-          <div className="flex col gap-5px">
-            Robot speed
-            <div className="flex row gap-15px">
-              <InputNumber
-                placeholder="0"
-                value={linearSpeed}
-                imgSrc="letterL"
-                readOnly={true}
-              />
-
-              <InputNumber
-                placeholder="0"
-                value={angularSpeed}
-                imgSrc="letterA"
-                readOnly={true}
-              />
-            </div>
-          </div>
-        </div>
-      )}
-
-      {visible && (
-        <div className="right-info-hidecontent">
-          <Comp.ImageButton
-            className="left-sidebar-btn"
-            onClick={() => setVisible(false)}
-            imageId={'showRightbar'}
-            imageclassName={'size-20px'}
-          />
-        </div>
-      )}
-    </div>
-  );
-};
-
-const InputNumber = ({
-  value,
-  defaultValue,
-  placeholder,
-  onChange,
-  imgSrc,
-  readOnly = false,
-  width = 50,
-}) => {
-  return (
-    <div className={`width-${width}per`} style={{ position: 'relative' }}>
-      <img
-        className="size-15px"
-        style={{
-          position: 'absolute',
-          top: '50%',
-          transform: 'translateY(-50%)',
-          marginLeft: '10px',
-        }}
-        src={Const.ImageSrc[imgSrc]}
-      />
-      <input
-        className="height-40px"
-        style={{ paddingLeft: '30px' }}
-        type="number"
-        placeholder={placeholder}
-        defaultValue={defaultValue}
-        value={value ? value.toFixed(2) : '--'}
-        onChange={(e) => onChange?.(e)}
-        readOnly={readOnly}
-      />
     </div>
   );
 };
@@ -454,7 +349,7 @@ const ShapeComponent = ({
                 }}
               />
               <div className="flex row gap-5px">
-                <InputNumber
+                <Comp.InputNumber
                   placeholder="Start X"
                   value={shape.startP.x}
                   onChange={(e) => {
@@ -465,7 +360,7 @@ const ShapeComponent = ({
                   }}
                   imgSrc="letterX"
                 />
-                <InputNumber
+                <Comp.InputNumber
                   placeholder="Start Y"
                   value={shape.startP.y}
                   onChange={(e) => {
@@ -506,7 +401,7 @@ const ShapeComponent = ({
               }}
             />
             <div className="flex row gap-5px">
-              <InputNumber
+              <Comp.InputNumber
                 placeholder="End X"
                 value={shape.endP?.x}
                 onChange={(e) => {
@@ -519,7 +414,7 @@ const ShapeComponent = ({
                 }}
                 imgSrc="letterX"
               />
-              <InputNumber
+              <Comp.InputNumber
                 placeholder="End Y"
                 value={shape.endP?.y}
                 onChange={(e) => {
@@ -543,12 +438,12 @@ const ShapeComponent = ({
           <div className="flex col gap-5px">
             Center
             <div className="flex row gap-15px">
-              <InputNumber
+              <Comp.InputNumber
                 placeholder="Center X"
                 value={shape.centerP.x}
                 imgSrc="letterX"
               />
-              <InputNumber
+              <Comp.InputNumber
                 placeholder="Center Y"
                 value={shape.centerP.y}
                 imgSrc="letterY"
@@ -564,12 +459,12 @@ const ShapeComponent = ({
           <div className="flex col gap-5px">
             Middle
             <div className="flex row gap-15px">
-              <InputNumber
+              <Comp.InputNumber
                 placeholder="Mid X"
                 value={shape.midP.x}
                 imgSrc="letterX"
               />
-              <InputNumber
+              <Comp.InputNumber
                 placeholder="Mid Y"
                 value={shape.midP.y}
                 imgSrc="letterY"
@@ -585,7 +480,7 @@ const ShapeComponent = ({
           <div className="flex col gap-5px">
             Radius
             <div className="flex row gap-15px">
-              <InputNumber placeholder="Radius" value={shape.radius} />
+              <Comp.InputNumber placeholder="Radius" value={shape.radius} />
             </div>
           </div>
         )
@@ -596,7 +491,7 @@ const ShapeComponent = ({
         <div className="flex col gap-5px">
           Angle
           <div className="flex row gap-15px">
-            <InputNumber placeholder="Angle" value={shape.angle} />
+            <Comp.InputNumber placeholder="Angle" value={shape.angle} />
           </div>
         </div>
       );
@@ -620,8 +515,11 @@ const ShapeComponent = ({
           <div className="flex col gap-5px">
             Start Angle - End Angle
             <div className="flex row gap-15px">
-              <InputNumber placeholder="startAngle" value={shape.startAngle} />
-              <InputNumber placeholder="endAngle" value={shape.endAngle} />
+              <Comp.InputNumber
+                placeholder="startAngle"
+                value={shape.startAngle}
+              />
+              <Comp.InputNumber placeholder="endAngle" value={shape.endAngle} />
             </div>
           </div>
         )
@@ -633,12 +531,12 @@ const ShapeComponent = ({
           <div className="flex col gap-5px">
             Clockwise
             <div className="flex row gap-15px">
-              <InputNumber
+              <Comp.InputNumber
                 placeholder="ContactPoint X"
                 value={shape.contactPoint.x}
                 imgSrc="letterX"
               />
-              <InputNumber
+              <Comp.InputNumber
                 placeholder="ContactPoint Y"
                 value={shape.contactPoint.y}
                 imgSrc="letterY"
@@ -655,8 +553,16 @@ const ShapeComponent = ({
           <div className="flex col gap-5px">
             Radius
             <div className="flex row gap-15px">
-              <InputNumber placeholder="Rx" value={shape.rx} imgSrc="letterX" />
-              <InputNumber placeholder="Ry" value={shape.ry} imgSrc="letterY" />
+              <Comp.InputNumber
+                placeholder="Rx"
+                value={shape.rx}
+                imgSrc="letterX"
+              />
+              <Comp.InputNumber
+                placeholder="Ry"
+                value={shape.ry}
+                imgSrc="letterY"
+              />
             </div>
           </div>
         )

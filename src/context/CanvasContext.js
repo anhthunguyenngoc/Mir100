@@ -93,7 +93,7 @@ export const CanvasProvider = ({ children, mapId }) => {
         ...data,
         metadata: JSON.parse(atob(data.metadata)),
       };
-
+      console.log(decodedMap);
       setMap(decodedMap);
     } catch (err) {
       console.error('Error fetching robot status:', err);

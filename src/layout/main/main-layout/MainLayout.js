@@ -39,7 +39,14 @@ export const MainLayout = ({ children }) => {
         onSelect={handleSidebarSelect}
         defaultIndex={sidebarSelectedIndex}
       />
-      <div className="right_sidebar full-width full-height flex col radius-15px">
+      <div
+        className="right_sidebar full-width full-height flex col radius-15px"
+        style={{
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
         <MainHeader pageInfo={delayedPageInfo} />
         <AnimatePresence mode="wait" initial={false}>
           <motion.div

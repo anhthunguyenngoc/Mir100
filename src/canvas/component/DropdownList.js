@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import * as Constant from '../../constant';
+import { Container } from 'konva/lib/Container';
 
 const DropdownItem = ({ item, itemOnClick }) => {
   const [subOpen, setSubOpen] = useState(false);
@@ -64,6 +65,7 @@ export const DropdownList = ({
   title,
   datalist,
   itemOnClick,
+  containerStyle,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -106,18 +108,24 @@ export const DropdownList = ({
         )}
       </div>
 
-      {isOpen && (
-        <motion.ul
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          transition={{ duration: 0.3 }}
-          className="flex col gap-5px"
-        >
-          {datalist.map((item) => (
-            <DropdownItem key={item.id} item={item} itemOnClick={itemOnClick} />
-          ))}
-        </motion.ul>
-      )}
+      <div className="full-height" style={containerStyle}>
+        {isOpen && (
+          <motion.ul
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            transition={{ duration: 0.3 }}
+            className="flex col gap-5px"
+          >
+            {datalist.map((item) => (
+              <DropdownItem
+                key={item.id}
+                item={item}
+                itemOnClick={itemOnClick}
+              />
+            ))}
+          </motion.ul>
+        )}
+      </div>
     </div>
   );
 };

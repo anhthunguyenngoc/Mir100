@@ -364,6 +364,26 @@ export const I_PostMission_queues = (props) => {
  * @property {number} [type_id] - Loại của vị trí (theo định nghĩa trong Position Type).
  */
 
+/**
+ * @typedef {Object} TGetMission_actions
+ * @property {string} [action_type] - ID của loại hành động.
+ * @property {string} [guid] - ID toàn cục duy nhất giữa các robot để nhận diện nhiệm vụ này.
+ * @property {string} [mission_id] - ID của nhiệm vụ mà hành động thuộc về.
+ * @property {string} [parameters] - Tham số của hành động.
+ * @property {number} [priority] - Độ ưu tiên của hành động.
+ * @property {string} [url] - URL của tài nguyên.
+ */
+
+/**
+ * @typedef {Object} TGetMission_action
+ * @property {string} [action_type] - ID của loại hành động.
+ * @property {string} [guid] - ID toàn cục duy nhất giữa các robot để nhận diện nhiệm vụ này.
+ * @property {string} [mission_id] - ID của nhiệm vụ mà hành động thuộc về.
+ * @property {string} [parameters] - Tham số của hành động.
+ * @property {number} [priority] - Độ ưu tiên của hành động.
+ * @property {string} [scope_reference] - Tham chiếu đến phạm vi mà hành động thuộc về.
+ */
+
 //======================================           POST           ======================================
 
 /**
@@ -407,6 +427,16 @@ export const I_PostMission_queues = (props) => {
  * @property {number} pos_x - Tọa độ X của vị trí so với gốc bản đồ.
  * @property {number} pos_y - Tọa độ Y của vị trí so với gốc bản đồ.
  * @property {number} type_id - Loại của vị trí (theo định nghĩa trong Position Type).
+ */
+
+/**
+ * @typedef {Object} TPostMission_actions
+ * @property {string} action_type - ID của loại hành động (bắt buộc, từ 1-255 ký tự).
+ * @property {string} [guid] - ID toàn cục duy nhất giữa các robot.
+ * @property {string} mission_id - ID của nhiệm vụ mà hành động thuộc về (bắt buộc).
+ * @property {Object[]} parameters - Mảng các tham số của hành động (bắt buộc).
+ * @property {number} priority - Độ ưu tiên của hành động (bắt buộc, số thực).
+ * @property {string} [scope_reference] - Tham chiếu đến phạm vi mà hành động thuộc về.
  */
 
 //======================================           PUT           ======================================
@@ -468,4 +498,11 @@ export const I_PostMission_queues = (props) => {
  * @property {string} [description] - (Tùy chọn) Mô tả (tối đa 200 ký tự).
  * @property {string} [mission_id] - (Tùy chọn) ID nhiệm vụ liên quan.
  * @property {number} [priority] - (Tùy chọn) Mức ưu tiên của nhiệm vụ.
+ */
+
+/**
+ * @typedef {Object} TPutMission_action
+ * @property {Object[]} [parameters] - Mảng các tham số của hành động.
+ * @property {number} [priority] - Độ ưu tiên của hành động (số thực).
+ * @property {string} [scope_reference] - Tham chiếu đến phạm vi mà hành động thuộc về.
  */

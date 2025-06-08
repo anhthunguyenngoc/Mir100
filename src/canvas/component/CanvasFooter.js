@@ -56,7 +56,7 @@ const SnapModeSelector = ({ enabledSnapModes, onChange }) => {
           <div style={styles.icon}>
             {Const.snapMode.grid.icon} {/* Use grid icon as default */}
           </div>
-          <span className="content">Snap Modes</span>
+          <span style={{ whiteSpace: 'nowrap' }}>Snap Modes</span>
           <span>({enabledCount})</span>
         </div>
       )}

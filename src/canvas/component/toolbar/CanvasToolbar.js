@@ -398,7 +398,7 @@ export const CanvasToolbar = ({
             style={{ gap: '3px' }}
           >
             <div className="flex row" style={{ gap: '1px' }}>
-              {[6, 0, 3]
+              {[5, 0]
                 .map((index) => pathOptions[index])
                 .map((option, index) => {
                   const setOptionFunc = setOptionsMap[option.id] || (() => {}); // Nếu không có thì dùng function rỗng
@@ -420,7 +420,7 @@ export const CanvasToolbar = ({
                           borderTopLeftRadius: '5px',
                           borderBottomLeftRadius: '5px',
                         }),
-                        ...(index === 2 && {
+                        ...(index === 1 && {
                           borderTopRightRadius: '5px',
                           borderBottomRightRadius: '5px',
                         }),
@@ -431,7 +431,7 @@ export const CanvasToolbar = ({
             </div>
 
             <div className="flex row" style={{ gap: '1px' }}>
-              {[1, 2, 4, 5]
+              {[1, 2, 3, 4]
                 .map((index) => pathOptions[index])
                 .map((option, index) => {
                   const setOptionFunc = setOptionsMap[option.id] || (() => {}); // Nếu không có thì dùng function rỗng

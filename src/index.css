@@ -11,3 +11,234 @@ code {
   font-family:
     source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+.container {
+  display: flex;
+  padding: 20px;
+  gap: 40px;
+  font-family: sans-serif;
+}
+
+.task-list,
+.drop-area {
+  width: 300px;
+}
+
+.task {
+  background-color: #e0e0e0;
+  padding: 10px;
+  margin-bottom: 10px;
+  cursor: grab;
+  border: 1px solid #bbb;
+  border-radius: 5px;
+}
+
+.dropzone {
+  min-height: 200px;
+  border: 2px dashed #888;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #fdfdfd;
+}
+
+.dropzone.over {
+  background-color: #d0ffd0;
+}
+
+.task.dropped {
+  background-color: #c0e0ff;
+}
+
+.robot-task-builder {
+  display: flex;
+  height: 100vh;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #f8fafc;
+}
+
+.task-palette {
+  width: 350px;
+  background: white;
+  border-right: 1px solid #e2e8f0;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.task-palette h3 {
+  margin: 0 0 20px 0;
+  color: #1e293b;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.category-section h4 {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.task-list {
+  overflow-y: auto;
+}
+
+.task-icon {
+  width: 20px;
+  height: 20px;
+  background: #e2e8f0;
+  border-radius: 4px;
+}
+
+.palette-task-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #334155;
+}
+
+.parallel-indicator {
+  font-size: 12px;
+  margin-left: 5px;
+}
+
+.workspace-controls {
+  display: flex;
+  gap: 10px;
+}
+
+/* .task-sequence {
+  background: white;
+  border: 2px dashed #e2e8f0;
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.task-sequence.empty {
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  font-size: 16px;
+} */
+
+.task-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.task-name {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 14px;
+}
+
+.parallel-badge {
+  background: #10b981;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.task-controls {
+  display: flex;
+  gap: 5px;
+}
+
+.config-btn,
+.delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.config-btn:hover {
+  background: #f1f5f9;
+}
+
+.delete-btn:hover {
+  background: #fef2f2;
+}
+
+.task-params {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.param-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 120px;
+}
+
+.param-group label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.param-group input {
+  padding: 6px 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.param-group input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.scope-task-container {
+  border: 2px dashed #cbd5e1;
+  border-radius: 6px;
+  padding: 15px;
+  background: #f8fafc;
+}
+
+.container-content {
+  color: #94a3b8;
+  text-align: center;
+  font-style: italic;
+  font-size: 13px;
+}
+
+.status-bar {
+  background: #1e293b;
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.animated-select {
+  transition: all 0.3s ease;
+}
+
+.animated-select:focus {
+  animation: dropdownOpen 0.3s ease-out;
+}
+
+@keyframes dropdownOpen {
+  0% {
+    transform: rotateX(-90deg);
+    opacity: 0;
+  }
+  100% {
+    transform: rotateX(0deg);
+    opacity: 1;
+  }
+}

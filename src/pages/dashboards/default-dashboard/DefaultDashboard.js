@@ -7,8 +7,12 @@ export const DefaultDashboard = () => {
   const { robotStatus } = Context.useAppContext();
 
   return (
-    <div id="content" className="content flex row">
-      <div className="flex col gap-content height-fit-content">
+    <div
+      id="content"
+      className="content flex row"
+      style={{ position: 'relative' }}
+    >
+      <div className="flex col gap-content height-fit-content width-30per">
         <section className="flex col height-fit-content">
           <ul>
             <li className="robot-info-title">
@@ -47,7 +51,7 @@ export const DefaultDashboard = () => {
       </div>
 
       <section id="map-canvas">
-        <CanvasView mapId={robotStatus?.map_id} />
+        <CanvasView mapId={robotStatus?.map_id} isSpeedVisible={true} />
       </section>
     </div>
   );

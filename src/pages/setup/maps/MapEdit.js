@@ -61,7 +61,7 @@ export const MapEdit = () => {
         </div>
 
         <section id="map-canvas">
-          <CanvasView mapId={guid} />
+          <CanvasView mapId={guid} isSpeedVisible={false} />
         </section>
       </div>
     </div>

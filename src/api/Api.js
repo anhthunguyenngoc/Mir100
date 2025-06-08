@@ -81,6 +81,26 @@ export const postPositions = async (body) => {
   };
 };
 
+/**
+ * POST /missions/{mission_id}/actions
+ *
+ * Description
+ * Add a new action to the mission with the specified mission ID
+ *
+ * @param {IApi.TPostMission_actions} body -
+ *   { action_type, guid?, mission_id, parameters, priority, scope_reference? }
+ *
+ * @returns {Promise<{statusCode: number, data: IApi.TGetMission_actions}>}
+ *   data: { action_type, guid, mission_id, parameters, priority, url }
+ */
+export const postMissionsAction = async (mission_id, body) => {
+  const response = await postAPI(URL.postMissionsActions(mission_id), body);
+  return {
+    statusCode: response.statusCode,
+    data: response.rawData,
+  };
+};
+
 //======================================           PUT           ======================================
 
 /**
@@ -187,6 +207,28 @@ export const putMissionQueue = async (id, body) => {
  */
 export const putStatus = async (body) => {
   const response = await putAPI(URL.putStatus, body);
+  return {
+    statusCode: response.statusCode,
+    data: response.rawData,
+  };
+};
+
+/**
+ * PUT /missions/{mission_id}/actions/{guid}
+ *
+ * Description
+ * Modify the values of the action with the specified GUID that belongs to the mission with the
+ specified mission ID
+ *
+ * @param {number} mission_id, guid - ID cần cập nhật.
+ * @param {IApi.TPutMission_action} body - Dữ liệu mission action mới.
+ *   { parameters, priority, scope_reference }
+ *
+ * @returns {Promise<{statusCode: number, data: IApi.TGetMission_action}>}
+ *   data: { action_type, guid, mission_id, parameters, priority, scope_reference }
+ */
+export const putMissionAction = async (mission_id, guid, body) => {
+  const response = await putAPI(URL.putMissionAction(mission_id, guid), body);
   return {
     statusCode: response.statusCode,
     data: response.rawData,
@@ -497,6 +539,75 @@ export const getMapPositions = async (map_id) => {
   };
 };
 
+/**
+ * GET /mission_groups/{mission_group_id}/actions
+ *
+ * Description
+ * Retrieve the list of action definitions from the mission group with the specified mission group ID
+ *
+ * @returns {Promise<{statusCode: number, data: IApi.TGetGroup_action_definition>}}
+ *   data: { action_type, description, descriptions, help, mission_group_id, name, parameters }
+ */
+export const getMission_groupsActions = async (mission_group_id) => {
+  const response = await getAPI(URL.getMission_groupsActions(mission_group_id));
+  return {
+    statusCode: response.statusCode,
+    data: response.rawData,
+  };
+};
+
+/**
+ * GET /missions/{guid}/definition
+ *
+ * Description
+ *  Retrieve the mission with the specified GUID as an action definition that can be inserted in another
+ mission
+ *
+ * @returns {Promise<{statusCode: number, data: Array<IApi.TGetGroup_action_definition>>}}
+ *   data: { action_type, description, descriptions, help, mission_group_id, name, parameters }
+ */
+export const getMission_definition = async (guid) => {
+  const response = await getAPI(URL.getMission_definition(guid));
+  return {
+    statusCode: response.statusCode,
+    data: response.rawData,
+  };
+};
+
+/**
+ * GET /missions/{mission_id}/actions
+ *
+ * Description
+ *   Retrieve the list of actions that belong to the mission with the specified mission ID
+ *
+ * @returns {Promise<{statusCode: number, data: Array<IApi.TGetMission_actions>>}}
+ *   data: { action_type, guid, mission_id, parameters, priority, url }
+ */
+export const GetMissionActions = async (mission_id) => {
+  const response = await getAPI(URL.getMission_actions(mission_id));
+  return {
+    statusCode: response.statusCode,
+    data: response.rawData,
+  };
+};
+
+/**
+ * GET /missions/{mission_id}/actions/{guid}
+ *
+ * Description
+ *  Retrieve the details about the action with the specified GUID that belongs to the mission with the
+ specified mission ID
+ *
+ * @returns {Promise<{statusCode: number, data: IApi.TGetMission_action>}}
+ *   data: { action_type, guid, mission_id, parameters, priority, scope_reference }
+ */
+export const GetMissionAction = async (mission_id, guid) => {
+  const response = await getAPI(URL.getMission_action(mission_id, guid));
+  return {
+    statusCode: response.statusCode,
+    data: response.rawData,
+  };
+};
 //====================================           DELETE           ====================================
 
 /**
@@ -557,6 +668,22 @@ export const deleteMissionQueueId = async (id) => {
  */
 export const deletePosition = async (guid) => {
   const response = await deleteAPI(URL.deletePositionId(guid));
+  return {
+    statusCode: response.statusCode,
+  };
+};
+
+/**
+ * DELETE /missions/{mission_id}/actions/{guid}
+ *
+ * Description
+ *  Erase the action with the specified GUID from the mission with the specified mission ID
+ *
+ * @param {Number} mission_id, guid
+ * @returns {Promise<{statusCode: number}>}
+ */
+export const deleteMissionAction = async (mission_id, guid) => {
+  const response = await deleteAPI(URL.deleteMissionAction(mission_id, guid));
   return {
     statusCode: response.statusCode,
   };

@@ -74,7 +74,7 @@ export const LeftSidebar = ({
           />
           <Components.HorizonLine
             height="1px"
-            color="white"
+            color={Constant.Color.BUTTON}
             borderRadius="2px"
             isVisible={true}
           />
@@ -89,6 +89,7 @@ export const LeftSidebar = ({
             }))}
             addBtnVisible={false}
             itemOnClick={handleShapeClick}
+            containerStyle={{ overflowY: 'auto' }}
           />
         </div>
       )}

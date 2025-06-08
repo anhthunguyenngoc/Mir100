@@ -132,3 +132,43 @@ section {
 .action-btn:hover {
   background-color: var(--color-subsidebar-background);
 }
+
+.control-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.execute-btn {
+  background: var(--color-button);
+  color: white;
+}
+
+.execute-btn:hover {
+  background: var(--color-button-hover);
+}
+
+.clear-btn {
+  background: var(--color-teal-200);
+  color: white;
+}
+
+.clear-btn:hover {
+  background: rgb(167, 207, 207, 0.8);
+}
+
+.condition-input select {
+  border: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.condition-input select option:hover {
+  background-color: #007bff !important;
+  color: white !important;
+}

@@ -332,41 +332,41 @@ const Canvas = ({ isSpeedVisible }) => {
 
     //!!!!
     // Lặp qua các zones trong layers
-    // for (const zones in map?.metadata.layers) {
-    //   // Lấy shapes của từng zone
-    //   if (!map?.metadata.layers[zones]) continue;
-    //   const shapes = map?.metadata.layers[zones].shapes;
-    //   // Nếu có shapes, lặp qua các shape để tạo các Line
-    //   for (let i = 0; i < shapes.length; i++) {
-    //     const zone = shapes[i];
-    //     if (!zone) continue;
+    for (const zones in map?.metadata.layers) {
+      // Lấy shapes của từng zone
+      if (!map?.metadata.layers[zones]) continue;
+      const shapes = map?.metadata.layers[zones].shapes;
+      // Nếu có shapes, lặp qua các shape để tạo các Line
+      for (let i = 0; i < shapes.length; i++) {
+        const zone = shapes[i];
+        if (!zone) continue;
 
-    //     lines.push(
-    //       <Line
-    //         points={zone.polygon.flatMap((point) => [point.x, point.y])}
-    //         stroke={zone.color}
-    //         strokeWidth={zone.brushsize}
-    //         closed={shapes[0]?.type === 'shape'} // Giữ `false` nếu không muốn tạo đa giác kín
-    //         fill={zone.color}
-    //       />
-    //     );
-    //   }
-    // }
-
-    //$$$Test */
-    Object.entries(Const.metadata).forEach(([key, zones]) => {
-      zones.forEach((zone) => {
         lines.push(
           <Line
             points={zone.polygon.flatMap((point) => [point.x, point.y])}
             stroke={zone.color}
             strokeWidth={zone.brushsize}
-            closed={zone.type === 'shape'}
+            closed={shapes[0]?.type === 'shape'} // Giữ `false` nếu không muốn tạo đa giác kín
             fill={zone.color}
           />
         );
-      });
-    });
+      }
+    }
+
+    //$$$Test */
+    // Object.entries(Const.metadata).forEach(([key, zones]) => {
+    //   zones.forEach((zone) => {
+    //     lines.push(
+    //       <Line
+    //         points={zone.polygon.flatMap((point) => [point.x, point.y])}
+    //         stroke={zone.color}
+    //         strokeWidth={zone.brushsize}
+    //         closed={zone.type === 'shape'}
+    //         fill={zone.color}
+    //       />
+    //     );
+    //   });
+    // });
 
     // Trả về mảng các phần tử Line
     return lines;
@@ -494,93 +494,93 @@ const Canvas = ({ isSpeedVisible }) => {
     });
 
     //Test
-    //     return fakeMapPositions.map((position) => {
-    //       const p = Utils.getCanvasPosition(position.pos_x, position.pos_y, {
-    //         metadata: { height: 568 },
-    //         resolution: 0.05,
-    //         origin_x: 0,
-    //         origin_y: 0,
-    //       });
-    //       return (
-    //         <ShapeComp.MyImage
-    //           ref={imageRef}
-    //           x={p.x}
-    //           y={p.y}
-    //           rotation={position.orientation}
-    //           imageSrc={Const.getPositionImage(position.type_id)}
-    //           width={20}
-    //           height={20}
-    //           onDblClick={(e, x, y) => {
-    //             setPositionDialog({
-    //               isVisible: true,
-    //               name: position.name,
-    //               type_id: position.type_id,
-    //               id: position.guid,
-    //             });
-    //             setIsClickVisible(false);
-    //           }}
-    //           onClick={(e, x, y) => {
-    //             handlePositionClick(e, x, y);
-    //             setPositionDialog({
-    //               isVisible: false,
-    //               name: position.name,
-    //               type_id: position.type_id,
-    //               id: position.guid,
-    //             });
-    //             setTooltipContent(
-    //               <div className="flex row" style={{ gap: '2px' }}>
-    //                 {[
-    //                   actionList.GOTO,
-    //                   actionList.CREATE_PATH,
-    //                   actionList.MOVE,
-    //                   actionList.EDIT,
-    //                   actionList.DELETE,
-    //                 ].map((action, index) => {
-    //                   return (
-    //                     <Comp.Tooltip hoverContent={action.alt}>
-    //                       <Comp.SmallToolButton
-    //                         imageSrc={action.imageSrc}
-    //                         showExpand={false}
-    //                         alt={action.alt}
-    //                         onClick={action?.onClick}
-    //                         buttonStyle={{
-    //                           borderRadius: '0',
-    //                           ...(index === 0 && {
-    //                             borderTopLeftRadius: '5px',
-    //                             borderBottomLeftRadius: '5px',
-    //                           }),
-    //                           ...(index === 4 && {
-    //                             borderTopRightRadius: '5px',
-    //                             borderBottomRightRadius: '5px',
-    //                           }),
-    //                         }}
-    //                       />
-    //                     </Comp.Tooltip>
-    //                   );
-    //                 })}
-    //               </div>
-    //             );
-    //           }}
-    //           onMouseEnter={(e, x, y) => {
-    //             handlePositionHover(e, x, y);
-    //             setTooltipContent(
-    //               <div
-    //                 className="radius-5px"
-    //                 style={{
-    //                   padding: '5px 10px',
-    //                   backgroundColor: Const.Color.BUTTON,
-    //                 }}
-    //               >
-    //                 {position.name}
-    //               </div>
-    //             );
-    //           }}
-    //           onMouseLeave={() => {
-    //             setIsHoverVisible(false);
-    //           }}
-    //         />
-    //       );
-    //     });
+        // return fakeMapPositions.map((position) => {
+        //   const p = Utils.getCanvasPosition(position.pos_x, position.pos_y, {
+        //     metadata: { height: 568 },
+        //     resolution: 0.05,
+        //     origin_x: 0,
+        //     origin_y: 0,
+        //   });
+        //   return (
+        //     <ShapeComp.MyImage
+        //       ref={imageRef}
+        //       x={p.x}
+        //       y={p.y}
+        //       rotation={position.orientation}
+        //       imageSrc={Const.getPositionImage(position.type_id)}
+        //       width={20}
+        //       height={20}
+        //       onDblClick={(e, x, y) => {
+        //         setPositionDialog({
+        //           isVisible: true,
+        //           name: position.name,
+        //           type_id: position.type_id,
+        //           id: position.guid,
+        //         });
+        //         setIsClickVisible(false);
+        //       }}
+        //       onClick={(e, x, y) => {
+        //         handlePositionClick(e, x, y);
+        //         setPositionDialog({
+        //           isVisible: false,
+        //           name: position.name,
+        //           type_id: position.type_id,
+        //           id: position.guid,
+        //         });
+        //         setTooltipContent(
+        //           <div className="flex row" style={{ gap: '2px' }}>
+        //             {[
+        //               actionList.GOTO,
+        //               actionList.CREATE_PATH,
+        //               actionList.MOVE,
+        //               actionList.EDIT,
+        //               actionList.DELETE,
+        //             ].map((action, index) => {
+        //               return (
+        //                 <Comp.Tooltip hoverContent={action.alt}>
+        //                   <Comp.SmallToolButton
+        //                     imageSrc={action.imageSrc}
+        //                     showExpand={false}
+        //                     alt={action.alt}
+        //                     onClick={action?.onClick}
+        //                     buttonStyle={{
+        //                       borderRadius: '0',
+        //                       ...(index === 0 && {
+        //                         borderTopLeftRadius: '5px',
+        //                         borderBottomLeftRadius: '5px',
+        //                       }),
+        //                       ...(index === 4 && {
+        //                         borderTopRightRadius: '5px',
+        //                         borderBottomRightRadius: '5px',
+        //                       }),
+        //                     }}
+        //                   />
+        //                 </Comp.Tooltip>
+        //               );
+        //             })}
+        //           </div>
+        //         );
+        //       }}
+        //       onMouseEnter={(e, x, y) => {
+        //         handlePositionHover(e, x, y);
+        //         setTooltipContent(
+        //           <div
+        //             className="radius-5px"
+        //             style={{
+        //               padding: '5px 10px',
+        //               backgroundColor: Const.Color.BUTTON,
+        //             }}
+        //           >
+        //             {position.name}
+        //           </div>
+        //         );
+        //       }}
+        //       onMouseLeave={() => {
+        //         setIsHoverVisible(false);
+        //       }}
+        //     />
+        //   );
+        // });
   };
 
   const renderCreatePosition = () => {
@@ -612,6 +612,10 @@ const Canvas = ({ isSpeedVisible }) => {
       />
     );
   };
+
+  useEffect(() => {
+    console.log(layers)
+  }, [layers])
 
   const renderlidarMapPoints = () => {
     if (!lidarMapPoints) return;
@@ -2014,15 +2018,15 @@ const Canvas = ({ isSpeedVisible }) => {
     if (!pathPoints) return;
 
     return pathPoints.map((p) => {
-      // const canvasP = Utils.getCanvasPosition(p.x, p.y, map); //!!!
+      const canvasP = Utils.getCanvasPosition(p.x, p.y, map); //!!!
 
       //$$$ Test
-      const canvasP = Utils.getCanvasPosition(p.x, p.y, {
-        metadata: { height: 568 },
-        resolution: 0.05,
-        origin_x: 0,
-        origin_y: 0,
-      });
+      // const canvasP = Utils.getCanvasPosition(p.x, p.y, {
+      //   metadata: { height: 568 },
+      //   resolution: 0.05,
+      //   origin_x: 0,
+      //   origin_y: 0,
+      // });
 
       return (
         canvasP && <Circle x={canvasP.x} y={canvasP.y} fill="red" radius={2} />
@@ -2444,7 +2448,7 @@ const Canvas = ({ isSpeedVisible }) => {
               scaleY={zoom / 100}
               opacity={layer.selected ? 1 : 0.6}
             >
-              {/* {renderedMapArray} */}
+              {renderedMapArray} 
 
               {renderMetadata()}
 

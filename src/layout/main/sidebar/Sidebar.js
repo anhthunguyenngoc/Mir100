@@ -16,7 +16,10 @@ export const Sidebar = ({ defaultIndex, onSelect }) => {
   return (
     <div id="left-sidebar-list" className="padding-15px radius-15px">
       <Icons.Logo width="80px" className="logo-icon" />
-      <ul className="sidebar-button-list flex col full-height gap-15px justify-center">
+      <ul
+        className="sidebar-button-list flex col full-height justify-center"
+        style={{ gap: '25px' }}
+      >
         {sidebarControl.map((item, index) => (
           <li
             key={item.key}

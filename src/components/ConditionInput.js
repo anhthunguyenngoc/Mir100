@@ -93,7 +93,7 @@ const CustomSelect = ({
           ...style,
         }}
       >
-        {options.find((item) => item.value == selected)?.name ||
+        {options.find((item) => item.value == selected)?.name || selected ||
           options[0].name}
       </div>
 
@@ -110,31 +110,39 @@ export const ConditionInput = ({
   description,
   updateParameterValueInList,
   updateTaskOrSubTaskProps,
+  conditions,
+  scope_reference,
+  logicalOperators,
 }) => {
-  const [conditions, setConditions] = useState();
-
+    const [hoverId, setHoverId] = useState(null);
+  
   useEffect(() => {
-    const init = Utils.initConditions(options, description, descriptions);
-    setConditions([
+    const compareValue = options.find((param) => param.id === "compare")?.value;
+
+    const matchedDesc = descriptions.find((desc) =>
+        desc.conditions.some(
+          (cond) => cond.parameter_id === 'compare' && cond.value === compareValue
+        )
+      );
+
+    const updatedDescription = matchedDesc || {text: description} ;
+      const requiredParams = Utils.getParamDefault(options, updatedDescription, compareValue);
+
+    updateTaskOrSubTaskProps(scope_reference, {
+      conditionsData: {
+        conditions: [
       {
         id: 1,
-        values: init,
+        values: requiredParams,
       },
-    ]);
-  }, [description, descriptions]);
-
-  useEffect(() => {
-    console.log(conditions);
-    updateTaskOrSubTaskProps(null, null, {
-      conditions,
+    ],
+        logicalOperators: logicalOperators,
+      },
     });
-  }, [conditions]);
-
-  const [hoverId, setHoverId] = useState(null);
-  const [logicalOperators, setLogicalOperators] = useState([]);
+  }, []);
 
   // Hàm render input cho từng tham số
-  const renderParameterInput = (conditionId, param) => {
+  const renderParameterInput = (conditionId, param, index) => {
     const paramConfig = param;
 
     if (!paramConfig) {
@@ -145,13 +153,13 @@ export const ConditionInput = ({
     if (paramConfig.type === 'Selection' && paramConfig.constraints?.choices) {
       return (
         <CustomSelect
-          key={`${conditionId}-${param.id}`}
+          key={`${conditionId}-${param.id}-${index}`}
           options={paramConfig.constraints.choices}
           color={color}
           selected={paramConfig.value}
           onSelect={(item) => {
             updateParameterValueInList(param.id, item.value);
-            updateConditionValue(conditionId, param.id, item.value);
+            updateConditionValue(conditionId, param.id, item.value, index);
           }}
         />
       );
@@ -161,13 +169,13 @@ export const ConditionInput = ({
     if (paramConfig.type === 'Reference' && paramConfig.constraints?.choices) {
       return (
         <CustomSelect
-          key={`${conditionId}-${param.id}`}
+          key={`${conditionId}-${param.id}-${index}`}
           options={paramConfig.constraints.choices}
           color={color}
           selected={paramConfig.value}
           onSelect={(item) => {
             updateParameterValueInList(param.id, item.value);
-            updateConditionValue(conditionId, param.id, item.value);
+            updateConditionValue(conditionId, param.id, item.value, index);
           }}
         />
       );
@@ -177,12 +185,12 @@ export const ConditionInput = ({
     if (paramConfig.type === 'Integer' || paramConfig.type === 'Float') {
       return (
         <input
-          key={`${conditionId}-${param.id}`}
+          key={`${conditionId}-${param.id}-${index}`}
           type="number"
           value={paramConfig.value}
           onChange={(e) => {
             updateParameterValueInList(param.id, e.target.value);
-            updateConditionValue(conditionId, param.id, e.target.value);
+            updateConditionValue(conditionId, param.id, e.target.value, index);
           }}
           placeholder={`(${paramConfig.name})`}
           style={{
@@ -200,12 +208,12 @@ export const ConditionInput = ({
     // Fallback for other types
     return (
       <input
-        key={`${conditionId}-${param.id}`}
+        key={`${conditionId}-${param.id}-${index}`}
         type="text"
         value={paramConfig.value}
         onChange={(e) => {
           updateParameterValueInList(param.id, e.target.value);
-          updateConditionValue(conditionId, param.id, e.target.value);
+          updateConditionValue(conditionId, param.id, e.target.value, index);
         }}
         placeholder={`(${paramConfig.name})`}
         style={{
@@ -222,52 +230,100 @@ export const ConditionInput = ({
 
   // Thêm điều kiện mới
   const addCondition = () => {
+    
     const newId = conditions.length + 1;
     const init = Utils.initConditions(options, description, descriptions);
-    setConditions([
+    const newConditions = [
       ...conditions,
       {
         id: newId,
         values: init,
       },
-    ]);
+    ];
 
-    if (conditions.length > 0) {
-      setLogicalOperators([...logicalOperators, '&&']);
-    }
+    const newLogicalOperators = [...logicalOperators, '&&'];
+
+    //Cập nhật props conditions
+    updateTaskOrSubTaskProps(scope_reference, {
+      conditionsData: {
+        conditions: newConditions,
+        logicalOperators: conditions.length > 0 ? newLogicalOperators : [],
+      },
+    });
   };
 
   // Xóa điều kiện
   const removeCondition = (id) => {
     if (conditions.length > 1) {
-      setConditions(conditions.filter((c) => c.id !== id));
+      // setConditions(conditions.filter((c) => c.id !== id));
       if (logicalOperators.length > 0) {
-        setLogicalOperators(logicalOperators.slice(0, -1));
+        // setLogicalOperators(logicalOperators.slice(0, -1));
       }
     }
   };
 
   // Cập nhật giá trị của tham số trong điều kiện
-  const updateConditionValue = (conditionId, paramId, newValue) => {
-    setConditions(
-      conditions.map((c) =>
-        c.id === conditionId
-          ? {
-              ...c,
-              values: c.values.map((item) =>
-                item.id == paramId ? { ...item, value: newValue } : item
-              ),
-            }
-          : c
+  const updateConditionValue = (conditionId, paramId, newValue, index) => {
+  if (paramId === 'compare') {
+    const matchedDesc = descriptions.find((desc) =>
+      desc.conditions.some(
+        (cond) => cond.parameter_id === 'compare' && cond.value === newValue
       )
     );
-  };
+
+    const updatedDescription = matchedDesc || { text: description };
+    let requiredParams = Utils.getParamDefault(options, updatedDescription, newValue);
+
+    const newConditions = conditions.map((c) =>
+      c.id === conditionId
+        ? {
+            ...c,
+            values: requiredParams,
+          }
+        : c
+    );
+
+    updateTaskOrSubTaskProps(scope_reference, {
+      conditionsData: {
+        conditions: newConditions,
+        logicalOperators,
+      },
+    });
+  } else {
+    const newConditions = conditions.map((c) =>
+      c.id === conditionId
+        ? {
+            ...c,
+            values: c.values.map((item, i) =>
+              (item.id == paramId && (i === index || paramId == 'compare'))
+                ? { ...item, value: newValue }
+                : item
+            ),
+          }
+        : c
+    );
+
+    updateTaskOrSubTaskProps(scope_reference, {
+      conditionsData: {
+        conditions: newConditions,
+        logicalOperators,
+      },
+    });
+  }
+};
 
   // Cập nhật toán tử logic
   const updateLogicalOperator = (index, value) => {
     const newOperators = [...logicalOperators];
     newOperators[index] = value;
-    setLogicalOperators(newOperators);
+
+    //Cập nhật props conditions
+    updateTaskOrSubTaskProps(scope_reference, {
+      conditionsData: {
+        conditions: conditions,
+        logicalOperators: newOperators,
+      },
+    });
   };
 
   return conditions?.length > 0 ? (
@@ -310,8 +366,8 @@ export const ConditionInput = ({
                     {/* <span>(</span> */}
 
                     {/* Render tất cả các tham số cần thiết */}
-                    {condition.values.map((param) =>
-                      renderParameterInput(condition.id, param)
+                    {condition.values.map((param, index) =>
+                      renderParameterInput(condition.id, param, index)
                     )}
 
                     {/* <span>)</span> */}
@@ -347,10 +403,7 @@ export const ConditionInput = ({
                       justifyContent: 'center',
                     }}
                     optionStyle={{ textAlign: 'center' }}
-                    selected={{
-                      name: logicalOperators[index] || '&&',
-                      value: logicalOperators[index] || '&&',
-                    }}
+                    selected={logicalOperators[index] || '&&'}
                     onSelect={(item) =>
                       updateLogicalOperator(index, item.value)
                     }

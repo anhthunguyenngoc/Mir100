@@ -6,7 +6,7 @@ export const TestActions = [
       guid: 'mirconst-guid-0000-0001-missiongroup',
       name: 'Move',
       style: {
-        icon: <Icons.Move />,
+        icon: <Icons.Move/>,
         color: '#2563EB',
       },
     },
@@ -2328,7 +2328,7 @@ export const TestActions = [
           url: '/v2.0.0/actions/set_footprint',
           action_type: 'set_footprint',
           style: {
-            icon: <Icons.Move />,
+            icon: <Icons.IOModule />,
             color: '#2563EB',
           },
         },
@@ -2416,7 +2416,7 @@ export const TestActions = [
       guid: 'mirconst-guid-0000-0002-missiongroup',
       name: 'Battery',
       style: {
-        icon: <Icons.Move />,
+        icon: <Icons.BatteryCharging />,
         color: '#2A7378',
       },
     },
@@ -2426,7 +2426,7 @@ export const TestActions = [
           url: '/v2.0.0/actions/charging',
           action_type: 'charging',
           style: {
-            icon: <Icons.Move />,
+            icon: <Icons.BatteryCharging />,
             color: '#2A7378',
           },
         },
@@ -2485,7 +2485,7 @@ export const TestActions = [
       guid: 'mirconst-guid-0000-0003-missiongroup',
       name: 'Logic',
       style: {
-        icon: <Icons.Move />,
+        icon: <Icons.Logic />,
         color: '#9333EA',
       },
     },
@@ -2495,7 +2495,7 @@ export const TestActions = [
           url: '/v2.0.0/actions/prompt_user',
           action_type: 'prompt_user',
           style: {
-            icon: <Icons.Move />,
+            icon: <Icons.Logic />,
             color: '#9333EA',
           },
         },
@@ -2597,7 +2597,7 @@ export const TestActions = [
           url: '/v2.0.0/actions/if',
           action_type: 'if',
           style: {
-            icon: <Icons.Move />,
+            icon: <Icons.Logic />,
             color: '#9333EA',
           },
         },
@@ -3599,7 +3599,7 @@ export const TestActions = [
           url: '/v2.0.0/actions/pause',
           action_type: 'pause',
           style: {
-            icon: <Icons.Move />,
+            icon: <Icons.Logic />,
             color: '#9333EA',
           },
         },
@@ -3619,7 +3619,7 @@ export const TestActions = [
           url: '/v2.0.0/actions/return',
           action_type: 'return',
           style: {
-            icon: <Icons.Move />,
+            icon: <Icons.Logic />,
             color: '#9333EA',
           },
         },
@@ -3639,7 +3639,7 @@ export const TestActions = [
           url: '/v2.0.0/actions/wait',
           action_type: 'wait',
           style: {
-            icon: <Icons.Move />,
+            icon: <Icons.Logic />,
             color: '#9333EA',
           },
         },
@@ -3671,7 +3671,7 @@ export const TestActions = [
           url: '/v2.0.0/actions/break',
           action_type: 'break',
           style: {
-            icon: <Icons.Move />,
+            icon: <Icons.Logic />,
             color: '#9333EA',
           },
         },
@@ -3691,7 +3691,7 @@ export const TestActions = [
           url: '/v2.0.0/actions/while',
           action_type: 'while',
           style: {
-            icon: <Icons.Move />,
+            icon: <Icons.Logic />,
             color: '#9333EA',
           },
         },
@@ -4689,7 +4689,7 @@ export const TestActions = [
           url: '/v2.0.0/actions/continue',
           action_type: 'continue',
           style: {
-            icon: <Icons.Move />,
+            icon: <Icons.Logic />,
             color: '#9333EA',
           },
         },
@@ -4709,7 +4709,7 @@ export const TestActions = [
           url: '/v2.0.0/actions/loop',
           action_type: 'loop',
           style: {
-            icon: <Icons.Move />,
+            icon: <Icons.Logic />,
             color: '#9333EA',
           },
         },
@@ -4753,7 +4753,7 @@ export const TestActions = [
       guid: 'mirconst-guid-0000-0004-missiongroup',
       name: 'Sound/Light',
       style: {
-        icon: <Icons.Move />,
+        icon: <Icons.SoundLight />,
         color: '#F59E0B',
       },
     },
@@ -4763,7 +4763,7 @@ export const TestActions = [
           url: '/v2.0.0/actions/sound_stop',
           action_type: 'sound_stop',
           style: {
-            icon: <Icons.Move />,
+            icon: <Icons.SoundLight />,
             color: '#F59E0B',
           },
         },
@@ -4783,7 +4783,7 @@ export const TestActions = [
           url: '/v2.0.0/actions/sound',
           action_type: 'sound',
           style: {
-            icon: <Icons.Move />,
+            icon: <Icons.SoundLight />,
             color: '#F59E0B',
           },
         },
@@ -4885,7 +4885,7 @@ export const TestActions = [
           url: '/v2.0.0/actions/light',
           action_type: 'light',
           style: {
-            icon: <Icons.Move />,
+            icon: <Icons.SoundLight />,
             color: '#F59E0B',
           },
         },
@@ -5133,7 +5133,7 @@ export const TestActions = [
       guid: 'mirconst-guid-0000-0005-missiongroup',
       name: 'PLC',
       style: {
-        icon: <Icons.Move />,
+        icon: <Icons.PLC />,
         color: '#A16207',
       },
     },
@@ -5143,7 +5143,7 @@ export const TestActions = [
           url: '/v2.0.0/actions/wait_for_plc_register',
           action_type: 'wait_for_plc_register',
           style: {
-            icon: <Icons.Move />,
+            icon: <Icons.PLC />,
             color: '#A16207',
           },
         },
@@ -6004,7 +6004,7 @@ export const TestActions = [
           url: '/v2.0.0/actions/set_reset_plc',
           action_type: 'set_reset_plc',
           style: {
-            icon: <Icons.Move />,
+            icon: <Icons.PLC />,
             color: '#A16207',
           },
         },
@@ -6871,7 +6871,7 @@ export const TestActions = [
           url: '/v2.0.0/actions/set_plc_register',
           action_type: 'set_plc_register',
           style: {
-            icon: <Icons.Move />,
+            icon: <Icons.PLC />,
             color: '#A16207',
           },
         },
@@ -7745,7 +7745,7 @@ export const TestActions = [
       guid: 'mirconst-guid-0000-0006-missiongroup',
       name: 'E-mail',
       style: {
-        icon: <Icons.Move />,
+        icon: <Icons.Email />,
         color: '#0891B2',
       },
     },
@@ -7755,7 +7755,7 @@ export const TestActions = [
           url: '/v2.0.0/actions/email',
           action_type: 'email',
           style: {
-            icon: <Icons.Move />,
+            icon: <Icons.Email />,
             color: '#0891B2',
           },
         },
@@ -7823,7 +7823,7 @@ export const TestActions = [
       guid: 'mirconst-guid-0000-0007-missiongroup',
       name: 'IO module',
       style: {
-        icon: <Icons.Move />,
+        icon: <Icons.IOModule />,
         color: '#374151',
       },
     },
@@ -7833,7 +7833,7 @@ export const TestActions = [
           url: '/v2.0.0/actions/disconnect_bluetooth',
           action_type: 'disconnect_bluetooth',
           style: {
-            icon: <Icons.Move />,
+            icon: <Icons.IOModule />,
             color: '#374151',
           },
         },
@@ -7853,7 +7853,7 @@ export const TestActions = [
           url: '/v2.0.0/actions/connect_bluetooth',
           action_type: 'connect_bluetooth',
           style: {
-            icon: <Icons.Move />,
+            icon: <Icons.IOModule/>,
             color: '#374151',
           },
         },
@@ -7896,7 +7896,7 @@ export const TestActions = [
           url: '/v2.0.0/actions/wait_for_io',
           action_type: 'wait_for_io',
           style: {
-            icon: <Icons.Move />,
+            icon: <Icons.IOModule/>,
             color: '#374151',
           },
         },
@@ -7979,7 +7979,7 @@ export const TestActions = [
           url: '/v2.0.0/actions/set_reset_io',
           action_type: 'set_reset_io',
           style: {
-            icon: <Icons.Move />,
+            icon: <Icons.IOModule/>,
             color: '#374151',
           },
         },
@@ -8075,7 +8075,7 @@ export const TestActions = [
           url: '/v2.0.0/actions/set_io',
           action_type: 'set_io',
           style: {
-            icon: <Icons.Move />,
+            icon: <Icons.IOModule/>,
             color: '#374151',
           },
         },
@@ -8161,6 +8161,266 @@ export const TestActions = [
       },
     ],
   },
+  // {
+  //       "missionGroup": {
+  //           "url": "/v2.0.0/mission_groups/mirconst-guid-0000-0008-missiongroup",
+  //           "guid": "mirconst-guid-0000-0008-missiongroup",
+  //           "name": "Cart"
+  //       },
+  //       "actions": [
+  //           {
+  //               "url": "/v2.0.0/actions/pickup_cart",
+  //               "action_type": "pickup_cart",
+  //               "detail": {
+  //                   "allowed_methods": null,
+  //                   "description": "Pick up cart at %(position)s",
+  //                   "parameters": [
+  //                       {
+  //                           "id": "position",
+  //                           "type": "Reference",
+  //                           "help": "Select a position from the drop-down list, or select the <b>XYZ</b> icon to define a variable.",
+  //                           "name": "Position",
+  //                           "constraints": {
+  //                               "body": {
+  //                                   "filters": [
+  //                                       {
+  //                                           "operator": "=",
+  //                                           "fieldname": "type_id",
+  //                                           "value": 1
+  //                                       }
+  //                                   ]
+  //                               },
+  //                               "value_field": "guid",
+  //                               "null_option": "Current position",
+  //                               "nullable": true,
+  //                               "url": "/positions/search",
+  //                               "name_field": "name",
+  //                               "choices": [],
+  //                               "method": "POST"
+  //                           }
+  //                       }
+  //                   ],
+  //                   "help": "Go to a position and pick up a cart.",
+  //                   "action_type": "pickup_cart",
+  //                   "descriptions": null,
+  //                   "mission_group_id": "mirconst-guid-0000-0008-missiongroup",
+  //                   "name": "Pick up cart"
+  //               }
+  //           },
+  //           {
+  //               "url": "/v2.0.0/actions/place_cart",
+  //               "action_type": "place_cart",
+  //               "detail": {
+  //                   "allowed_methods": null,
+  //                   "description": "Place cart at %(position)s",
+  //                   "parameters": [
+  //                       {
+  //                           "id": "position",
+  //                           "type": "Reference",
+  //                           "help": "Select a position from the drop-down list, or select the <b>XYZ</b> icon to define a variable.",
+  //                           "name": "Position",
+  //                           "constraints": {
+  //                               "body": {
+  //                                   "filters": [
+  //                                       {
+  //                                           "operator": "=",
+  //                                           "fieldname": "type_id",
+  //                                           "value": 1
+  //                                       }
+  //                                   ]
+  //                               },
+  //                               "value_field": "guid",
+  //                               "null_option": "Current position",
+  //                               "nullable": true,
+  //                               "url": "/positions/search",
+  //                               "name_field": "name",
+  //                               "choices": [],
+  //                               "method": "POST"
+  //                           }
+  //                       }
+  //                   ],
+  //                   "help": "Place the cart currently attached to the robot at a specific position.",
+  //                   "action_type": "place_cart",
+  //                   "descriptions": null,
+  //                   "mission_group_id": "mirconst-guid-0000-0008-missiongroup",
+  //                   "name": "Place cart"
+  //               }
+  //           }
+  //       ]
+  //   },
+  //   {
+  //       "missionGroup": {
+  //           "url": "/v2.0.0/mission_groups/mirconst-guid-0000-0009-missiongroup",
+  //           "guid": "mirconst-guid-0000-0009-missiongroup",
+  //           "name": "Shelf"
+  //       },
+  //       "actions": []
+  //   },
+  //   {
+  //       "missionGroup": {
+  //           "url": "/v2.0.0/mission_groups/mirconst-guid-0000-0011-missiongroup",
+  //           "guid": "mirconst-guid-0000-0011-missiongroup",
+  //           "name": "Missions"
+  //       },
+  //       "actions": []
+  //   },
+  //   {
+  //       "missionGroup": {
+  //           "url": "/v2.0.0/mission_groups/mirconst-guid-0000-0012-missiongroup",
+  //           "guid": "mirconst-guid-0000-0012-missiongroup",
+  //           "name": "UR"
+  //       },
+  //       "actions": [
+  //           {
+  //               "url": "/v2.0.0/actions/run_ur_program",
+  //               "action_type": "run_ur_program",
+  //               "detail": {
+  //                   "allowed_methods": null,
+  //                   "description": "Run UR program: %(program_name)s",
+  //                   "parameters": [
+  //                       {
+  //                           "id": "program_name",
+  //                           "type": "String",
+  //                           "help": "Enter the name of the UR program (without the urp extension), or select the <b>XYZ </b>icon to define a variable.",
+  //                           "name": "Program name",
+  //                           "constraints": {
+  //                               "default": "",
+  //                               "min_length": 1,
+  //                               "max_length": 255
+  //                           }
+  //                       }
+  //                   ],
+  //                   "help": "A Run UR action is used to communicate with a Universal Robots application. The action starts a .urp file saved on the Universal robot. The program name is [program name].urp. Leave out .urp when you type the name. The MiR robot will continue until the given UR program has been executed.",
+  //                   "action_type": "run_ur_program",
+  //                   "descriptions": null,
+  //                   "mission_group_id": "mirconst-guid-0000-0012-missiongroup",
+  //                   "name": "Run UR program"
+  //               }
+  //           }
+  //       ]
+  //   },
+    {
+        "missionGroup": {
+            "url": "/v2.0.0/mission_groups/mirconst-guid-0000-0013-missiongroup",
+            "guid": "mirconst-guid-0000-0013-missiongroup",
+            "name": "Error Handling",
+            style: {
+              icon: <Icons.ErrorHandling />,
+              color: '#E74C3C',
+            },
+        },
+        "actions": [
+            {
+                "url": "/v2.0.0/actions/create_autolog",
+                "action_type": "create_autolog",
+                style: {
+                  icon: <Icons.ErrorHandling />,
+                  color: '#E74C3C',
+                },
+                "detail": {
+                    "allowed_methods": null,
+                    "description": "Create log: %(description)s",
+                    "parameters": [
+                        {
+                            "id": "description",
+                            "type": "String",
+                            "help": "Enter a description for the log type you want to create, or select the <b>XYZ </b>icon to define a variable. An example of a description could be “Mission x fail log”",
+                            "name": "Description",
+                            "constraints": {
+                                "default": "",
+                                "min_length": 1,
+                                "max_length": 255
+                            }
+                        }
+                    ],
+                    "help": "A Create log action is used to create user generated error logs. The error logs are stored under <b>Monitoring</b> > <b>Error logs</b>. This is useful in, for example, a Try/Catch action where a log is created when catching an unsuccessful try.",
+                    "action_type": "create_autolog",
+                    "descriptions": null,
+                    "mission_group_id": "mirconst-guid-0000-0013-missiongroup",
+                    "name": "Create log"
+                }
+            },
+            {
+                "url": "/v2.0.0/actions/throw_error",
+                "action_type": "throw_error",
+                style: {
+                  icon: <Icons.ErrorHandling />,
+                  color: '#E74C3C',
+                },
+                "detail": {
+                    "allowed_methods": null,
+                    "description": "Throw error: %(message)s",
+                    "parameters": [
+                        {
+                            "id": "message",
+                            "type": "String",
+                            "help": "Enter the message you want displayed on the user interface when the mission is run, or select the <b>XYZ </b>icon to define a variable.",
+                            "name": "Message",
+                            "constraints": {
+                                "default": "",
+                                "min_length": 1,
+                                "max_length": 255
+                            }
+                        }
+                    ],
+                    "help": "A Throw error action is used to enter an error message that will be shown in the user interface when the mission is run. You can, for example, use this with a Try/Catch action, to make the robot report an error if it fails to execute its main mission. ",
+                    "action_type": "throw_error",
+                    "descriptions": null,
+                    "mission_group_id": "mirconst-guid-0000-0013-missiongroup",
+                    "name": "Throw error"
+                }
+            },
+            {
+                "url": "/v2.0.0/actions/try_catch",
+                "action_type": "try_catch",
+                style: {
+                  icon: <Icons.ErrorHandling />,
+                  color: '#E74C3C',
+                },
+                "detail": {
+                    "allowed_methods": null,
+                    "description": "Try/Catch",
+                    "parameters": [],
+                    "help": "A Try/Catch action is a way to reinforce missions by defining an alternative action if the first choice action fails. This will in many cases prevent a mission from discontinuing in case, for example, a position is blocked. A Try/Catch action consists of a Try action, which the robot should attempt to complete, and a  Catch action that is used in case the Try action fails.",
+                    "action_type": "try_catch",
+                    "descriptions": null,
+                    "mission_group_id": "mirconst-guid-0000-0013-missiongroup",
+                    "name": "Try/Catch"
+                }
+            }
+        ]
+    },
+    // {
+    //     "missionGroup": {
+    //         "url": "/v2.0.0/mission_groups/mirconst-guid-0000-0014-missiongroup",
+    //         "guid": "mirconst-guid-0000-0014-missiongroup",
+    //         "name": "Safety System"
+    //     },
+    //     "actions": [
+    //         {
+    //             "url": "/v2.0.0/actions/reduce_protective_fields",
+    //             "action_type": "reduce_protective_fields",
+    //             "detail": {
+    //                 "allowed_methods": null,
+    //                 "description": "Mute protective fields",
+    //                 "parameters": [],
+    //                 "help": "",
+    //                 "action_type": "reduce_protective_fields",
+    //                 "descriptions": null,
+    //                 "mission_group_id": "mirconst-guid-0000-0014-missiongroup",
+    //                 "name": "Mute protective fields"
+    //             }
+    //         }
+    //     ]
+    // },
+    // {
+    //     "missionGroup": {
+    //         "url": "/v2.0.0/mission_groups/mirconst-guid-0000-0015-missiongroup",
+    //         "guid": "mirconst-guid-0000-0015-missiongroup",
+    //         "name": "Pallet"
+    //     },
+    //     "actions": []
+    // }
 ];
 
 export const existedAction = [
@@ -9114,3 +9374,6492 @@ export const existedAction = [
     guid: '0447511a-3ba5-11f0-9176-000129af8ea5',
   },
 ];
+
+export const existedDetailAction = [
+    {
+        "priority": 2,
+        "allowed_methods": [
+            "PUT",
+            "GET",
+            "DELETE"
+        ],
+        "scope_reference": null,
+        "parameters": [
+            {
+                "id": "compare",
+                "type": "Selection",
+                "help": "Select either <b>Battery Percentage</b>, <b>PLC Register</b>, <b>Pending Missions</b>, or <b>I/O input</b>, or select the <b>XYZ </b>icon to define a variable.",
+                "name": "Compare",
+                "constraints": {
+                    "default": "battery",
+                    "choices": [
+                        {
+                            "name": "Battery Percentage",
+                            "value": "battery"
+                        },
+                        {
+                            "name": "PLC Register",
+                            "value": "plc_register"
+                        },
+                        {
+                            "name": "Pending missions",
+                            "value": "mission_queue_length"
+                        },
+                        {
+                            "name": "I/O input",
+                            "value": "io_module"
+                        }
+                    ]
+                },
+                "value": "plc_register",
+                "input_name": null,
+                "guid": "0447ef47-3ba5-11f0-9176-000129af8ea5"
+            },
+            {
+                "help": "For I/O inputs, select an I/O module from the drop-down list, or select the <b>XYZ</b> icon to define a variable.",
+                "name": "Module",
+                "dependencies": [
+                    {
+                        "dependency_id": "compare",
+                        "value": "io_module"
+                    }
+                ],
+                "type": "Reference",
+                "id": "module",
+                "constraints": {
+                    "url": "/io_modules",
+                    "value_field": "guid",
+                    "name_field": "name",
+                    "method": "GET",
+                    "choices": [
+                        {
+                            "name": "ur5",
+                            "value": "339096ae-2ca7-11ef-95a5-000129af8ea5"
+                        }
+                    ]
+                },
+                "value": "339096ae-2ca7-11ef-95a5-000129af8ea5",
+                "input_name": null,
+                "guid": "04481d00-3ba5-11f0-9176-000129af8ea5"
+            },
+            {
+                "help": "Select I/O port",
+                "name": "I/O port",
+                "dependencies": [
+                    {
+                        "dependency_id": "compare",
+                        "value": "io_module"
+                    }
+                ],
+                "type": "Integer",
+                "id": "io_port",
+                "constraints": {
+                    "default": 0,
+                    "max": 99,
+                    "min": 0
+                },
+                "value": "0",
+                "input_name": null,
+                "guid": "044845c0-3ba5-11f0-9176-000129af8ea5"
+            },
+            {
+                "help": "For PLC registers: enter the required index number (Integer registers 1-100, Floating point registers 101-200), or select the <b>XYZ </b>icon to define a variable.",
+                "name": "Register",
+                "dependencies": [
+                    {
+                        "dependency_id": "compare",
+                        "value": "plc_register"
+                    }
+                ],
+                "type": "Reference",
+                "id": "register",
+                "constraints": {
+                    "value_field": "id",
+                    "name_field": "label",
+                    "default": 1,
+                    "choices": [
+                        {
+                            "name": "",
+                            "value": 1
+                        },
+                        {
+                            "name": "",
+                            "value": 2
+                        },
+                        {
+                            "name": "",
+                            "value": 3
+                        },
+                        {
+                            "name": "",
+                            "value": 4
+                        },
+                        {
+                            "name": "",
+                            "value": 5
+                        },
+                        {
+                            "name": "",
+                            "value": 6
+                        },
+                        {
+                            "name": "",
+                            "value": 7
+                        },
+                        {
+                            "name": "",
+                            "value": 8
+                        },
+                        {
+                            "name": "",
+                            "value": 9
+                        },
+                        {
+                            "name": "",
+                            "value": 10
+                        },
+                        {
+                            "name": "",
+                            "value": 11
+                        },
+                        {
+                            "name": "",
+                            "value": 12
+                        },
+                        {
+                            "name": "",
+                            "value": 13
+                        },
+                        {
+                            "name": "",
+                            "value": 14
+                        },
+                        {
+                            "name": "",
+                            "value": 15
+                        },
+                        {
+                            "name": "",
+                            "value": 16
+                        },
+                        {
+                            "name": "",
+                            "value": 17
+                        },
+                        {
+                            "name": "",
+                            "value": 18
+                        },
+                        {
+                            "name": "",
+                            "value": 19
+                        },
+                        {
+                            "name": "",
+                            "value": 20
+                        },
+                        {
+                            "name": "",
+                            "value": 21
+                        },
+                        {
+                            "name": "",
+                            "value": 22
+                        },
+                        {
+                            "name": "",
+                            "value": 23
+                        },
+                        {
+                            "name": "",
+                            "value": 24
+                        },
+                        {
+                            "name": "",
+                            "value": 25
+                        },
+                        {
+                            "name": "",
+                            "value": 26
+                        },
+                        {
+                            "name": "",
+                            "value": 27
+                        },
+                        {
+                            "name": "",
+                            "value": 28
+                        },
+                        {
+                            "name": "",
+                            "value": 29
+                        },
+                        {
+                            "name": "",
+                            "value": 30
+                        },
+                        {
+                            "name": "",
+                            "value": 31
+                        },
+                        {
+                            "name": "",
+                            "value": 32
+                        },
+                        {
+                            "name": "",
+                            "value": 33
+                        },
+                        {
+                            "name": "",
+                            "value": 34
+                        },
+                        {
+                            "name": "",
+                            "value": 35
+                        },
+                        {
+                            "name": "",
+                            "value": 36
+                        },
+                        {
+                            "name": "",
+                            "value": 37
+                        },
+                        {
+                            "name": "",
+                            "value": 38
+                        },
+                        {
+                            "name": "",
+                            "value": 39
+                        },
+                        {
+                            "name": "",
+                            "value": 40
+                        },
+                        {
+                            "name": "",
+                            "value": 41
+                        },
+                        {
+                            "name": "",
+                            "value": 42
+                        },
+                        {
+                            "name": "",
+                            "value": 43
+                        },
+                        {
+                            "name": "",
+                            "value": 44
+                        },
+                        {
+                            "name": "",
+                            "value": 45
+                        },
+                        {
+                            "name": "",
+                            "value": 46
+                        },
+                        {
+                            "name": "",
+                            "value": 47
+                        },
+                        {
+                            "name": "",
+                            "value": 48
+                        },
+                        {
+                            "name": "",
+                            "value": 49
+                        },
+                        {
+                            "name": "",
+                            "value": 50
+                        },
+                        {
+                            "name": "",
+                            "value": 51
+                        },
+                        {
+                            "name": "",
+                            "value": 52
+                        },
+                        {
+                            "name": "",
+                            "value": 53
+                        },
+                        {
+                            "name": "",
+                            "value": 54
+                        },
+                        {
+                            "name": "",
+                            "value": 55
+                        },
+                        {
+                            "name": "",
+                            "value": 56
+                        },
+                        {
+                            "name": "",
+                            "value": 57
+                        },
+                        {
+                            "name": "",
+                            "value": 58
+                        },
+                        {
+                            "name": "",
+                            "value": 59
+                        },
+                        {
+                            "name": "",
+                            "value": 60
+                        },
+                        {
+                            "name": "",
+                            "value": 61
+                        },
+                        {
+                            "name": "",
+                            "value": 62
+                        },
+                        {
+                            "name": "",
+                            "value": 63
+                        },
+                        {
+                            "name": "",
+                            "value": 64
+                        },
+                        {
+                            "name": "",
+                            "value": 65
+                        },
+                        {
+                            "name": "",
+                            "value": 66
+                        },
+                        {
+                            "name": "",
+                            "value": 67
+                        },
+                        {
+                            "name": "",
+                            "value": 68
+                        },
+                        {
+                            "name": "",
+                            "value": 69
+                        },
+                        {
+                            "name": "",
+                            "value": 70
+                        },
+                        {
+                            "name": "",
+                            "value": 71
+                        },
+                        {
+                            "name": "",
+                            "value": 72
+                        },
+                        {
+                            "name": "",
+                            "value": 73
+                        },
+                        {
+                            "name": "",
+                            "value": 74
+                        },
+                        {
+                            "name": "",
+                            "value": 75
+                        },
+                        {
+                            "name": "",
+                            "value": 76
+                        },
+                        {
+                            "name": "",
+                            "value": 77
+                        },
+                        {
+                            "name": "",
+                            "value": 78
+                        },
+                        {
+                            "name": "",
+                            "value": 79
+                        },
+                        {
+                            "name": "",
+                            "value": 80
+                        },
+                        {
+                            "name": "",
+                            "value": 81
+                        },
+                        {
+                            "name": "",
+                            "value": 82
+                        },
+                        {
+                            "name": "",
+                            "value": 83
+                        },
+                        {
+                            "name": "",
+                            "value": 84
+                        },
+                        {
+                            "name": "",
+                            "value": 85
+                        },
+                        {
+                            "name": "",
+                            "value": 86
+                        },
+                        {
+                            "name": "",
+                            "value": 87
+                        },
+                        {
+                            "name": "",
+                            "value": 88
+                        },
+                        {
+                            "name": "",
+                            "value": 89
+                        },
+                        {
+                            "name": "",
+                            "value": 90
+                        },
+                        {
+                            "name": "",
+                            "value": 91
+                        },
+                        {
+                            "name": "",
+                            "value": 92
+                        },
+                        {
+                            "name": "",
+                            "value": 93
+                        },
+                        {
+                            "name": "",
+                            "value": 94
+                        },
+                        {
+                            "name": "",
+                            "value": 95
+                        },
+                        {
+                            "name": "",
+                            "value": 96
+                        },
+                        {
+                            "name": "",
+                            "value": 97
+                        },
+                        {
+                            "name": "",
+                            "value": 98
+                        },
+                        {
+                            "name": "",
+                            "value": 99
+                        },
+                        {
+                            "name": "",
+                            "value": 100
+                        },
+                        {
+                            "name": "",
+                            "value": 101
+                        },
+                        {
+                            "name": "",
+                            "value": 102
+                        },
+                        {
+                            "name": "",
+                            "value": 103
+                        },
+                        {
+                            "name": "",
+                            "value": 104
+                        },
+                        {
+                            "name": "",
+                            "value": 105
+                        },
+                        {
+                            "name": "",
+                            "value": 106
+                        },
+                        {
+                            "name": "",
+                            "value": 107
+                        },
+                        {
+                            "name": "",
+                            "value": 108
+                        },
+                        {
+                            "name": "",
+                            "value": 109
+                        },
+                        {
+                            "name": "",
+                            "value": 110
+                        },
+                        {
+                            "name": "",
+                            "value": 111
+                        },
+                        {
+                            "name": "",
+                            "value": 112
+                        },
+                        {
+                            "name": "",
+                            "value": 113
+                        },
+                        {
+                            "name": "",
+                            "value": 114
+                        },
+                        {
+                            "name": "",
+                            "value": 115
+                        },
+                        {
+                            "name": "",
+                            "value": 116
+                        },
+                        {
+                            "name": "",
+                            "value": 117
+                        },
+                        {
+                            "name": "",
+                            "value": 118
+                        },
+                        {
+                            "name": "",
+                            "value": 119
+                        },
+                        {
+                            "name": "",
+                            "value": 120
+                        },
+                        {
+                            "name": "",
+                            "value": 121
+                        },
+                        {
+                            "name": "",
+                            "value": 122
+                        },
+                        {
+                            "name": "",
+                            "value": 123
+                        },
+                        {
+                            "name": "",
+                            "value": 124
+                        },
+                        {
+                            "name": "",
+                            "value": 125
+                        },
+                        {
+                            "name": "",
+                            "value": 126
+                        },
+                        {
+                            "name": "",
+                            "value": 127
+                        },
+                        {
+                            "name": "",
+                            "value": 128
+                        },
+                        {
+                            "name": "",
+                            "value": 129
+                        },
+                        {
+                            "name": "",
+                            "value": 130
+                        },
+                        {
+                            "name": "",
+                            "value": 131
+                        },
+                        {
+                            "name": "",
+                            "value": 132
+                        },
+                        {
+                            "name": "",
+                            "value": 133
+                        },
+                        {
+                            "name": "",
+                            "value": 134
+                        },
+                        {
+                            "name": "",
+                            "value": 135
+                        },
+                        {
+                            "name": "",
+                            "value": 136
+                        },
+                        {
+                            "name": "",
+                            "value": 137
+                        },
+                        {
+                            "name": "",
+                            "value": 138
+                        },
+                        {
+                            "name": "",
+                            "value": 139
+                        },
+                        {
+                            "name": "",
+                            "value": 140
+                        },
+                        {
+                            "name": "",
+                            "value": 141
+                        },
+                        {
+                            "name": "",
+                            "value": 142
+                        },
+                        {
+                            "name": "",
+                            "value": 143
+                        },
+                        {
+                            "name": "",
+                            "value": 144
+                        },
+                        {
+                            "name": "",
+                            "value": 145
+                        },
+                        {
+                            "name": "",
+                            "value": 146
+                        },
+                        {
+                            "name": "",
+                            "value": 147
+                        },
+                        {
+                            "name": "",
+                            "value": 148
+                        },
+                        {
+                            "name": "",
+                            "value": 149
+                        },
+                        {
+                            "name": "",
+                            "value": 150
+                        },
+                        {
+                            "name": "",
+                            "value": 151
+                        },
+                        {
+                            "name": "",
+                            "value": 152
+                        },
+                        {
+                            "name": "",
+                            "value": 153
+                        },
+                        {
+                            "name": "",
+                            "value": 154
+                        },
+                        {
+                            "name": "",
+                            "value": 155
+                        },
+                        {
+                            "name": "",
+                            "value": 156
+                        },
+                        {
+                            "name": "",
+                            "value": 157
+                        },
+                        {
+                            "name": "",
+                            "value": 158
+                        },
+                        {
+                            "name": "",
+                            "value": 159
+                        },
+                        {
+                            "name": "",
+                            "value": 160
+                        },
+                        {
+                            "name": "",
+                            "value": 161
+                        },
+                        {
+                            "name": "",
+                            "value": 162
+                        },
+                        {
+                            "name": "",
+                            "value": 163
+                        },
+                        {
+                            "name": "",
+                            "value": 164
+                        },
+                        {
+                            "name": "",
+                            "value": 165
+                        },
+                        {
+                            "name": "",
+                            "value": 166
+                        },
+                        {
+                            "name": "",
+                            "value": 167
+                        },
+                        {
+                            "name": "",
+                            "value": 168
+                        },
+                        {
+                            "name": "",
+                            "value": 169
+                        },
+                        {
+                            "name": "",
+                            "value": 170
+                        },
+                        {
+                            "name": "",
+                            "value": 171
+                        },
+                        {
+                            "name": "",
+                            "value": 172
+                        },
+                        {
+                            "name": "",
+                            "value": 173
+                        },
+                        {
+                            "name": "",
+                            "value": 174
+                        },
+                        {
+                            "name": "",
+                            "value": 175
+                        },
+                        {
+                            "name": "",
+                            "value": 176
+                        },
+                        {
+                            "name": "",
+                            "value": 177
+                        },
+                        {
+                            "name": "",
+                            "value": 178
+                        },
+                        {
+                            "name": "",
+                            "value": 179
+                        },
+                        {
+                            "name": "",
+                            "value": 180
+                        },
+                        {
+                            "name": "",
+                            "value": 181
+                        },
+                        {
+                            "name": "",
+                            "value": 182
+                        },
+                        {
+                            "name": "",
+                            "value": 183
+                        },
+                        {
+                            "name": "",
+                            "value": 184
+                        },
+                        {
+                            "name": "",
+                            "value": 185
+                        },
+                        {
+                            "name": "",
+                            "value": 186
+                        },
+                        {
+                            "name": "",
+                            "value": 187
+                        },
+                        {
+                            "name": "",
+                            "value": 188
+                        },
+                        {
+                            "name": "",
+                            "value": 189
+                        },
+                        {
+                            "name": "",
+                            "value": 190
+                        },
+                        {
+                            "name": "",
+                            "value": 191
+                        },
+                        {
+                            "name": "",
+                            "value": 192
+                        },
+                        {
+                            "name": "",
+                            "value": 193
+                        },
+                        {
+                            "name": "",
+                            "value": 194
+                        },
+                        {
+                            "name": "",
+                            "value": 195
+                        },
+                        {
+                            "name": "",
+                            "value": 196
+                        },
+                        {
+                            "name": "",
+                            "value": 197
+                        },
+                        {
+                            "name": "",
+                            "value": 198
+                        },
+                        {
+                            "name": "",
+                            "value": 199
+                        },
+                        {
+                            "name": "",
+                            "value": 200
+                        }
+                    ],
+                    "url": "/registers",
+                    "validator": "PLCId",
+                    "method": "GET"
+                },
+                "value": "1",
+                "input_name": null,
+                "guid": "04486f4a-3ba5-11f0-9176-000129af8ea5"
+            },
+            {
+                "id": "operator",
+                "type": "Selection",
+                "help": "<p>Select the arithmetic operator you want to use, or select the <b>XYZ</b> icon to define a variable.</p><p>Operators are arithmetic operators used to specify the compare mission, for example, use the < operator to specify “If Battery percentage is below 50 percent”.</p><p>The available operators are:</p><ul><li>== ‘equal to’</li><li>!= ‘not equal to’</li><li>> ‘greater than’</li><li>>= ‘greater than or equal to’</li><li>< ‘lesser than’</li><li><= ‘lesser than or equal to’.</li></ul>",
+                "name": "Operator",
+                "constraints": {
+                    "default": "==",
+                    "choices": [
+                        {
+                            "name": "==",
+                            "value": "=="
+                        },
+                        {
+                            "name": "!=",
+                            "value": "!="
+                        },
+                        {
+                            "name": ">",
+                            "value": ">"
+                        },
+                        {
+                            "name": ">=",
+                            "value": ">="
+                        },
+                        {
+                            "name": "<",
+                            "value": "<"
+                        },
+                        {
+                            "name": "<=",
+                            "value": "<="
+                        }
+                    ]
+                },
+                "value": "==",
+                "input_name": null,
+                "guid": "04489459-3ba5-11f0-9176-000129af8ea5"
+            },
+            {
+                "id": "value",
+                "type": "Float",
+                "help": "Enter the value for the selected register, or select the <b>XYZ </b>icon to define a variable.",
+                "name": "Value",
+                "constraints": {
+                    "default": 1,
+                    "max": 1000000000,
+                    "min": -1000000000
+                },
+                "value": 1,
+                "input_name": null,
+                "guid": "0448af2d-3ba5-11f0-9176-000129af8ea5"
+            },
+            {
+                "id": "true",
+                "type": "Scope",
+                "help": "",
+                "name": "True",
+                "constraints": {},
+                "value": "",
+                "input_name": null,
+                "guid": "0448d1c7-3ba5-11f0-9176-000129af8ea5"
+            },
+            {
+                "id": "false",
+                "type": "Scope",
+                "help": "",
+                "name": "False",
+                "constraints": {},
+                "value": "",
+                "input_name": null,
+                "guid": "0448f8e8-3ba5-11f0-9176-000129af8ea5"
+            }
+        ],
+        "created_by_name": "Administrator",
+        "mission_id": "374052c7-38a4-11f0-b4c9-000129af8ea5",
+        "action_type": "if",
+        "created_by_id": "mirconst-guid-0000-0005-users0000000",
+        "guid": "0447511a-3ba5-11f0-9176-000129af8ea5",
+        "uniqueId": "if_2",
+        "description": "If %(compare)s %(operator)s %(value)f",
+        "descriptions": [
+            {
+                "text": "If %(compare)s %(operator)s %(value)f",
+                "conditions": [
+                    {
+                        "operator": "==",
+                        "parameter_id": "compare",
+                        "value": "battery"
+                    }
+                ]
+            },
+            {
+                "text": "If %(compare)s (%(register)s) %(operator)s %(value)f",
+                "conditions": [
+                    {
+                        "operator": "==",
+                        "parameter_id": "compare",
+                        "value": "plc_register"
+                    }
+                ]
+            },
+            {
+                "text": "If %(module)s port %(io_port)f %(operator)s %(value)f",
+                "conditions": [
+                    {
+                        "operator": "==",
+                        "parameter_id": "compare",
+                        "value": "io_module"
+                    }
+                ]
+            }
+        ],
+        "name": "If",
+        "color": "#9333EA",
+        "icon": {
+            "key": null,
+            "props": {},
+            "_owner": null,
+            "_store": {}
+        },
+        "status": 0
+    },
+    {
+        "priority": 3,
+        "allowed_methods": [
+            "PUT",
+            "GET",
+            "DELETE"
+        ],
+        "scope_reference": "0448f8e8-3ba5-11f0-9176-000129af8ea5",
+        "parameters": [
+            {
+                "id": "position",
+                "type": "Reference",
+                "help": "Select a position from the drop-down list, or select the <b>XYZ</b> icon to define a variable.",
+                "name": "Position",
+                "constraints": {
+                    "body": {
+                        "filters": [
+                            {
+                                "operator": "IN",
+                                "fieldname": "type_id",
+                                "value": [
+                                    0,
+                                    1,
+                                    5,
+                                    7,
+                                    9,
+                                    11,
+                                    13,
+                                    16,
+                                    18,
+                                    20,
+                                    22,
+                                    25,
+                                    26,
+                                    42
+                                ]
+                            }
+                        ]
+                    },
+                    "value_field": "guid",
+                    "name_field": "name",
+                    "url": "/positions/search",
+                    "choices": [
+                        {
+                            "name": "Config position",
+                            "value": "mirconst-guid-0000-0001-positions000"
+                        },
+                        {
+                            "name": "BB",
+                            "value": "30cc460e-753a-11ed-938a-000129af8ea5"
+                        },
+                        {
+                            "name": "TT",
+                            "value": "c4139848-753a-11ed-938a-000129af8ea5"
+                        },
+                        {
+                            "name": "CC",
+                            "value": "4dcef373-753b-11ed-938a-000129af8ea5"
+                        },
+                        {
+                            "name": "DD",
+                            "value": "54654780-753b-11ed-938a-000129af8ea5"
+                        },
+                        {
+                            "name": "EE",
+                            "value": "5d3e56fc-753b-11ed-938a-000129af8ea5"
+                        },
+                        {
+                            "name": "Tram24V",
+                            "value": "9c2a3648-753c-11ed-938a-000129af8ea5"
+                        },
+                        {
+                            "name": "11",
+                            "value": "3c2019b8-753e-11ed-938a-000129af8ea5"
+                        },
+                        {
+                            "name": "B",
+                            "value": "44953d6a-75d8-11ed-9fb2-000129af8ea5"
+                        },
+                        {
+                            "name": "C",
+                            "value": "52085258-75d8-11ed-9fb2-000129af8ea5"
+                        },
+                        {
+                            "name": "A",
+                            "value": "f304ebe4-75dd-11ed-9fb2-000129af8ea5"
+                        },
+                        {
+                            "name": "An_Charger",
+                            "value": "b2ee0882-75e5-11ed-9fb2-000129af8ea5"
+                        },
+                        {
+                            "name": "An_map_p0",
+                            "value": "e4d8727e-75ff-11ed-a088-000129af8ea5"
+                        },
+                        {
+                            "name": "target",
+                            "value": "1d7298ee-7601-11ed-a088-000129af8ea5"
+                        },
+                        {
+                            "name": "A_Target",
+                            "value": "a2cd0818-7602-11ed-a088-000129af8ea5"
+                        },
+                        {
+                            "name": "B_target",
+                            "value": "bdecbfba-7602-11ed-a088-000129af8ea5"
+                        },
+                        {
+                            "name": "C-Target",
+                            "value": "fd25935f-7605-11ed-a088-000129af8ea5"
+                        },
+                        {
+                            "name": "Charge24V",
+                            "value": "9b14fb01-760d-11ed-a088-000129af8ea5"
+                        },
+                        {
+                            "name": "D_Charger",
+                            "value": "e8496d27-760d-11ed-a088-000129af8ea5"
+                        },
+                        {
+                            "name": "An_P5",
+                            "value": "9685989c-760e-11ed-a088-000129af8ea5"
+                        },
+                        {
+                            "name": "BB",
+                            "value": "d1e5dfc5-7c5c-11ed-8c6e-000129af8ea5"
+                        },
+                        {
+                            "name": "AA",
+                            "value": "da0f0fbe-7c5c-11ed-8c6e-000129af8ea5"
+                        },
+                        {
+                            "name": "CB",
+                            "value": "fea2fe00-7c5c-11ed-8c6e-000129af8ea5"
+                        },
+                        {
+                            "name": "SAC",
+                            "value": "02321c0c-7c5e-11ed-8c6e-000129af8ea5"
+                        },
+                        {
+                            "name": "CC",
+                            "value": "5c37f64b-7c5f-11ed-8c6e-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-1",
+                            "value": "333eab23-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-2",
+                            "value": "4d7d2e5f-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-3",
+                            "value": "5b8ba886-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-4",
+                            "value": "62d07eeb-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-5",
+                            "value": "689bed41-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-6",
+                            "value": "6e09b7b2-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-7",
+                            "value": "7a4ed5a1-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-8",
+                            "value": "8e6e23ff-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-9",
+                            "value": "95d8e087-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-10",
+                            "value": "9e488359-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-11",
+                            "value": "ac9143f9-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-12",
+                            "value": "b5a5ddc2-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-13",
+                            "value": "bbc7cca7-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-14",
+                            "value": "c10d432b-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-15",
+                            "value": "c7a46485-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-16",
+                            "value": "d2a28fff-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-17",
+                            "value": "d9eb6590-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-18",
+                            "value": "e294cbab-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-19",
+                            "value": "e7a681b1-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-20",
+                            "value": "f1d79500-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-21",
+                            "value": "0caad605-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-21",
+                            "value": "1e78320d-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-22",
+                            "value": "224afb5f-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-23",
+                            "value": "29120490-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-24",
+                            "value": "3057844c-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-25",
+                            "value": "3551f800-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-26",
+                            "value": "3aa66d2e-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-27",
+                            "value": "3e1fe98d-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-28",
+                            "value": "423c3835-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-29",
+                            "value": "4af2c2c1-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-30",
+                            "value": "5660e500-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-31",
+                            "value": "5d4f3b65-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-32",
+                            "value": "6275f161-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "Test",
+                            "value": "1e38a391-2c64-11ee-831f-000129af8ea5"
+                        },
+                        {
+                            "name": "P1-811",
+                            "value": "9fcefb39-4436-11ee-b236-000129af8ea5"
+                        },
+                        {
+                            "name": "P2-811",
+                            "value": "a84a69e1-4436-11ee-b236-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-P1",
+                            "value": "5b25ce57-47f3-11ee-89b0-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-P2",
+                            "value": "62a538ce-47f3-11ee-89b0-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-P3",
+                            "value": "69d5903d-47f3-11ee-89b0-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-P4",
+                            "value": "71adfab2-47f3-11ee-89b0-000129af8ea5"
+                        },
+                        {
+                            "name": "sac2",
+                            "value": "58f888b8-f33d-11ee-9e69-000129af8ea5"
+                        },
+                        {
+                            "name": "so3",
+                            "value": "38d8d4e4-00a5-11ef-9f0a-000129af8ea5"
+                        },
+                        {
+                            "name": "so0",
+                            "value": "f992a818-0ba2-11ef-86e2-000129af8ea5"
+                        },
+                        {
+                            "name": "quay0",
+                            "value": "8e7c88b8-0ba8-11ef-86e2-000129af8ea5"
+                        },
+                        {
+                            "name": "lt",
+                            "value": "f0901fb9-0bb1-11ef-86e2-000129af8ea5"
+                        },
+                        {
+                            "name": "vv",
+                            "value": "a17855c3-0bb2-11ef-86e2-000129af8ea5"
+                        },
+                        {
+                            "name": "u",
+                            "value": "a0088120-0ed6-11ef-b5a1-000129af8ea5"
+                        },
+                        {
+                            "name": "t",
+                            "value": "bfa9d5b0-0ed6-11ef-b5a1-000129af8ea5"
+                        },
+                        {
+                            "name": "sac",
+                            "value": "1cc8e001-16ae-11ef-bf45-000129af8ea5"
+                        },
+                        {
+                            "name": "t",
+                            "value": "b94b9d9d-1c16-11ef-ad01-000129af8ea5"
+                        },
+                        {
+                            "name": "q",
+                            "value": "e2ab486c-1dbd-11ef-af25-000129af8ea5"
+                        },
+                        {
+                            "name": "K",
+                            "value": "814aecbe-2198-11ef-bbf9-000129af8ea5"
+                        },
+                        {
+                            "name": "k1",
+                            "value": "25836735-219a-11ef-bbf9-000129af8ea5"
+                        },
+                        {
+                            "name": "k2",
+                            "value": "3bd4716e-219a-11ef-bbf9-000129af8ea5"
+                        },
+                        {
+                            "name": "rt",
+                            "value": "9e1c6d5f-2a45-11ef-999a-000129af8ea5"
+                        },
+                        {
+                            "name": "oo",
+                            "value": "1a3b9736-2a48-11ef-999a-000129af8ea5"
+                        },
+                        {
+                            "name": "ghgh",
+                            "value": "e24b0aa0-2c97-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "P1",
+                            "value": "353db769-2c99-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "V",
+                            "value": "8042b20a-2c99-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "L",
+                            "value": "a8a164f8-2c99-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "VL",
+                            "value": "c993a862-2c99-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "P2",
+                            "value": "f0ea9301-2c99-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "Sac",
+                            "value": "0c5ef5c0-2c9a-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "P3",
+                            "value": "2f50eedd-2c9f-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "p1",
+                            "value": "4c70e81a-2ca6-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "p2",
+                            "value": "525fbf77-2ca6-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "1",
+                            "value": "73b2310d-2ca6-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "2",
+                            "value": "937a0993-2ca6-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "3",
+                            "value": "a15f7eb7-2ca6-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "4",
+                            "value": "adfc3e19-2ca6-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "4",
+                            "value": "b92cb902-2ca6-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "Lay hang",
+                            "value": "8e12fe5c-3063-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "D1",
+                            "value": "e321ba74-3077-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "p1",
+                            "value": "e84a204c-3077-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "D2",
+                            "value": "ed1db1c1-3077-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "D3",
+                            "value": "ff7be74c-3077-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "D4",
+                            "value": "0641d386-3078-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "D5",
+                            "value": "16beb100-3078-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "D6",
+                            "value": "1dddce57-3078-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "Sac612",
+                            "value": "2cfd8aae-3078-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "Nhan hang",
+                            "value": "7af709e9-3078-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "Chờ",
+                            "value": "b9c2fd4d-3078-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "Nhan hang 1",
+                            "value": "e3c0b651-3078-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "Lay hang 1",
+                            "value": "2a76eda6-3079-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "v1",
+                            "value": "a163310b-3b70-11ef-9f22-000129af8ea5"
+                        },
+                        {
+                            "name": "vl1",
+                            "value": "582087be-3b96-11ef-893b-000129af8ea5"
+                        },
+                        {
+                            "name": "VL_ss",
+                            "value": "df58719b-3dc0-11ef-90c2-000129af8ea5"
+                        },
+                        {
+                            "name": "10m20mvl",
+                            "value": "0ba39922-3dd4-11ef-90c2-000129af8ea5"
+                        },
+                        {
+                            "name": "10m",
+                            "value": "39f173fa-3dd4-11ef-90c2-000129af8ea5"
+                        },
+                        {
+                            "name": "Charge Dock",
+                            "value": "1c1caf15-fa81-11ef-b058-000129af8ea5"
+                        },
+                        {
+                            "name": "Position 1",
+                            "value": "1eaf4128-fa89-11ef-b058-000129af8ea5"
+                        },
+                        {
+                            "name": "Position 3",
+                            "value": "29fda235-fa89-11ef-b058-000129af8ea5"
+                        },
+                        {
+                            "name": "Position 4",
+                            "value": "30399fa7-fa89-11ef-b058-000129af8ea5"
+                        },
+                        {
+                            "name": "Position 5",
+                            "value": "f6b12465-fa8a-11ef-b058-000129af8ea5"
+                        },
+                        {
+                            "name": "Position 7",
+                            "value": "7ec3d7b9-fb37-11ef-a27c-000129af8ea5"
+                        },
+                        {
+                            "name": "Position 8",
+                            "value": "8e836b5f-fb37-11ef-a27c-000129af8ea5"
+                        },
+                        {
+                            "name": "Position 9",
+                            "value": "94f6370f-fb37-11ef-a27c-000129af8ea5"
+                        },
+                        {
+                            "name": "Position 2",
+                            "value": "197221dd-fe93-11ef-9736-000129af8ea5"
+                        },
+                        {
+                            "name": "position 11",
+                            "value": "0c9ca3a6-0bc2-11f0-8046-000129af8ea5"
+                        },
+                        {
+                            "name": "Position 15",
+                            "value": "528e2602-0fcc-11f0-8cf1-000129af8ea5"
+                        },
+                        {
+                            "name": "pos1",
+                            "value": "6aaf9bbb-1f8e-11f0-ac01-000129af8ea5"
+                        },
+                        {
+                            "name": "pos2",
+                            "value": "828afebe-1f8e-11f0-ac01-000129af8ea5"
+                        },
+                        {
+                            "name": "pos5",
+                            "value": "d036fd32-1f8e-11f0-ac01-000129af8ea5"
+                        },
+                        {
+                            "name": "start",
+                            "value": "ced89ad0-3645-11f0-adb5-000129af8ea5"
+                        },
+                        {
+                            "name": "position 1",
+                            "value": "0581fb8b-487d-11f0-afb0-000129af8ea5"
+                        },
+                        {
+                            "name": "position 2",
+                            "value": "2137f6a7-487e-11f0-afb0-000129af8ea5"
+                        },
+                        {
+                            "name": "position 3",
+                            "value": "aa4fda0a-487e-11f0-afb0-000129af8ea5"
+                        },
+                        {
+                            "name": "position 4",
+                            "value": "7e575cf7-4880-11f0-afb0-000129af8ea5"
+                        },
+                        {
+                            "name": "position 5",
+                            "value": "d1651e14-4880-11f0-afb0-000129af8ea5"
+                        },
+                        {
+                            "name": "position 6",
+                            "value": "a88e668f-4881-11f0-afb0-000129af8ea5"
+                        },
+                        {
+                            "name": "position 7",
+                            "value": "62610283-4882-11f0-afb0-000129af8ea5"
+                        },
+                        {
+                            "name": "dock",
+                            "value": "a57fde83-4c47-11f0-9c92-000129af8ea5"
+                        }
+                    ],
+                    "method": "POST"
+                },
+                "value": "30cc460e-753a-11ed-938a-000129af8ea5",
+                "input_name": null,
+                "guid": "04681e42-3ba5-11f0-9176-000129af8ea5"
+            },
+            {
+                "help": "Select a position, <b>Entry</b> or <b>Main</b>, from the list, or select the <b>XYZ</b> icon to define a variable.",
+                "name": "Cart position",
+                "dependencies": [
+                    {
+                        "dependency_id": "position",
+                        "value": [
+                            1
+                        ],
+                        "check_field": "type_id"
+                    }
+                ],
+                "type": "Selection",
+                "id": "cart_entry_position",
+                "constraints": {
+                    "default": "main",
+                    "choices": [
+                        {
+                            "name": "Main",
+                            "value": "main"
+                        },
+                        {
+                            "name": "Front",
+                            "value": "entry"
+                        },
+                        {
+                            "name": "Left",
+                            "value": "left"
+                        },
+                        {
+                            "name": "Right",
+                            "value": "right"
+                        }
+                    ]
+                },
+                "value": "main",
+                "input_name": null,
+                "guid": "0468437f-3ba5-11f0-9176-000129af8ea5"
+            },
+            {
+                "help": "Select a position, <b>Entry</b> or <b>Main</b>, from the list, or select the <b>XYZ</b> icon to define a variable.",
+                "name": "Position type",
+                "dependencies": [
+                    {
+                        "dependency_id": "position",
+                        "value": [
+                            5,
+                            22
+                        ],
+                        "check_field": "type_id"
+                    }
+                ],
+                "type": "Selection",
+                "id": "main_or_entry_position",
+                "constraints": {
+                    "default": "main",
+                    "choices": [
+                        {
+                            "name": "Main",
+                            "value": "main"
+                        },
+                        {
+                            "name": "Entry",
+                            "value": "entry"
+                        }
+                    ]
+                },
+                "value": "main",
+                "input_name": null,
+                "guid": "046869a4-3ba5-11f0-9176-000129af8ea5"
+            },
+            {
+                "help": "Select a position, <b>Entry</b> or <b>Main</b>, from the list, or select the <b>XYZ</b> icon to define a variable.",
+                "name": "Position type",
+                "dependencies": [
+                    {
+                        "dependency_id": "position",
+                        "value": [
+                            7,
+                            9,
+                            11,
+                            13,
+                            16,
+                            18,
+                            20,
+                            24
+                        ],
+                        "check_field": "type_id"
+                    }
+                ],
+                "type": "Selection",
+                "id": "marker_entry_position",
+                "constraints": {
+                    "default": "entry",
+                    "choices": [
+                        {
+                            "name": "Entry",
+                            "value": "entry"
+                        }
+                    ]
+                },
+                "value": "entry",
+                "input_name": null,
+                "guid": "046888a4-3ba5-11f0-9176-000129af8ea5"
+            },
+            {
+                "id": "retries",
+                "type": "Integer",
+                "help": "Set the number of times the robot should try to reach the position if the path is blocked, or select the <b>XYZ</b> icon to define a variable. If, after the set number of retries, the path is still blocked, the robot stops and produces an error message.",
+                "name": "Retries (Blocked Path)",
+                "constraints": {
+                    "default": 10,
+                    "max": 1000,
+                    "min": 0
+                },
+                "value": 10,
+                "input_name": null,
+                "guid": "0468a4dd-3ba5-11f0-9176-000129af8ea5"
+            },
+            {
+                "id": "distance_threshold",
+                "type": "Float",
+                "help": "Depending on how accurately the robot is required to position itself on the goal position, the threshold can be increased or decreased. The default is 0.1 m.",
+                "name": "Distance threshold",
+                "constraints": {
+                    "default": 0.1,
+                    "max": 3,
+                    "min": 0.1
+                },
+                "value": 0.1,
+                "input_name": null,
+                "guid": "046c9471-3ba5-11f0-9176-000129af8ea5"
+            }
+        ],
+        "created_by_name": "Administrator",
+        "mission_id": "374052c7-38a4-11f0-b4c9-000129af8ea5",
+        "action_type": "move",
+        "created_by_id": "mirconst-guid-0000-0005-users0000000",
+        "guid": "0467a8b9-3ba5-11f0-9176-000129af8ea5",
+        "uniqueId": "move_3",
+        "description": "Move to %(position)s",
+        "descriptions": null,
+        "name": "Move",
+        "color": "#2563EB",
+        "icon": {
+            "key": null,
+            "props": {},
+            "_owner": null,
+            "_store": {}
+        },
+        "status": 0
+    },
+    {
+        "priority": 4,
+        "allowed_methods": [
+            "PUT",
+            "GET",
+            "DELETE"
+        ],
+        "scope_reference": null,
+        "parameters": [
+            {
+                "id": "minimum_time",
+                "type": "Duration",
+                "help": "<p>Set a minimum amount of time the robot should charge before it moves on, or select the <b>XYZ</b> icon to define a variable. The system will compare the set minimum time with the minimum percentage, and when the first of those two requirements is fulfilled, the mission continues.</p><p>You may skip defining a minimum time by selecting the<b> Ignore value </b>check box. The robot will then charge until the minimum battery percentage level is reached.</p>",
+                "name": "Minimum Time",
+                "constraints": {
+                    "default": "00:10:00.000000",
+                    "max": "24:59:59.000000",
+                    "null_option": "Ignore value",
+                    "nullable": true,
+                    "min": "00:00:00.000000"
+                },
+                "value": "00:10:00.000000",
+                "input_name": null,
+                "guid": "3bbefb40-3bbd-11f0-9176-000129af8ea5"
+            },
+            {
+                "id": "minimum_percentage",
+                "type": "Float",
+                "help": "Enter the minimum battery percentage the robot should charge to before it moves on, or select the <b>XYZ </b>icon to define a variable. The system will compare the set minimum percentage with the minimum time, and when the first of those two requirements is fulfilled, the mission continues. You may skip defining a minimum percentage by selecting the <b>Ignore value</b> check box. The robot will then charge until the minimum charge time is reached.",
+                "name": "Minimum Percentage",
+                "constraints": {
+                    "default": 25,
+                    "max": 100,
+                    "null_option": "Ignore value",
+                    "nullable": true,
+                    "min": 0
+                },
+                "value": 25,
+                "input_name": null,
+                "guid": "3bbf24dc-3bbd-11f0-9176-000129af8ea5"
+            },
+            {
+                "id": "charge_until_new_mission",
+                "type": "Boolean",
+                "help": "<p>Select this check box if you want the robot to continue charging until it receives a new mission. If selected, the robot stays in the charging station until it receives a new mission, but not until at least one of the criteria for minimum time or minimum percentage is reached.</p><p>If deselected, the robot leaves the charging station when either of the two charging criteria are reached regardless of queued missions.</p>",
+                "name": "Charge until new mission in queue",
+                "constraints": {
+                    "default": false
+                },
+                "value": false,
+                "input_name": null,
+                "guid": "3bbf54cf-3bbd-11f0-9176-000129af8ea5"
+            }
+        ],
+        "created_by_name": "Administrator",
+        "mission_id": "374052c7-38a4-11f0-b4c9-000129af8ea5",
+        "action_type": "charging",
+        "created_by_id": "mirconst-guid-0000-0005-users0000000",
+        "guid": "3bbe8510-3bbd-11f0-9176-000129af8ea5",
+        "uniqueId": "charging_4",
+        "description": "Charging",
+        "descriptions": null,
+        "name": "Charging",
+        "color": "",
+        "icon": null,
+        "status": 0
+    },
+    {
+        "priority": 5,
+        "allowed_methods": [
+            "PUT",
+            "GET",
+            "DELETE"
+        ],
+        "scope_reference": null,
+        "parameters": [
+            {
+                "id": "compare",
+                "type": "Selection",
+                "help": "Select either <b>Battery Percentage</b>, <b>PLC Register</b>, <b>Pending Missions</b>, or <b>I/O input</b>, or select the <b>XYZ </b>icon to define a variable.",
+                "name": "Compare",
+                "constraints": {
+                    "default": "battery",
+                    "choices": [
+                        {
+                            "name": "Battery Percentage",
+                            "value": "battery"
+                        },
+                        {
+                            "name": "PLC Register",
+                            "value": "plc_register"
+                        },
+                        {
+                            "name": "Pending missions",
+                            "value": "mission_queue_length"
+                        },
+                        {
+                            "name": "I/O input",
+                            "value": "io_module"
+                        }
+                    ]
+                },
+                "value": "battery",
+                "input_name": null,
+                "guid": "9d3f7a64-3c7e-11f0-9718-000129af8ea5"
+            },
+            {
+                "help": "For I/O inputs, select an I/O module from the drop-down list, or select the <b>XYZ</b> icon to define a variable.",
+                "name": "Module",
+                "dependencies": [
+                    {
+                        "dependency_id": "compare",
+                        "value": "io_module"
+                    }
+                ],
+                "type": "Reference",
+                "id": "module",
+                "constraints": {
+                    "url": "/io_modules",
+                    "value_field": "guid",
+                    "name_field": "name",
+                    "method": "GET",
+                    "choices": [
+                        {
+                            "name": "ur5",
+                            "value": "339096ae-2ca7-11ef-95a5-000129af8ea5"
+                        }
+                    ]
+                },
+                "value": "339096ae-2ca7-11ef-95a5-000129af8ea5",
+                "input_name": null,
+                "guid": "9d3fa61b-3c7e-11f0-9718-000129af8ea5"
+            },
+            {
+                "help": "Select I/O port",
+                "name": "I/O port",
+                "dependencies": [
+                    {
+                        "dependency_id": "compare",
+                        "value": "io_module"
+                    }
+                ],
+                "type": "Integer",
+                "id": "io_port",
+                "constraints": {
+                    "default": 0,
+                    "max": 99,
+                    "min": 0
+                },
+                "value": "0",
+                "input_name": null,
+                "guid": "9d3fcb1b-3c7e-11f0-9718-000129af8ea5"
+            },
+            {
+                "help": "For PLC registers: enter the required index number (Integer registers 1-100, Floating point registers 101-200), or select the <b>XYZ </b>icon to define a variable.",
+                "name": "Register",
+                "dependencies": [
+                    {
+                        "dependency_id": "compare",
+                        "value": "plc_register"
+                    }
+                ],
+                "type": "Reference",
+                "id": "register",
+                "constraints": {
+                    "value_field": "id",
+                    "name_field": "label",
+                    "default": 1,
+                    "choices": [
+                        {
+                            "name": "",
+                            "value": 1
+                        },
+                        {
+                            "name": "",
+                            "value": 2
+                        },
+                        {
+                            "name": "",
+                            "value": 3
+                        },
+                        {
+                            "name": "",
+                            "value": 4
+                        },
+                        {
+                            "name": "",
+                            "value": 5
+                        },
+                        {
+                            "name": "",
+                            "value": 6
+                        },
+                        {
+                            "name": "",
+                            "value": 7
+                        },
+                        {
+                            "name": "",
+                            "value": 8
+                        },
+                        {
+                            "name": "",
+                            "value": 9
+                        },
+                        {
+                            "name": "",
+                            "value": 10
+                        },
+                        {
+                            "name": "",
+                            "value": 11
+                        },
+                        {
+                            "name": "",
+                            "value": 12
+                        },
+                        {
+                            "name": "",
+                            "value": 13
+                        },
+                        {
+                            "name": "",
+                            "value": 14
+                        },
+                        {
+                            "name": "",
+                            "value": 15
+                        },
+                        {
+                            "name": "",
+                            "value": 16
+                        },
+                        {
+                            "name": "",
+                            "value": 17
+                        },
+                        {
+                            "name": "",
+                            "value": 18
+                        },
+                        {
+                            "name": "",
+                            "value": 19
+                        },
+                        {
+                            "name": "",
+                            "value": 20
+                        },
+                        {
+                            "name": "",
+                            "value": 21
+                        },
+                        {
+                            "name": "",
+                            "value": 22
+                        },
+                        {
+                            "name": "",
+                            "value": 23
+                        },
+                        {
+                            "name": "",
+                            "value": 24
+                        },
+                        {
+                            "name": "",
+                            "value": 25
+                        },
+                        {
+                            "name": "",
+                            "value": 26
+                        },
+                        {
+                            "name": "",
+                            "value": 27
+                        },
+                        {
+                            "name": "",
+                            "value": 28
+                        },
+                        {
+                            "name": "",
+                            "value": 29
+                        },
+                        {
+                            "name": "",
+                            "value": 30
+                        },
+                        {
+                            "name": "",
+                            "value": 31
+                        },
+                        {
+                            "name": "",
+                            "value": 32
+                        },
+                        {
+                            "name": "",
+                            "value": 33
+                        },
+                        {
+                            "name": "",
+                            "value": 34
+                        },
+                        {
+                            "name": "",
+                            "value": 35
+                        },
+                        {
+                            "name": "",
+                            "value": 36
+                        },
+                        {
+                            "name": "",
+                            "value": 37
+                        },
+                        {
+                            "name": "",
+                            "value": 38
+                        },
+                        {
+                            "name": "",
+                            "value": 39
+                        },
+                        {
+                            "name": "",
+                            "value": 40
+                        },
+                        {
+                            "name": "",
+                            "value": 41
+                        },
+                        {
+                            "name": "",
+                            "value": 42
+                        },
+                        {
+                            "name": "",
+                            "value": 43
+                        },
+                        {
+                            "name": "",
+                            "value": 44
+                        },
+                        {
+                            "name": "",
+                            "value": 45
+                        },
+                        {
+                            "name": "",
+                            "value": 46
+                        },
+                        {
+                            "name": "",
+                            "value": 47
+                        },
+                        {
+                            "name": "",
+                            "value": 48
+                        },
+                        {
+                            "name": "",
+                            "value": 49
+                        },
+                        {
+                            "name": "",
+                            "value": 50
+                        },
+                        {
+                            "name": "",
+                            "value": 51
+                        },
+                        {
+                            "name": "",
+                            "value": 52
+                        },
+                        {
+                            "name": "",
+                            "value": 53
+                        },
+                        {
+                            "name": "",
+                            "value": 54
+                        },
+                        {
+                            "name": "",
+                            "value": 55
+                        },
+                        {
+                            "name": "",
+                            "value": 56
+                        },
+                        {
+                            "name": "",
+                            "value": 57
+                        },
+                        {
+                            "name": "",
+                            "value": 58
+                        },
+                        {
+                            "name": "",
+                            "value": 59
+                        },
+                        {
+                            "name": "",
+                            "value": 60
+                        },
+                        {
+                            "name": "",
+                            "value": 61
+                        },
+                        {
+                            "name": "",
+                            "value": 62
+                        },
+                        {
+                            "name": "",
+                            "value": 63
+                        },
+                        {
+                            "name": "",
+                            "value": 64
+                        },
+                        {
+                            "name": "",
+                            "value": 65
+                        },
+                        {
+                            "name": "",
+                            "value": 66
+                        },
+                        {
+                            "name": "",
+                            "value": 67
+                        },
+                        {
+                            "name": "",
+                            "value": 68
+                        },
+                        {
+                            "name": "",
+                            "value": 69
+                        },
+                        {
+                            "name": "",
+                            "value": 70
+                        },
+                        {
+                            "name": "",
+                            "value": 71
+                        },
+                        {
+                            "name": "",
+                            "value": 72
+                        },
+                        {
+                            "name": "",
+                            "value": 73
+                        },
+                        {
+                            "name": "",
+                            "value": 74
+                        },
+                        {
+                            "name": "",
+                            "value": 75
+                        },
+                        {
+                            "name": "",
+                            "value": 76
+                        },
+                        {
+                            "name": "",
+                            "value": 77
+                        },
+                        {
+                            "name": "",
+                            "value": 78
+                        },
+                        {
+                            "name": "",
+                            "value": 79
+                        },
+                        {
+                            "name": "",
+                            "value": 80
+                        },
+                        {
+                            "name": "",
+                            "value": 81
+                        },
+                        {
+                            "name": "",
+                            "value": 82
+                        },
+                        {
+                            "name": "",
+                            "value": 83
+                        },
+                        {
+                            "name": "",
+                            "value": 84
+                        },
+                        {
+                            "name": "",
+                            "value": 85
+                        },
+                        {
+                            "name": "",
+                            "value": 86
+                        },
+                        {
+                            "name": "",
+                            "value": 87
+                        },
+                        {
+                            "name": "",
+                            "value": 88
+                        },
+                        {
+                            "name": "",
+                            "value": 89
+                        },
+                        {
+                            "name": "",
+                            "value": 90
+                        },
+                        {
+                            "name": "",
+                            "value": 91
+                        },
+                        {
+                            "name": "",
+                            "value": 92
+                        },
+                        {
+                            "name": "",
+                            "value": 93
+                        },
+                        {
+                            "name": "",
+                            "value": 94
+                        },
+                        {
+                            "name": "",
+                            "value": 95
+                        },
+                        {
+                            "name": "",
+                            "value": 96
+                        },
+                        {
+                            "name": "",
+                            "value": 97
+                        },
+                        {
+                            "name": "",
+                            "value": 98
+                        },
+                        {
+                            "name": "",
+                            "value": 99
+                        },
+                        {
+                            "name": "",
+                            "value": 100
+                        },
+                        {
+                            "name": "",
+                            "value": 101
+                        },
+                        {
+                            "name": "",
+                            "value": 102
+                        },
+                        {
+                            "name": "",
+                            "value": 103
+                        },
+                        {
+                            "name": "",
+                            "value": 104
+                        },
+                        {
+                            "name": "",
+                            "value": 105
+                        },
+                        {
+                            "name": "",
+                            "value": 106
+                        },
+                        {
+                            "name": "",
+                            "value": 107
+                        },
+                        {
+                            "name": "",
+                            "value": 108
+                        },
+                        {
+                            "name": "",
+                            "value": 109
+                        },
+                        {
+                            "name": "",
+                            "value": 110
+                        },
+                        {
+                            "name": "",
+                            "value": 111
+                        },
+                        {
+                            "name": "",
+                            "value": 112
+                        },
+                        {
+                            "name": "",
+                            "value": 113
+                        },
+                        {
+                            "name": "",
+                            "value": 114
+                        },
+                        {
+                            "name": "",
+                            "value": 115
+                        },
+                        {
+                            "name": "",
+                            "value": 116
+                        },
+                        {
+                            "name": "",
+                            "value": 117
+                        },
+                        {
+                            "name": "",
+                            "value": 118
+                        },
+                        {
+                            "name": "",
+                            "value": 119
+                        },
+                        {
+                            "name": "",
+                            "value": 120
+                        },
+                        {
+                            "name": "",
+                            "value": 121
+                        },
+                        {
+                            "name": "",
+                            "value": 122
+                        },
+                        {
+                            "name": "",
+                            "value": 123
+                        },
+                        {
+                            "name": "",
+                            "value": 124
+                        },
+                        {
+                            "name": "",
+                            "value": 125
+                        },
+                        {
+                            "name": "",
+                            "value": 126
+                        },
+                        {
+                            "name": "",
+                            "value": 127
+                        },
+                        {
+                            "name": "",
+                            "value": 128
+                        },
+                        {
+                            "name": "",
+                            "value": 129
+                        },
+                        {
+                            "name": "",
+                            "value": 130
+                        },
+                        {
+                            "name": "",
+                            "value": 131
+                        },
+                        {
+                            "name": "",
+                            "value": 132
+                        },
+                        {
+                            "name": "",
+                            "value": 133
+                        },
+                        {
+                            "name": "",
+                            "value": 134
+                        },
+                        {
+                            "name": "",
+                            "value": 135
+                        },
+                        {
+                            "name": "",
+                            "value": 136
+                        },
+                        {
+                            "name": "",
+                            "value": 137
+                        },
+                        {
+                            "name": "",
+                            "value": 138
+                        },
+                        {
+                            "name": "",
+                            "value": 139
+                        },
+                        {
+                            "name": "",
+                            "value": 140
+                        },
+                        {
+                            "name": "",
+                            "value": 141
+                        },
+                        {
+                            "name": "",
+                            "value": 142
+                        },
+                        {
+                            "name": "",
+                            "value": 143
+                        },
+                        {
+                            "name": "",
+                            "value": 144
+                        },
+                        {
+                            "name": "",
+                            "value": 145
+                        },
+                        {
+                            "name": "",
+                            "value": 146
+                        },
+                        {
+                            "name": "",
+                            "value": 147
+                        },
+                        {
+                            "name": "",
+                            "value": 148
+                        },
+                        {
+                            "name": "",
+                            "value": 149
+                        },
+                        {
+                            "name": "",
+                            "value": 150
+                        },
+                        {
+                            "name": "",
+                            "value": 151
+                        },
+                        {
+                            "name": "",
+                            "value": 152
+                        },
+                        {
+                            "name": "",
+                            "value": 153
+                        },
+                        {
+                            "name": "",
+                            "value": 154
+                        },
+                        {
+                            "name": "",
+                            "value": 155
+                        },
+                        {
+                            "name": "",
+                            "value": 156
+                        },
+                        {
+                            "name": "",
+                            "value": 157
+                        },
+                        {
+                            "name": "",
+                            "value": 158
+                        },
+                        {
+                            "name": "",
+                            "value": 159
+                        },
+                        {
+                            "name": "",
+                            "value": 160
+                        },
+                        {
+                            "name": "",
+                            "value": 161
+                        },
+                        {
+                            "name": "",
+                            "value": 162
+                        },
+                        {
+                            "name": "",
+                            "value": 163
+                        },
+                        {
+                            "name": "",
+                            "value": 164
+                        },
+                        {
+                            "name": "",
+                            "value": 165
+                        },
+                        {
+                            "name": "",
+                            "value": 166
+                        },
+                        {
+                            "name": "",
+                            "value": 167
+                        },
+                        {
+                            "name": "",
+                            "value": 168
+                        },
+                        {
+                            "name": "",
+                            "value": 169
+                        },
+                        {
+                            "name": "",
+                            "value": 170
+                        },
+                        {
+                            "name": "",
+                            "value": 171
+                        },
+                        {
+                            "name": "",
+                            "value": 172
+                        },
+                        {
+                            "name": "",
+                            "value": 173
+                        },
+                        {
+                            "name": "",
+                            "value": 174
+                        },
+                        {
+                            "name": "",
+                            "value": 175
+                        },
+                        {
+                            "name": "",
+                            "value": 176
+                        },
+                        {
+                            "name": "",
+                            "value": 177
+                        },
+                        {
+                            "name": "",
+                            "value": 178
+                        },
+                        {
+                            "name": "",
+                            "value": 179
+                        },
+                        {
+                            "name": "",
+                            "value": 180
+                        },
+                        {
+                            "name": "",
+                            "value": 181
+                        },
+                        {
+                            "name": "",
+                            "value": 182
+                        },
+                        {
+                            "name": "",
+                            "value": 183
+                        },
+                        {
+                            "name": "",
+                            "value": 184
+                        },
+                        {
+                            "name": "",
+                            "value": 185
+                        },
+                        {
+                            "name": "",
+                            "value": 186
+                        },
+                        {
+                            "name": "",
+                            "value": 187
+                        },
+                        {
+                            "name": "",
+                            "value": 188
+                        },
+                        {
+                            "name": "",
+                            "value": 189
+                        },
+                        {
+                            "name": "",
+                            "value": 190
+                        },
+                        {
+                            "name": "",
+                            "value": 191
+                        },
+                        {
+                            "name": "",
+                            "value": 192
+                        },
+                        {
+                            "name": "",
+                            "value": 193
+                        },
+                        {
+                            "name": "",
+                            "value": 194
+                        },
+                        {
+                            "name": "",
+                            "value": 195
+                        },
+                        {
+                            "name": "",
+                            "value": 196
+                        },
+                        {
+                            "name": "",
+                            "value": 197
+                        },
+                        {
+                            "name": "",
+                            "value": 198
+                        },
+                        {
+                            "name": "",
+                            "value": 199
+                        },
+                        {
+                            "name": "",
+                            "value": 200
+                        }
+                    ],
+                    "url": "/registers",
+                    "validator": "PLCId",
+                    "method": "GET"
+                },
+                "value": "1",
+                "input_name": null,
+                "guid": "9d3ff2c6-3c7e-11f0-9718-000129af8ea5"
+            },
+            {
+                "id": "operator",
+                "type": "Selection",
+                "help": "<p>Select the arithmetic operator you want to use, or select the <b>XYZ</b> icon to define a variable.</p><p>Operators are arithmetic operators used to specify the compare mission, for example, use the < operator to specify “If Battery percentage is below 50 percent”.</p><p>The available operators are:</p><ul><li>== ‘equal to’</li><li>!= ‘not equal to’</li><li>> ‘greater than’</li><li>>= ‘greater than or equal to’</li><li>< ‘lesser than’</li><li><= ‘lesser than or equal to’.</li></ul>",
+                "name": "Operator",
+                "constraints": {
+                    "default": "==",
+                    "choices": [
+                        {
+                            "name": "==",
+                            "value": "=="
+                        },
+                        {
+                            "name": "!=",
+                            "value": "!="
+                        },
+                        {
+                            "name": ">",
+                            "value": ">"
+                        },
+                        {
+                            "name": ">=",
+                            "value": ">="
+                        },
+                        {
+                            "name": "<",
+                            "value": "<"
+                        },
+                        {
+                            "name": "<=",
+                            "value": "<="
+                        }
+                    ]
+                },
+                "value": "==",
+                "input_name": null,
+                "guid": "9d4021b4-3c7e-11f0-9718-000129af8ea5"
+            },
+            {
+                "id": "value",
+                "type": "Float",
+                "help": "Enter the value for the selected register, or select the <b>XYZ </b>icon to define a variable.",
+                "name": "Value",
+                "constraints": {
+                    "default": 1,
+                    "max": 1000000000,
+                    "min": -1000000000
+                },
+                "value": 1,
+                "input_name": null,
+                "guid": "9d404ee0-3c7e-11f0-9718-000129af8ea5"
+            },
+            {
+                "id": "true",
+                "type": "Scope",
+                "help": "",
+                "name": "True",
+                "constraints": {},
+                "value": "",
+                "input_name": null,
+                "guid": "9d40799a-3c7e-11f0-9718-000129af8ea5"
+            },
+            {
+                "id": "false",
+                "type": "Scope",
+                "help": "",
+                "name": "False",
+                "constraints": {},
+                "value": "",
+                "input_name": null,
+                "guid": "9d40a307-3c7e-11f0-9718-000129af8ea5"
+            }
+        ],
+        "created_by_name": "Administrator",
+        "mission_id": "374052c7-38a4-11f0-b4c9-000129af8ea5",
+        "action_type": "if",
+        "created_by_id": "mirconst-guid-0000-0005-users0000000",
+        "guid": "9d3ec364-3c7e-11f0-9718-000129af8ea5",
+        "uniqueId": "if_5",
+        "description": "If %(compare)s %(operator)s %(value)f",
+        "descriptions": [
+            {
+                "text": "If %(compare)s %(operator)s %(value)f",
+                "conditions": [
+                    {
+                        "operator": "==",
+                        "parameter_id": "compare",
+                        "value": "battery"
+                    }
+                ]
+            },
+            {
+                "text": "If %(compare)s (%(register)s) %(operator)s %(value)f",
+                "conditions": [
+                    {
+                        "operator": "==",
+                        "parameter_id": "compare",
+                        "value": "plc_register"
+                    }
+                ]
+            },
+            {
+                "text": "If %(module)s port %(io_port)f %(operator)s %(value)f",
+                "conditions": [
+                    {
+                        "operator": "==",
+                        "parameter_id": "compare",
+                        "value": "io_module"
+                    }
+                ]
+            }
+        ],
+        "name": "If",
+        "color": "#9333EA",
+        "icon": {
+            "key": null,
+            "props": {},
+            "_owner": null,
+            "_store": {}
+        },
+        "status": 0
+    },
+    {
+        "priority": 6,
+        "allowed_methods": [
+            "PUT",
+            "GET",
+            "DELETE"
+        ],
+        "scope_reference": "9d40799a-3c7e-11f0-9718-000129af8ea5",
+        "parameters": [
+            {
+                "id": "position",
+                "type": "Reference",
+                "help": "Select a position from the drop-down list, or select the <b>XYZ</b> icon to define a variable.",
+                "name": "Position",
+                "constraints": {
+                    "body": {
+                        "filters": [
+                            {
+                                "operator": "IN",
+                                "fieldname": "type_id",
+                                "value": [
+                                    0,
+                                    1,
+                                    5,
+                                    7,
+                                    9,
+                                    11,
+                                    13,
+                                    16,
+                                    18,
+                                    20,
+                                    22,
+                                    25,
+                                    26,
+                                    42
+                                ]
+                            }
+                        ]
+                    },
+                    "value_field": "guid",
+                    "name_field": "name",
+                    "url": "/positions/search",
+                    "choices": [
+                        {
+                            "name": "Config position",
+                            "value": "mirconst-guid-0000-0001-positions000"
+                        },
+                        {
+                            "name": "BB",
+                            "value": "30cc460e-753a-11ed-938a-000129af8ea5"
+                        },
+                        {
+                            "name": "TT",
+                            "value": "c4139848-753a-11ed-938a-000129af8ea5"
+                        },
+                        {
+                            "name": "CC",
+                            "value": "4dcef373-753b-11ed-938a-000129af8ea5"
+                        },
+                        {
+                            "name": "DD",
+                            "value": "54654780-753b-11ed-938a-000129af8ea5"
+                        },
+                        {
+                            "name": "EE",
+                            "value": "5d3e56fc-753b-11ed-938a-000129af8ea5"
+                        },
+                        {
+                            "name": "Tram24V",
+                            "value": "9c2a3648-753c-11ed-938a-000129af8ea5"
+                        },
+                        {
+                            "name": "11",
+                            "value": "3c2019b8-753e-11ed-938a-000129af8ea5"
+                        },
+                        {
+                            "name": "B",
+                            "value": "44953d6a-75d8-11ed-9fb2-000129af8ea5"
+                        },
+                        {
+                            "name": "C",
+                            "value": "52085258-75d8-11ed-9fb2-000129af8ea5"
+                        },
+                        {
+                            "name": "A",
+                            "value": "f304ebe4-75dd-11ed-9fb2-000129af8ea5"
+                        },
+                        {
+                            "name": "An_Charger",
+                            "value": "b2ee0882-75e5-11ed-9fb2-000129af8ea5"
+                        },
+                        {
+                            "name": "An_map_p0",
+                            "value": "e4d8727e-75ff-11ed-a088-000129af8ea5"
+                        },
+                        {
+                            "name": "target",
+                            "value": "1d7298ee-7601-11ed-a088-000129af8ea5"
+                        },
+                        {
+                            "name": "A_Target",
+                            "value": "a2cd0818-7602-11ed-a088-000129af8ea5"
+                        },
+                        {
+                            "name": "B_target",
+                            "value": "bdecbfba-7602-11ed-a088-000129af8ea5"
+                        },
+                        {
+                            "name": "C-Target",
+                            "value": "fd25935f-7605-11ed-a088-000129af8ea5"
+                        },
+                        {
+                            "name": "Charge24V",
+                            "value": "9b14fb01-760d-11ed-a088-000129af8ea5"
+                        },
+                        {
+                            "name": "D_Charger",
+                            "value": "e8496d27-760d-11ed-a088-000129af8ea5"
+                        },
+                        {
+                            "name": "An_P5",
+                            "value": "9685989c-760e-11ed-a088-000129af8ea5"
+                        },
+                        {
+                            "name": "BB",
+                            "value": "d1e5dfc5-7c5c-11ed-8c6e-000129af8ea5"
+                        },
+                        {
+                            "name": "AA",
+                            "value": "da0f0fbe-7c5c-11ed-8c6e-000129af8ea5"
+                        },
+                        {
+                            "name": "CB",
+                            "value": "fea2fe00-7c5c-11ed-8c6e-000129af8ea5"
+                        },
+                        {
+                            "name": "SAC",
+                            "value": "02321c0c-7c5e-11ed-8c6e-000129af8ea5"
+                        },
+                        {
+                            "name": "CC",
+                            "value": "5c37f64b-7c5f-11ed-8c6e-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-1",
+                            "value": "333eab23-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-2",
+                            "value": "4d7d2e5f-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-3",
+                            "value": "5b8ba886-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-4",
+                            "value": "62d07eeb-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-5",
+                            "value": "689bed41-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-6",
+                            "value": "6e09b7b2-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-7",
+                            "value": "7a4ed5a1-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-8",
+                            "value": "8e6e23ff-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-9",
+                            "value": "95d8e087-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-10",
+                            "value": "9e488359-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-11",
+                            "value": "ac9143f9-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-12",
+                            "value": "b5a5ddc2-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-13",
+                            "value": "bbc7cca7-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-14",
+                            "value": "c10d432b-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-15",
+                            "value": "c7a46485-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-16",
+                            "value": "d2a28fff-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-17",
+                            "value": "d9eb6590-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-18",
+                            "value": "e294cbab-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-19",
+                            "value": "e7a681b1-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-20",
+                            "value": "f1d79500-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-21",
+                            "value": "0caad605-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-21",
+                            "value": "1e78320d-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-22",
+                            "value": "224afb5f-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-23",
+                            "value": "29120490-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-24",
+                            "value": "3057844c-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-25",
+                            "value": "3551f800-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-26",
+                            "value": "3aa66d2e-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-27",
+                            "value": "3e1fe98d-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-28",
+                            "value": "423c3835-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-29",
+                            "value": "4af2c2c1-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-30",
+                            "value": "5660e500-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-31",
+                            "value": "5d4f3b65-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-32",
+                            "value": "6275f161-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "Test",
+                            "value": "1e38a391-2c64-11ee-831f-000129af8ea5"
+                        },
+                        {
+                            "name": "P1-811",
+                            "value": "9fcefb39-4436-11ee-b236-000129af8ea5"
+                        },
+                        {
+                            "name": "P2-811",
+                            "value": "a84a69e1-4436-11ee-b236-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-P1",
+                            "value": "5b25ce57-47f3-11ee-89b0-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-P2",
+                            "value": "62a538ce-47f3-11ee-89b0-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-P3",
+                            "value": "69d5903d-47f3-11ee-89b0-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-P4",
+                            "value": "71adfab2-47f3-11ee-89b0-000129af8ea5"
+                        },
+                        {
+                            "name": "sac2",
+                            "value": "58f888b8-f33d-11ee-9e69-000129af8ea5"
+                        },
+                        {
+                            "name": "so3",
+                            "value": "38d8d4e4-00a5-11ef-9f0a-000129af8ea5"
+                        },
+                        {
+                            "name": "so0",
+                            "value": "f992a818-0ba2-11ef-86e2-000129af8ea5"
+                        },
+                        {
+                            "name": "quay0",
+                            "value": "8e7c88b8-0ba8-11ef-86e2-000129af8ea5"
+                        },
+                        {
+                            "name": "lt",
+                            "value": "f0901fb9-0bb1-11ef-86e2-000129af8ea5"
+                        },
+                        {
+                            "name": "vv",
+                            "value": "a17855c3-0bb2-11ef-86e2-000129af8ea5"
+                        },
+                        {
+                            "name": "u",
+                            "value": "a0088120-0ed6-11ef-b5a1-000129af8ea5"
+                        },
+                        {
+                            "name": "t",
+                            "value": "bfa9d5b0-0ed6-11ef-b5a1-000129af8ea5"
+                        },
+                        {
+                            "name": "sac",
+                            "value": "1cc8e001-16ae-11ef-bf45-000129af8ea5"
+                        },
+                        {
+                            "name": "t",
+                            "value": "b94b9d9d-1c16-11ef-ad01-000129af8ea5"
+                        },
+                        {
+                            "name": "q",
+                            "value": "e2ab486c-1dbd-11ef-af25-000129af8ea5"
+                        },
+                        {
+                            "name": "K",
+                            "value": "814aecbe-2198-11ef-bbf9-000129af8ea5"
+                        },
+                        {
+                            "name": "k1",
+                            "value": "25836735-219a-11ef-bbf9-000129af8ea5"
+                        },
+                        {
+                            "name": "k2",
+                            "value": "3bd4716e-219a-11ef-bbf9-000129af8ea5"
+                        },
+                        {
+                            "name": "rt",
+                            "value": "9e1c6d5f-2a45-11ef-999a-000129af8ea5"
+                        },
+                        {
+                            "name": "oo",
+                            "value": "1a3b9736-2a48-11ef-999a-000129af8ea5"
+                        },
+                        {
+                            "name": "ghgh",
+                            "value": "e24b0aa0-2c97-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "P1",
+                            "value": "353db769-2c99-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "V",
+                            "value": "8042b20a-2c99-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "L",
+                            "value": "a8a164f8-2c99-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "VL",
+                            "value": "c993a862-2c99-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "P2",
+                            "value": "f0ea9301-2c99-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "Sac",
+                            "value": "0c5ef5c0-2c9a-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "P3",
+                            "value": "2f50eedd-2c9f-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "p1",
+                            "value": "4c70e81a-2ca6-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "p2",
+                            "value": "525fbf77-2ca6-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "1",
+                            "value": "73b2310d-2ca6-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "2",
+                            "value": "937a0993-2ca6-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "3",
+                            "value": "a15f7eb7-2ca6-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "4",
+                            "value": "adfc3e19-2ca6-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "4",
+                            "value": "b92cb902-2ca6-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "Lay hang",
+                            "value": "8e12fe5c-3063-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "D1",
+                            "value": "e321ba74-3077-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "p1",
+                            "value": "e84a204c-3077-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "D2",
+                            "value": "ed1db1c1-3077-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "D3",
+                            "value": "ff7be74c-3077-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "D4",
+                            "value": "0641d386-3078-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "D5",
+                            "value": "16beb100-3078-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "D6",
+                            "value": "1dddce57-3078-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "Sac612",
+                            "value": "2cfd8aae-3078-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "Nhan hang",
+                            "value": "7af709e9-3078-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "Chờ",
+                            "value": "b9c2fd4d-3078-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "Nhan hang 1",
+                            "value": "e3c0b651-3078-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "Lay hang 1",
+                            "value": "2a76eda6-3079-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "v1",
+                            "value": "a163310b-3b70-11ef-9f22-000129af8ea5"
+                        },
+                        {
+                            "name": "vl1",
+                            "value": "582087be-3b96-11ef-893b-000129af8ea5"
+                        },
+                        {
+                            "name": "VL_ss",
+                            "value": "df58719b-3dc0-11ef-90c2-000129af8ea5"
+                        },
+                        {
+                            "name": "10m20mvl",
+                            "value": "0ba39922-3dd4-11ef-90c2-000129af8ea5"
+                        },
+                        {
+                            "name": "10m",
+                            "value": "39f173fa-3dd4-11ef-90c2-000129af8ea5"
+                        },
+                        {
+                            "name": "Charge Dock",
+                            "value": "1c1caf15-fa81-11ef-b058-000129af8ea5"
+                        },
+                        {
+                            "name": "Position 1",
+                            "value": "1eaf4128-fa89-11ef-b058-000129af8ea5"
+                        },
+                        {
+                            "name": "Position 3",
+                            "value": "29fda235-fa89-11ef-b058-000129af8ea5"
+                        },
+                        {
+                            "name": "Position 4",
+                            "value": "30399fa7-fa89-11ef-b058-000129af8ea5"
+                        },
+                        {
+                            "name": "Position 5",
+                            "value": "f6b12465-fa8a-11ef-b058-000129af8ea5"
+                        },
+                        {
+                            "name": "Position 7",
+                            "value": "7ec3d7b9-fb37-11ef-a27c-000129af8ea5"
+                        },
+                        {
+                            "name": "Position 8",
+                            "value": "8e836b5f-fb37-11ef-a27c-000129af8ea5"
+                        },
+                        {
+                            "name": "Position 9",
+                            "value": "94f6370f-fb37-11ef-a27c-000129af8ea5"
+                        },
+                        {
+                            "name": "Position 2",
+                            "value": "197221dd-fe93-11ef-9736-000129af8ea5"
+                        },
+                        {
+                            "name": "position 11",
+                            "value": "0c9ca3a6-0bc2-11f0-8046-000129af8ea5"
+                        },
+                        {
+                            "name": "Position 15",
+                            "value": "528e2602-0fcc-11f0-8cf1-000129af8ea5"
+                        },
+                        {
+                            "name": "pos1",
+                            "value": "6aaf9bbb-1f8e-11f0-ac01-000129af8ea5"
+                        },
+                        {
+                            "name": "pos2",
+                            "value": "828afebe-1f8e-11f0-ac01-000129af8ea5"
+                        },
+                        {
+                            "name": "pos5",
+                            "value": "d036fd32-1f8e-11f0-ac01-000129af8ea5"
+                        },
+                        {
+                            "name": "start",
+                            "value": "ced89ad0-3645-11f0-adb5-000129af8ea5"
+                        },
+                        {
+                            "name": "position 1",
+                            "value": "0581fb8b-487d-11f0-afb0-000129af8ea5"
+                        },
+                        {
+                            "name": "position 2",
+                            "value": "2137f6a7-487e-11f0-afb0-000129af8ea5"
+                        },
+                        {
+                            "name": "position 3",
+                            "value": "aa4fda0a-487e-11f0-afb0-000129af8ea5"
+                        },
+                        {
+                            "name": "position 4",
+                            "value": "7e575cf7-4880-11f0-afb0-000129af8ea5"
+                        },
+                        {
+                            "name": "position 5",
+                            "value": "d1651e14-4880-11f0-afb0-000129af8ea5"
+                        },
+                        {
+                            "name": "position 6",
+                            "value": "a88e668f-4881-11f0-afb0-000129af8ea5"
+                        },
+                        {
+                            "name": "position 7",
+                            "value": "62610283-4882-11f0-afb0-000129af8ea5"
+                        },
+                        {
+                            "name": "dock",
+                            "value": "a57fde83-4c47-11f0-9c92-000129af8ea5"
+                        }
+                    ],
+                    "method": "POST"
+                },
+                "value": "30cc460e-753a-11ed-938a-000129af8ea5",
+                "input_name": null,
+                "guid": "9d49f447-3c7e-11f0-9718-000129af8ea5"
+            },
+            {
+                "help": "Select a position, <b>Entry</b> or <b>Main</b>, from the list, or select the <b>XYZ</b> icon to define a variable.",
+                "name": "Cart position",
+                "dependencies": [
+                    {
+                        "dependency_id": "position",
+                        "value": [
+                            1
+                        ],
+                        "check_field": "type_id"
+                    }
+                ],
+                "type": "Selection",
+                "id": "cart_entry_position",
+                "constraints": {
+                    "default": "main",
+                    "choices": [
+                        {
+                            "name": "Main",
+                            "value": "main"
+                        },
+                        {
+                            "name": "Front",
+                            "value": "entry"
+                        },
+                        {
+                            "name": "Left",
+                            "value": "left"
+                        },
+                        {
+                            "name": "Right",
+                            "value": "right"
+                        }
+                    ]
+                },
+                "value": "main",
+                "input_name": null,
+                "guid": "9d4a202b-3c7e-11f0-9718-000129af8ea5"
+            },
+            {
+                "help": "Select a position, <b>Entry</b> or <b>Main</b>, from the list, or select the <b>XYZ</b> icon to define a variable.",
+                "name": "Position type",
+                "dependencies": [
+                    {
+                        "dependency_id": "position",
+                        "value": [
+                            5,
+                            22
+                        ],
+                        "check_field": "type_id"
+                    }
+                ],
+                "type": "Selection",
+                "id": "main_or_entry_position",
+                "constraints": {
+                    "default": "main",
+                    "choices": [
+                        {
+                            "name": "Main",
+                            "value": "main"
+                        },
+                        {
+                            "name": "Entry",
+                            "value": "entry"
+                        }
+                    ]
+                },
+                "value": "main",
+                "input_name": null,
+                "guid": "9d4a4abf-3c7e-11f0-9718-000129af8ea5"
+            },
+            {
+                "help": "Select a position, <b>Entry</b> or <b>Main</b>, from the list, or select the <b>XYZ</b> icon to define a variable.",
+                "name": "Position type",
+                "dependencies": [
+                    {
+                        "dependency_id": "position",
+                        "value": [
+                            7,
+                            9,
+                            11,
+                            13,
+                            16,
+                            18,
+                            20,
+                            24
+                        ],
+                        "check_field": "type_id"
+                    }
+                ],
+                "type": "Selection",
+                "id": "marker_entry_position",
+                "constraints": {
+                    "default": "entry",
+                    "choices": [
+                        {
+                            "name": "Entry",
+                            "value": "entry"
+                        }
+                    ]
+                },
+                "value": "entry",
+                "input_name": null,
+                "guid": "9d4a7d23-3c7e-11f0-9718-000129af8ea5"
+            },
+            {
+                "id": "retries",
+                "type": "Integer",
+                "help": "Set the number of times the robot should try to reach the position if the path is blocked, or select the <b>XYZ</b> icon to define a variable. If, after the set number of retries, the path is still blocked, the robot stops and produces an error message.",
+                "name": "Retries (Blocked Path)",
+                "constraints": {
+                    "default": 10,
+                    "max": 1000,
+                    "min": 0
+                },
+                "value": 10,
+                "input_name": null,
+                "guid": "9d4ab02e-3c7e-11f0-9718-000129af8ea5"
+            },
+            {
+                "id": "distance_threshold",
+                "type": "Float",
+                "help": "Depending on how accurately the robot is required to position itself on the goal position, the threshold can be increased or decreased. The default is 0.1 m.",
+                "name": "Distance threshold",
+                "constraints": {
+                    "default": 0.1,
+                    "max": 3,
+                    "min": 0.1
+                },
+                "value": 0.1,
+                "input_name": null,
+                "guid": "9d4addc5-3c7e-11f0-9718-000129af8ea5"
+            }
+        ],
+        "created_by_name": "Administrator",
+        "mission_id": "374052c7-38a4-11f0-b4c9-000129af8ea5",
+        "action_type": "move",
+        "created_by_id": "mirconst-guid-0000-0005-users0000000",
+        "guid": "9d493f17-3c7e-11f0-9718-000129af8ea5",
+        "uniqueId": "move_6",
+        "description": "Move to %(position)s",
+        "descriptions": null,
+        "name": "Move",
+        "color": "#2563EB",
+        "icon": {
+            "key": null,
+            "props": {},
+            "_owner": null,
+            "_store": {}
+        },
+        "status": 0
+    },
+    {
+        "priority": 7,
+        "allowed_methods": [
+            "PUT",
+            "GET",
+            "DELETE"
+        ],
+        "scope_reference": "9d40799a-3c7e-11f0-9718-000129af8ea5",
+        "parameters": [
+            {
+                "id": "minimum_time",
+                "type": "Duration",
+                "help": "<p>Set a minimum amount of time the robot should charge before it moves on, or select the <b>XYZ</b> icon to define a variable. The system will compare the set minimum time with the minimum percentage, and when the first of those two requirements is fulfilled, the mission continues.</p><p>You may skip defining a minimum time by selecting the<b> Ignore value </b>check box. The robot will then charge until the minimum battery percentage level is reached.</p>",
+                "name": "Minimum Time",
+                "constraints": {
+                    "default": "00:10:00.000000",
+                    "max": "24:59:59.000000",
+                    "null_option": "Ignore value",
+                    "nullable": true,
+                    "min": "00:00:00.000000"
+                },
+                "value": "00:10:00.000000",
+                "input_name": null,
+                "guid": "9d549abf-3c7e-11f0-9718-000129af8ea5"
+            },
+            {
+                "id": "minimum_percentage",
+                "type": "Float",
+                "help": "Enter the minimum battery percentage the robot should charge to before it moves on, or select the <b>XYZ </b>icon to define a variable. The system will compare the set minimum percentage with the minimum time, and when the first of those two requirements is fulfilled, the mission continues. You may skip defining a minimum percentage by selecting the <b>Ignore value</b> check box. The robot will then charge until the minimum charge time is reached.",
+                "name": "Minimum Percentage",
+                "constraints": {
+                    "default": 25,
+                    "max": 100,
+                    "null_option": "Ignore value",
+                    "nullable": true,
+                    "min": 0
+                },
+                "value": 25,
+                "input_name": null,
+                "guid": "9d54ddd1-3c7e-11f0-9718-000129af8ea5"
+            },
+            {
+                "id": "charge_until_new_mission",
+                "type": "Boolean",
+                "help": "<p>Select this check box if you want the robot to continue charging until it receives a new mission. If selected, the robot stays in the charging station until it receives a new mission, but not until at least one of the criteria for minimum time or minimum percentage is reached.</p><p>If deselected, the robot leaves the charging station when either of the two charging criteria are reached regardless of queued missions.</p>",
+                "name": "Charge until new mission in queue",
+                "constraints": {
+                    "default": false
+                },
+                "value": false,
+                "input_name": null,
+                "guid": "9d553006-3c7e-11f0-9718-000129af8ea5"
+            }
+        ],
+        "created_by_name": "Administrator",
+        "mission_id": "374052c7-38a4-11f0-b4c9-000129af8ea5",
+        "action_type": "charging",
+        "created_by_id": "mirconst-guid-0000-0005-users0000000",
+        "guid": "9d53945c-3c7e-11f0-9718-000129af8ea5",
+        "uniqueId": "charging_7",
+        "description": "Charging",
+        "descriptions": null,
+        "name": "Charging",
+        "color": "",
+        "icon": null,
+        "status": 0
+    },
+    {
+        "priority": 9,
+        "allowed_methods": [
+            "PUT",
+            "GET",
+            "DELETE"
+        ],
+        "scope_reference": null,
+        "parameters": [
+            {
+                "id": "compare",
+                "type": "Selection",
+                "help": "Select either <b>Battery Percentage</b>, <b>PLC Register</b>, <b>Pending Missions</b>, or <b>I/O input</b>, or select the <b>XYZ </b>icon to define a variable.",
+                "name": "Compare",
+                "constraints": {
+                    "default": "battery",
+                    "choices": [
+                        {
+                            "name": "Battery Percentage",
+                            "value": "battery"
+                        },
+                        {
+                            "name": "PLC Register",
+                            "value": "plc_register"
+                        },
+                        {
+                            "name": "Pending missions",
+                            "value": "mission_queue_length"
+                        },
+                        {
+                            "name": "I/O input",
+                            "value": "io_module"
+                        }
+                    ]
+                },
+                "value": "plc_register",
+                "input_name": null,
+                "guid": "93877169-3d58-11f0-baac-000129af8ea5"
+            },
+            {
+                "help": "For I/O inputs, select an I/O module from the drop-down list, or select the <b>XYZ</b> icon to define a variable.",
+                "name": "Module",
+                "dependencies": [
+                    {
+                        "dependency_id": "compare",
+                        "value": "io_module"
+                    }
+                ],
+                "type": "Reference",
+                "id": "module",
+                "constraints": {
+                    "url": "/io_modules",
+                    "value_field": "guid",
+                    "name_field": "name",
+                    "method": "GET",
+                    "choices": [
+                        {
+                            "name": "ur5",
+                            "value": "339096ae-2ca7-11ef-95a5-000129af8ea5"
+                        }
+                    ]
+                },
+                "value": "339096ae-2ca7-11ef-95a5-000129af8ea5",
+                "input_name": null,
+                "guid": "93879400-3d58-11f0-baac-000129af8ea5"
+            },
+            {
+                "help": "Select I/O port",
+                "name": "I/O port",
+                "dependencies": [
+                    {
+                        "dependency_id": "compare",
+                        "value": "io_module"
+                    }
+                ],
+                "type": "Integer",
+                "id": "io_port",
+                "constraints": {
+                    "default": 0,
+                    "max": 99,
+                    "min": 0
+                },
+                "value": "0",
+                "input_name": null,
+                "guid": "9387b330-3d58-11f0-baac-000129af8ea5"
+            },
+            {
+                "help": "For PLC registers: enter the required index number (Integer registers 1-100, Floating point registers 101-200), or select the <b>XYZ </b>icon to define a variable.",
+                "name": "Register",
+                "dependencies": [
+                    {
+                        "dependency_id": "compare",
+                        "value": "plc_register"
+                    }
+                ],
+                "type": "Reference",
+                "id": "register",
+                "constraints": {
+                    "value_field": "id",
+                    "name_field": "label",
+                    "default": 1,
+                    "choices": [
+                        {
+                            "name": "",
+                            "value": 1
+                        },
+                        {
+                            "name": "",
+                            "value": 2
+                        },
+                        {
+                            "name": "",
+                            "value": 3
+                        },
+                        {
+                            "name": "",
+                            "value": 4
+                        },
+                        {
+                            "name": "",
+                            "value": 5
+                        },
+                        {
+                            "name": "",
+                            "value": 6
+                        },
+                        {
+                            "name": "",
+                            "value": 7
+                        },
+                        {
+                            "name": "",
+                            "value": 8
+                        },
+                        {
+                            "name": "",
+                            "value": 9
+                        },
+                        {
+                            "name": "",
+                            "value": 10
+                        },
+                        {
+                            "name": "",
+                            "value": 11
+                        },
+                        {
+                            "name": "",
+                            "value": 12
+                        },
+                        {
+                            "name": "",
+                            "value": 13
+                        },
+                        {
+                            "name": "",
+                            "value": 14
+                        },
+                        {
+                            "name": "",
+                            "value": 15
+                        },
+                        {
+                            "name": "",
+                            "value": 16
+                        },
+                        {
+                            "name": "",
+                            "value": 17
+                        },
+                        {
+                            "name": "",
+                            "value": 18
+                        },
+                        {
+                            "name": "",
+                            "value": 19
+                        },
+                        {
+                            "name": "",
+                            "value": 20
+                        },
+                        {
+                            "name": "",
+                            "value": 21
+                        },
+                        {
+                            "name": "",
+                            "value": 22
+                        },
+                        {
+                            "name": "",
+                            "value": 23
+                        },
+                        {
+                            "name": "",
+                            "value": 24
+                        },
+                        {
+                            "name": "",
+                            "value": 25
+                        },
+                        {
+                            "name": "",
+                            "value": 26
+                        },
+                        {
+                            "name": "",
+                            "value": 27
+                        },
+                        {
+                            "name": "",
+                            "value": 28
+                        },
+                        {
+                            "name": "",
+                            "value": 29
+                        },
+                        {
+                            "name": "",
+                            "value": 30
+                        },
+                        {
+                            "name": "",
+                            "value": 31
+                        },
+                        {
+                            "name": "",
+                            "value": 32
+                        },
+                        {
+                            "name": "",
+                            "value": 33
+                        },
+                        {
+                            "name": "",
+                            "value": 34
+                        },
+                        {
+                            "name": "",
+                            "value": 35
+                        },
+                        {
+                            "name": "",
+                            "value": 36
+                        },
+                        {
+                            "name": "",
+                            "value": 37
+                        },
+                        {
+                            "name": "",
+                            "value": 38
+                        },
+                        {
+                            "name": "",
+                            "value": 39
+                        },
+                        {
+                            "name": "",
+                            "value": 40
+                        },
+                        {
+                            "name": "",
+                            "value": 41
+                        },
+                        {
+                            "name": "",
+                            "value": 42
+                        },
+                        {
+                            "name": "",
+                            "value": 43
+                        },
+                        {
+                            "name": "",
+                            "value": 44
+                        },
+                        {
+                            "name": "",
+                            "value": 45
+                        },
+                        {
+                            "name": "",
+                            "value": 46
+                        },
+                        {
+                            "name": "",
+                            "value": 47
+                        },
+                        {
+                            "name": "",
+                            "value": 48
+                        },
+                        {
+                            "name": "",
+                            "value": 49
+                        },
+                        {
+                            "name": "",
+                            "value": 50
+                        },
+                        {
+                            "name": "",
+                            "value": 51
+                        },
+                        {
+                            "name": "",
+                            "value": 52
+                        },
+                        {
+                            "name": "",
+                            "value": 53
+                        },
+                        {
+                            "name": "",
+                            "value": 54
+                        },
+                        {
+                            "name": "",
+                            "value": 55
+                        },
+                        {
+                            "name": "",
+                            "value": 56
+                        },
+                        {
+                            "name": "",
+                            "value": 57
+                        },
+                        {
+                            "name": "",
+                            "value": 58
+                        },
+                        {
+                            "name": "",
+                            "value": 59
+                        },
+                        {
+                            "name": "",
+                            "value": 60
+                        },
+                        {
+                            "name": "",
+                            "value": 61
+                        },
+                        {
+                            "name": "",
+                            "value": 62
+                        },
+                        {
+                            "name": "",
+                            "value": 63
+                        },
+                        {
+                            "name": "",
+                            "value": 64
+                        },
+                        {
+                            "name": "",
+                            "value": 65
+                        },
+                        {
+                            "name": "",
+                            "value": 66
+                        },
+                        {
+                            "name": "",
+                            "value": 67
+                        },
+                        {
+                            "name": "",
+                            "value": 68
+                        },
+                        {
+                            "name": "",
+                            "value": 69
+                        },
+                        {
+                            "name": "",
+                            "value": 70
+                        },
+                        {
+                            "name": "",
+                            "value": 71
+                        },
+                        {
+                            "name": "",
+                            "value": 72
+                        },
+                        {
+                            "name": "",
+                            "value": 73
+                        },
+                        {
+                            "name": "",
+                            "value": 74
+                        },
+                        {
+                            "name": "",
+                            "value": 75
+                        },
+                        {
+                            "name": "",
+                            "value": 76
+                        },
+                        {
+                            "name": "",
+                            "value": 77
+                        },
+                        {
+                            "name": "",
+                            "value": 78
+                        },
+                        {
+                            "name": "",
+                            "value": 79
+                        },
+                        {
+                            "name": "",
+                            "value": 80
+                        },
+                        {
+                            "name": "",
+                            "value": 81
+                        },
+                        {
+                            "name": "",
+                            "value": 82
+                        },
+                        {
+                            "name": "",
+                            "value": 83
+                        },
+                        {
+                            "name": "",
+                            "value": 84
+                        },
+                        {
+                            "name": "",
+                            "value": 85
+                        },
+                        {
+                            "name": "",
+                            "value": 86
+                        },
+                        {
+                            "name": "",
+                            "value": 87
+                        },
+                        {
+                            "name": "",
+                            "value": 88
+                        },
+                        {
+                            "name": "",
+                            "value": 89
+                        },
+                        {
+                            "name": "",
+                            "value": 90
+                        },
+                        {
+                            "name": "",
+                            "value": 91
+                        },
+                        {
+                            "name": "",
+                            "value": 92
+                        },
+                        {
+                            "name": "",
+                            "value": 93
+                        },
+                        {
+                            "name": "",
+                            "value": 94
+                        },
+                        {
+                            "name": "",
+                            "value": 95
+                        },
+                        {
+                            "name": "",
+                            "value": 96
+                        },
+                        {
+                            "name": "",
+                            "value": 97
+                        },
+                        {
+                            "name": "",
+                            "value": 98
+                        },
+                        {
+                            "name": "",
+                            "value": 99
+                        },
+                        {
+                            "name": "",
+                            "value": 100
+                        },
+                        {
+                            "name": "",
+                            "value": 101
+                        },
+                        {
+                            "name": "",
+                            "value": 102
+                        },
+                        {
+                            "name": "",
+                            "value": 103
+                        },
+                        {
+                            "name": "",
+                            "value": 104
+                        },
+                        {
+                            "name": "",
+                            "value": 105
+                        },
+                        {
+                            "name": "",
+                            "value": 106
+                        },
+                        {
+                            "name": "",
+                            "value": 107
+                        },
+                        {
+                            "name": "",
+                            "value": 108
+                        },
+                        {
+                            "name": "",
+                            "value": 109
+                        },
+                        {
+                            "name": "",
+                            "value": 110
+                        },
+                        {
+                            "name": "",
+                            "value": 111
+                        },
+                        {
+                            "name": "",
+                            "value": 112
+                        },
+                        {
+                            "name": "",
+                            "value": 113
+                        },
+                        {
+                            "name": "",
+                            "value": 114
+                        },
+                        {
+                            "name": "",
+                            "value": 115
+                        },
+                        {
+                            "name": "",
+                            "value": 116
+                        },
+                        {
+                            "name": "",
+                            "value": 117
+                        },
+                        {
+                            "name": "",
+                            "value": 118
+                        },
+                        {
+                            "name": "",
+                            "value": 119
+                        },
+                        {
+                            "name": "",
+                            "value": 120
+                        },
+                        {
+                            "name": "",
+                            "value": 121
+                        },
+                        {
+                            "name": "",
+                            "value": 122
+                        },
+                        {
+                            "name": "",
+                            "value": 123
+                        },
+                        {
+                            "name": "",
+                            "value": 124
+                        },
+                        {
+                            "name": "",
+                            "value": 125
+                        },
+                        {
+                            "name": "",
+                            "value": 126
+                        },
+                        {
+                            "name": "",
+                            "value": 127
+                        },
+                        {
+                            "name": "",
+                            "value": 128
+                        },
+                        {
+                            "name": "",
+                            "value": 129
+                        },
+                        {
+                            "name": "",
+                            "value": 130
+                        },
+                        {
+                            "name": "",
+                            "value": 131
+                        },
+                        {
+                            "name": "",
+                            "value": 132
+                        },
+                        {
+                            "name": "",
+                            "value": 133
+                        },
+                        {
+                            "name": "",
+                            "value": 134
+                        },
+                        {
+                            "name": "",
+                            "value": 135
+                        },
+                        {
+                            "name": "",
+                            "value": 136
+                        },
+                        {
+                            "name": "",
+                            "value": 137
+                        },
+                        {
+                            "name": "",
+                            "value": 138
+                        },
+                        {
+                            "name": "",
+                            "value": 139
+                        },
+                        {
+                            "name": "",
+                            "value": 140
+                        },
+                        {
+                            "name": "",
+                            "value": 141
+                        },
+                        {
+                            "name": "",
+                            "value": 142
+                        },
+                        {
+                            "name": "",
+                            "value": 143
+                        },
+                        {
+                            "name": "",
+                            "value": 144
+                        },
+                        {
+                            "name": "",
+                            "value": 145
+                        },
+                        {
+                            "name": "",
+                            "value": 146
+                        },
+                        {
+                            "name": "",
+                            "value": 147
+                        },
+                        {
+                            "name": "",
+                            "value": 148
+                        },
+                        {
+                            "name": "",
+                            "value": 149
+                        },
+                        {
+                            "name": "",
+                            "value": 150
+                        },
+                        {
+                            "name": "",
+                            "value": 151
+                        },
+                        {
+                            "name": "",
+                            "value": 152
+                        },
+                        {
+                            "name": "",
+                            "value": 153
+                        },
+                        {
+                            "name": "",
+                            "value": 154
+                        },
+                        {
+                            "name": "",
+                            "value": 155
+                        },
+                        {
+                            "name": "",
+                            "value": 156
+                        },
+                        {
+                            "name": "",
+                            "value": 157
+                        },
+                        {
+                            "name": "",
+                            "value": 158
+                        },
+                        {
+                            "name": "",
+                            "value": 159
+                        },
+                        {
+                            "name": "",
+                            "value": 160
+                        },
+                        {
+                            "name": "",
+                            "value": 161
+                        },
+                        {
+                            "name": "",
+                            "value": 162
+                        },
+                        {
+                            "name": "",
+                            "value": 163
+                        },
+                        {
+                            "name": "",
+                            "value": 164
+                        },
+                        {
+                            "name": "",
+                            "value": 165
+                        },
+                        {
+                            "name": "",
+                            "value": 166
+                        },
+                        {
+                            "name": "",
+                            "value": 167
+                        },
+                        {
+                            "name": "",
+                            "value": 168
+                        },
+                        {
+                            "name": "",
+                            "value": 169
+                        },
+                        {
+                            "name": "",
+                            "value": 170
+                        },
+                        {
+                            "name": "",
+                            "value": 171
+                        },
+                        {
+                            "name": "",
+                            "value": 172
+                        },
+                        {
+                            "name": "",
+                            "value": 173
+                        },
+                        {
+                            "name": "",
+                            "value": 174
+                        },
+                        {
+                            "name": "",
+                            "value": 175
+                        },
+                        {
+                            "name": "",
+                            "value": 176
+                        },
+                        {
+                            "name": "",
+                            "value": 177
+                        },
+                        {
+                            "name": "",
+                            "value": 178
+                        },
+                        {
+                            "name": "",
+                            "value": 179
+                        },
+                        {
+                            "name": "",
+                            "value": 180
+                        },
+                        {
+                            "name": "",
+                            "value": 181
+                        },
+                        {
+                            "name": "",
+                            "value": 182
+                        },
+                        {
+                            "name": "",
+                            "value": 183
+                        },
+                        {
+                            "name": "",
+                            "value": 184
+                        },
+                        {
+                            "name": "",
+                            "value": 185
+                        },
+                        {
+                            "name": "",
+                            "value": 186
+                        },
+                        {
+                            "name": "",
+                            "value": 187
+                        },
+                        {
+                            "name": "",
+                            "value": 188
+                        },
+                        {
+                            "name": "",
+                            "value": 189
+                        },
+                        {
+                            "name": "",
+                            "value": 190
+                        },
+                        {
+                            "name": "",
+                            "value": 191
+                        },
+                        {
+                            "name": "",
+                            "value": 192
+                        },
+                        {
+                            "name": "",
+                            "value": 193
+                        },
+                        {
+                            "name": "",
+                            "value": 194
+                        },
+                        {
+                            "name": "",
+                            "value": 195
+                        },
+                        {
+                            "name": "",
+                            "value": 196
+                        },
+                        {
+                            "name": "",
+                            "value": 197
+                        },
+                        {
+                            "name": "",
+                            "value": 198
+                        },
+                        {
+                            "name": "",
+                            "value": 199
+                        },
+                        {
+                            "name": "",
+                            "value": 200
+                        }
+                    ],
+                    "url": "/registers",
+                    "validator": "PLCId",
+                    "method": "GET"
+                },
+                "value": "1",
+                "input_name": null,
+                "guid": "9387cd1f-3d58-11f0-baac-000129af8ea5"
+            },
+            {
+                "id": "operator",
+                "type": "Selection",
+                "help": "<p>Select the arithmetic operator you want to use, or select the <b>XYZ</b> icon to define a variable.</p><p>Operators are arithmetic operators used to specify the compare mission, for example, use the < operator to specify “If Battery percentage is below 50 percent”.</p><p>The available operators are:</p><ul><li>== ‘equal to’</li><li>!= ‘not equal to’</li><li>> ‘greater than’</li><li>>= ‘greater than or equal to’</li><li>< ‘lesser than’</li><li><= ‘lesser than or equal to’.</li></ul>",
+                "name": "Operator",
+                "constraints": {
+                    "default": "==",
+                    "choices": [
+                        {
+                            "name": "==",
+                            "value": "=="
+                        },
+                        {
+                            "name": "!=",
+                            "value": "!="
+                        },
+                        {
+                            "name": ">",
+                            "value": ">"
+                        },
+                        {
+                            "name": ">=",
+                            "value": ">="
+                        },
+                        {
+                            "name": "<",
+                            "value": "<"
+                        },
+                        {
+                            "name": "<=",
+                            "value": "<="
+                        }
+                    ]
+                },
+                "value": "==",
+                "input_name": null,
+                "guid": "9387e683-3d58-11f0-baac-000129af8ea5"
+            },
+            {
+                "id": "value",
+                "type": "Float",
+                "help": "Enter the value for the selected register, or select the <b>XYZ </b>icon to define a variable.",
+                "name": "Value",
+                "constraints": {
+                    "default": 1,
+                    "max": 1000000000,
+                    "min": -1000000000
+                },
+                "value": 1,
+                "input_name": null,
+                "guid": "9387ff2d-3d58-11f0-baac-000129af8ea5"
+            },
+            {
+                "id": "true",
+                "type": "Scope",
+                "help": "",
+                "name": "True",
+                "constraints": {},
+                "value": "",
+                "input_name": null,
+                "guid": "9388196f-3d58-11f0-baac-000129af8ea5"
+            },
+            {
+                "id": "false",
+                "type": "Scope",
+                "help": "",
+                "name": "False",
+                "constraints": {},
+                "value": "",
+                "input_name": null,
+                "guid": "9388332c-3d58-11f0-baac-000129af8ea5"
+            }
+        ],
+        "created_by_name": "Administrator",
+        "mission_id": "374052c7-38a4-11f0-b4c9-000129af8ea5",
+        "action_type": "if",
+        "created_by_id": "mirconst-guid-0000-0005-users0000000",
+        "guid": "9386ce7b-3d58-11f0-baac-000129af8ea5",
+        "uniqueId": "if_9",
+        "description": "If %(compare)s %(operator)s %(value)f",
+        "descriptions": [
+            {
+                "text": "If %(compare)s %(operator)s %(value)f",
+                "conditions": [
+                    {
+                        "operator": "==",
+                        "parameter_id": "compare",
+                        "value": "battery"
+                    }
+                ]
+            },
+            {
+                "text": "If %(compare)s (%(register)s) %(operator)s %(value)f",
+                "conditions": [
+                    {
+                        "operator": "==",
+                        "parameter_id": "compare",
+                        "value": "plc_register"
+                    }
+                ]
+            },
+            {
+                "text": "If %(module)s port %(io_port)f %(operator)s %(value)f",
+                "conditions": [
+                    {
+                        "operator": "==",
+                        "parameter_id": "compare",
+                        "value": "io_module"
+                    }
+                ]
+            }
+        ],
+        "name": "If",
+        "color": "#9333EA",
+        "icon": {
+            "key": null,
+            "props": {},
+            "_owner": null,
+            "_store": {}
+        },
+        "status": 0
+    },
+    {
+        "priority": 10,
+        "allowed_methods": [
+            "PUT",
+            "GET",
+            "DELETE"
+        ],
+        "scope_reference": "9388196f-3d58-11f0-baac-000129af8ea5",
+        "parameters": [
+            {
+                "id": "position",
+                "type": "Reference",
+                "help": "Select a position from the drop-down list, or select the <b>XYZ</b> icon to define a variable.",
+                "name": "Position",
+                "constraints": {
+                    "body": {
+                        "filters": [
+                            {
+                                "operator": "IN",
+                                "fieldname": "type_id",
+                                "value": [
+                                    0,
+                                    1,
+                                    5,
+                                    7,
+                                    9,
+                                    11,
+                                    13,
+                                    16,
+                                    18,
+                                    20,
+                                    22,
+                                    25,
+                                    26,
+                                    42
+                                ]
+                            }
+                        ]
+                    },
+                    "value_field": "guid",
+                    "name_field": "name",
+                    "url": "/positions/search",
+                    "choices": [
+                        {
+                            "name": "Config position",
+                            "value": "mirconst-guid-0000-0001-positions000"
+                        },
+                        {
+                            "name": "BB",
+                            "value": "30cc460e-753a-11ed-938a-000129af8ea5"
+                        },
+                        {
+                            "name": "TT",
+                            "value": "c4139848-753a-11ed-938a-000129af8ea5"
+                        },
+                        {
+                            "name": "CC",
+                            "value": "4dcef373-753b-11ed-938a-000129af8ea5"
+                        },
+                        {
+                            "name": "DD",
+                            "value": "54654780-753b-11ed-938a-000129af8ea5"
+                        },
+                        {
+                            "name": "EE",
+                            "value": "5d3e56fc-753b-11ed-938a-000129af8ea5"
+                        },
+                        {
+                            "name": "Tram24V",
+                            "value": "9c2a3648-753c-11ed-938a-000129af8ea5"
+                        },
+                        {
+                            "name": "11",
+                            "value": "3c2019b8-753e-11ed-938a-000129af8ea5"
+                        },
+                        {
+                            "name": "B",
+                            "value": "44953d6a-75d8-11ed-9fb2-000129af8ea5"
+                        },
+                        {
+                            "name": "C",
+                            "value": "52085258-75d8-11ed-9fb2-000129af8ea5"
+                        },
+                        {
+                            "name": "A",
+                            "value": "f304ebe4-75dd-11ed-9fb2-000129af8ea5"
+                        },
+                        {
+                            "name": "An_Charger",
+                            "value": "b2ee0882-75e5-11ed-9fb2-000129af8ea5"
+                        },
+                        {
+                            "name": "An_map_p0",
+                            "value": "e4d8727e-75ff-11ed-a088-000129af8ea5"
+                        },
+                        {
+                            "name": "target",
+                            "value": "1d7298ee-7601-11ed-a088-000129af8ea5"
+                        },
+                        {
+                            "name": "A_Target",
+                            "value": "a2cd0818-7602-11ed-a088-000129af8ea5"
+                        },
+                        {
+                            "name": "B_target",
+                            "value": "bdecbfba-7602-11ed-a088-000129af8ea5"
+                        },
+                        {
+                            "name": "C-Target",
+                            "value": "fd25935f-7605-11ed-a088-000129af8ea5"
+                        },
+                        {
+                            "name": "Charge24V",
+                            "value": "9b14fb01-760d-11ed-a088-000129af8ea5"
+                        },
+                        {
+                            "name": "D_Charger",
+                            "value": "e8496d27-760d-11ed-a088-000129af8ea5"
+                        },
+                        {
+                            "name": "An_P5",
+                            "value": "9685989c-760e-11ed-a088-000129af8ea5"
+                        },
+                        {
+                            "name": "BB",
+                            "value": "d1e5dfc5-7c5c-11ed-8c6e-000129af8ea5"
+                        },
+                        {
+                            "name": "AA",
+                            "value": "da0f0fbe-7c5c-11ed-8c6e-000129af8ea5"
+                        },
+                        {
+                            "name": "CB",
+                            "value": "fea2fe00-7c5c-11ed-8c6e-000129af8ea5"
+                        },
+                        {
+                            "name": "SAC",
+                            "value": "02321c0c-7c5e-11ed-8c6e-000129af8ea5"
+                        },
+                        {
+                            "name": "CC",
+                            "value": "5c37f64b-7c5f-11ed-8c6e-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-1",
+                            "value": "333eab23-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-2",
+                            "value": "4d7d2e5f-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-3",
+                            "value": "5b8ba886-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-4",
+                            "value": "62d07eeb-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-5",
+                            "value": "689bed41-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-6",
+                            "value": "6e09b7b2-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-7",
+                            "value": "7a4ed5a1-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-8",
+                            "value": "8e6e23ff-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-9",
+                            "value": "95d8e087-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-10",
+                            "value": "9e488359-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-11",
+                            "value": "ac9143f9-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-12",
+                            "value": "b5a5ddc2-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-13",
+                            "value": "bbc7cca7-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-14",
+                            "value": "c10d432b-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-15",
+                            "value": "c7a46485-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-16",
+                            "value": "d2a28fff-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-17",
+                            "value": "d9eb6590-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-18",
+                            "value": "e294cbab-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-19",
+                            "value": "e7a681b1-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-20",
+                            "value": "f1d79500-175d-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-21",
+                            "value": "0caad605-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-21",
+                            "value": "1e78320d-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-22",
+                            "value": "224afb5f-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-23",
+                            "value": "29120490-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-24",
+                            "value": "3057844c-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-25",
+                            "value": "3551f800-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-26",
+                            "value": "3aa66d2e-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-27",
+                            "value": "3e1fe98d-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-28",
+                            "value": "423c3835-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-29",
+                            "value": "4af2c2c1-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-30",
+                            "value": "5660e500-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-31",
+                            "value": "5d4f3b65-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-32",
+                            "value": "6275f161-175e-11ee-8393-000129af8ea5"
+                        },
+                        {
+                            "name": "Test",
+                            "value": "1e38a391-2c64-11ee-831f-000129af8ea5"
+                        },
+                        {
+                            "name": "P1-811",
+                            "value": "9fcefb39-4436-11ee-b236-000129af8ea5"
+                        },
+                        {
+                            "name": "P2-811",
+                            "value": "a84a69e1-4436-11ee-b236-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-P1",
+                            "value": "5b25ce57-47f3-11ee-89b0-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-P2",
+                            "value": "62a538ce-47f3-11ee-89b0-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-P3",
+                            "value": "69d5903d-47f3-11ee-89b0-000129af8ea5"
+                        },
+                        {
+                            "name": "T8-P4",
+                            "value": "71adfab2-47f3-11ee-89b0-000129af8ea5"
+                        },
+                        {
+                            "name": "sac2",
+                            "value": "58f888b8-f33d-11ee-9e69-000129af8ea5"
+                        },
+                        {
+                            "name": "so3",
+                            "value": "38d8d4e4-00a5-11ef-9f0a-000129af8ea5"
+                        },
+                        {
+                            "name": "so0",
+                            "value": "f992a818-0ba2-11ef-86e2-000129af8ea5"
+                        },
+                        {
+                            "name": "quay0",
+                            "value": "8e7c88b8-0ba8-11ef-86e2-000129af8ea5"
+                        },
+                        {
+                            "name": "lt",
+                            "value": "f0901fb9-0bb1-11ef-86e2-000129af8ea5"
+                        },
+                        {
+                            "name": "vv",
+                            "value": "a17855c3-0bb2-11ef-86e2-000129af8ea5"
+                        },
+                        {
+                            "name": "u",
+                            "value": "a0088120-0ed6-11ef-b5a1-000129af8ea5"
+                        },
+                        {
+                            "name": "t",
+                            "value": "bfa9d5b0-0ed6-11ef-b5a1-000129af8ea5"
+                        },
+                        {
+                            "name": "sac",
+                            "value": "1cc8e001-16ae-11ef-bf45-000129af8ea5"
+                        },
+                        {
+                            "name": "t",
+                            "value": "b94b9d9d-1c16-11ef-ad01-000129af8ea5"
+                        },
+                        {
+                            "name": "q",
+                            "value": "e2ab486c-1dbd-11ef-af25-000129af8ea5"
+                        },
+                        {
+                            "name": "K",
+                            "value": "814aecbe-2198-11ef-bbf9-000129af8ea5"
+                        },
+                        {
+                            "name": "k1",
+                            "value": "25836735-219a-11ef-bbf9-000129af8ea5"
+                        },
+                        {
+                            "name": "k2",
+                            "value": "3bd4716e-219a-11ef-bbf9-000129af8ea5"
+                        },
+                        {
+                            "name": "rt",
+                            "value": "9e1c6d5f-2a45-11ef-999a-000129af8ea5"
+                        },
+                        {
+                            "name": "oo",
+                            "value": "1a3b9736-2a48-11ef-999a-000129af8ea5"
+                        },
+                        {
+                            "name": "ghgh",
+                            "value": "e24b0aa0-2c97-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "P1",
+                            "value": "353db769-2c99-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "V",
+                            "value": "8042b20a-2c99-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "L",
+                            "value": "a8a164f8-2c99-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "VL",
+                            "value": "c993a862-2c99-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "P2",
+                            "value": "f0ea9301-2c99-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "Sac",
+                            "value": "0c5ef5c0-2c9a-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "P3",
+                            "value": "2f50eedd-2c9f-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "p1",
+                            "value": "4c70e81a-2ca6-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "p2",
+                            "value": "525fbf77-2ca6-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "1",
+                            "value": "73b2310d-2ca6-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "2",
+                            "value": "937a0993-2ca6-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "3",
+                            "value": "a15f7eb7-2ca6-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "4",
+                            "value": "adfc3e19-2ca6-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "4",
+                            "value": "b92cb902-2ca6-11ef-95a5-000129af8ea5"
+                        },
+                        {
+                            "name": "Lay hang",
+                            "value": "8e12fe5c-3063-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "D1",
+                            "value": "e321ba74-3077-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "p1",
+                            "value": "e84a204c-3077-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "D2",
+                            "value": "ed1db1c1-3077-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "D3",
+                            "value": "ff7be74c-3077-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "D4",
+                            "value": "0641d386-3078-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "D5",
+                            "value": "16beb100-3078-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "D6",
+                            "value": "1dddce57-3078-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "Sac612",
+                            "value": "2cfd8aae-3078-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "Nhan hang",
+                            "value": "7af709e9-3078-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "Chờ",
+                            "value": "b9c2fd4d-3078-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "Nhan hang 1",
+                            "value": "e3c0b651-3078-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "Lay hang 1",
+                            "value": "2a76eda6-3079-11ef-b04e-000129af8ea5"
+                        },
+                        {
+                            "name": "v1",
+                            "value": "a163310b-3b70-11ef-9f22-000129af8ea5"
+                        },
+                        {
+                            "name": "vl1",
+                            "value": "582087be-3b96-11ef-893b-000129af8ea5"
+                        },
+                        {
+                            "name": "VL_ss",
+                            "value": "df58719b-3dc0-11ef-90c2-000129af8ea5"
+                        },
+                        {
+                            "name": "10m20mvl",
+                            "value": "0ba39922-3dd4-11ef-90c2-000129af8ea5"
+                        },
+                        {
+                            "name": "10m",
+                            "value": "39f173fa-3dd4-11ef-90c2-000129af8ea5"
+                        },
+                        {
+                            "name": "Charge Dock",
+                            "value": "1c1caf15-fa81-11ef-b058-000129af8ea5"
+                        },
+                        {
+                            "name": "Position 1",
+                            "value": "1eaf4128-fa89-11ef-b058-000129af8ea5"
+                        },
+                        {
+                            "name": "Position 3",
+                            "value": "29fda235-fa89-11ef-b058-000129af8ea5"
+                        },
+                        {
+                            "name": "Position 4",
+                            "value": "30399fa7-fa89-11ef-b058-000129af8ea5"
+                        },
+                        {
+                            "name": "Position 5",
+                            "value": "f6b12465-fa8a-11ef-b058-000129af8ea5"
+                        },
+                        {
+                            "name": "Position 7",
+                            "value": "7ec3d7b9-fb37-11ef-a27c-000129af8ea5"
+                        },
+                        {
+                            "name": "Position 8",
+                            "value": "8e836b5f-fb37-11ef-a27c-000129af8ea5"
+                        },
+                        {
+                            "name": "Position 9",
+                            "value": "94f6370f-fb37-11ef-a27c-000129af8ea5"
+                        },
+                        {
+                            "name": "Position 2",
+                            "value": "197221dd-fe93-11ef-9736-000129af8ea5"
+                        },
+                        {
+                            "name": "position 11",
+                            "value": "0c9ca3a6-0bc2-11f0-8046-000129af8ea5"
+                        },
+                        {
+                            "name": "Position 15",
+                            "value": "528e2602-0fcc-11f0-8cf1-000129af8ea5"
+                        },
+                        {
+                            "name": "pos1",
+                            "value": "6aaf9bbb-1f8e-11f0-ac01-000129af8ea5"
+                        },
+                        {
+                            "name": "pos2",
+                            "value": "828afebe-1f8e-11f0-ac01-000129af8ea5"
+                        },
+                        {
+                            "name": "pos5",
+                            "value": "d036fd32-1f8e-11f0-ac01-000129af8ea5"
+                        },
+                        {
+                            "name": "start",
+                            "value": "ced89ad0-3645-11f0-adb5-000129af8ea5"
+                        },
+                        {
+                            "name": "position 1",
+                            "value": "0581fb8b-487d-11f0-afb0-000129af8ea5"
+                        },
+                        {
+                            "name": "position 2",
+                            "value": "2137f6a7-487e-11f0-afb0-000129af8ea5"
+                        },
+                        {
+                            "name": "position 3",
+                            "value": "aa4fda0a-487e-11f0-afb0-000129af8ea5"
+                        },
+                        {
+                            "name": "position 4",
+                            "value": "7e575cf7-4880-11f0-afb0-000129af8ea5"
+                        },
+                        {
+                            "name": "position 5",
+                            "value": "d1651e14-4880-11f0-afb0-000129af8ea5"
+                        },
+                        {
+                            "name": "position 6",
+                            "value": "a88e668f-4881-11f0-afb0-000129af8ea5"
+                        },
+                        {
+                            "name": "position 7",
+                            "value": "62610283-4882-11f0-afb0-000129af8ea5"
+                        },
+                        {
+                            "name": "dock",
+                            "value": "a57fde83-4c47-11f0-9c92-000129af8ea5"
+                        }
+                    ],
+                    "method": "POST"
+                },
+                "value": "9fcefb39-4436-11ee-b236-000129af8ea5",
+                "input_name": null,
+                "guid": "fee3c74b-4384-11f0-b0fa-000129af8ea5"
+            },
+            {
+                "help": "Select a position, <b>Entry</b> or <b>Main</b>, from the list, or select the <b>XYZ</b> icon to define a variable.",
+                "name": "Cart position",
+                "dependencies": [
+                    {
+                        "dependency_id": "position",
+                        "value": [
+                            1
+                        ],
+                        "check_field": "type_id"
+                    }
+                ],
+                "type": "Selection",
+                "id": "cart_entry_position",
+                "constraints": {
+                    "default": "main",
+                    "choices": [
+                        {
+                            "name": "Main",
+                            "value": "main"
+                        },
+                        {
+                            "name": "Front",
+                            "value": "entry"
+                        },
+                        {
+                            "name": "Left",
+                            "value": "left"
+                        },
+                        {
+                            "name": "Right",
+                            "value": "right"
+                        }
+                    ]
+                },
+                "value": "main",
+                "input_name": null,
+                "guid": "fee3f320-4384-11f0-b0fa-000129af8ea5"
+            },
+            {
+                "help": "Select a position, <b>Entry</b> or <b>Main</b>, from the list, or select the <b>XYZ</b> icon to define a variable.",
+                "name": "Position type",
+                "dependencies": [
+                    {
+                        "dependency_id": "position",
+                        "value": [
+                            5,
+                            22
+                        ],
+                        "check_field": "type_id"
+                    }
+                ],
+                "type": "Selection",
+                "id": "main_or_entry_position",
+                "constraints": {
+                    "default": "main",
+                    "choices": [
+                        {
+                            "name": "Main",
+                            "value": "main"
+                        },
+                        {
+                            "name": "Entry",
+                            "value": "entry"
+                        }
+                    ]
+                },
+                "value": "main",
+                "input_name": null,
+                "guid": "fee41680-4384-11f0-b0fa-000129af8ea5"
+            },
+            {
+                "help": "Select a position, <b>Entry</b> or <b>Main</b>, from the list, or select the <b>XYZ</b> icon to define a variable.",
+                "name": "Position type",
+                "dependencies": [
+                    {
+                        "dependency_id": "position",
+                        "value": [
+                            7,
+                            9,
+                            11,
+                            13,
+                            16,
+                            18,
+                            20,
+                            24
+                        ],
+                        "check_field": "type_id"
+                    }
+                ],
+                "type": "Selection",
+                "id": "marker_entry_position",
+                "constraints": {
+                    "default": "entry",
+                    "choices": [
+                        {
+                            "name": "Entry",
+                            "value": "entry"
+                        }
+                    ]
+                },
+                "value": "entry",
+                "input_name": null,
+                "guid": "fee4374b-4384-11f0-b0fa-000129af8ea5"
+            },
+            {
+                "id": "retries",
+                "type": "Integer",
+                "help": "Set the number of times the robot should try to reach the position if the path is blocked, or select the <b>XYZ</b> icon to define a variable. If, after the set number of retries, the path is still blocked, the robot stops and produces an error message.",
+                "name": "Retries (Blocked Path)",
+                "constraints": {
+                    "default": 10,
+                    "max": 1000,
+                    "min": 0
+                },
+                "value": 10,
+                "input_name": null,
+                "guid": "fee466f0-4384-11f0-b0fa-000129af8ea5"
+            },
+            {
+                "id": "distance_threshold",
+                "type": "Float",
+                "help": "Depending on how accurately the robot is required to position itself on the goal position, the threshold can be increased or decreased. The default is 0.1 m.",
+                "name": "Distance threshold",
+                "constraints": {
+                    "default": 0.1,
+                    "max": 3,
+                    "min": 0.1
+                },
+                "value": 0.1,
+                "input_name": null,
+                "guid": "fee49649-4384-11f0-b0fa-000129af8ea5"
+            }
+        ],
+        "created_by_name": "Administrator",
+        "mission_id": "374052c7-38a4-11f0-b4c9-000129af8ea5",
+        "action_type": "move",
+        "created_by_id": "mirconst-guid-0000-0005-users0000000",
+        "guid": "fee30942-4384-11f0-b0fa-000129af8ea5",
+        "uniqueId": "move_10",
+        "description": "Move to %(position)s",
+        "descriptions": null,
+        "name": "Move",
+        "color": "#2563EB",
+        "icon": {
+            "key": null,
+            "props": {},
+            "_owner": null,
+            "_store": {}
+        },
+        "status": 0
+    }
+];
+
+export const TestRegisterChoices = [
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 1,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 2,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 3,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 4,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 5,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 6,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 7,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 8,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 9,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 10,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 11,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 12,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 13,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 14,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 15,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 16,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 17,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 18,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 19,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 20,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 21,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 22,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 23,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 24,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 25,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 26,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 27,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 28,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 29,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 30,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 31,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 32,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 33,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 34,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 35,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 36,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 37,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 38,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 39,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 40,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 41,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 42,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 43,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 44,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 45,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 46,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 47,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 48,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 49,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 50,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 51,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 52,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 53,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 54,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 55,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 56,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 57,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 58,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 59,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 60,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 61,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 62,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 63,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 64,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 65,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 66,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 67,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 68,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 69,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 70,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 71,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 72,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 73,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 74,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 75,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 76,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 77,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 78,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 79,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 80,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 81,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 82,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 83,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 84,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 85,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 86,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 87,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 88,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 89,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 90,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 91,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 92,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 93,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 94,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 95,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 96,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 97,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 98,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 99,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 100,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 101,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 102,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 103,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 104,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 105,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 106,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 107,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 108,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 109,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 110,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 111,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 112,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 113,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 114,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 115,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 116,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 117,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 118,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 119,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 120,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 121,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 122,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 123,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 124,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 125,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 126,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 127,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 128,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 129,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 130,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 131,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 132,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 133,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 134,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 135,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 136,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 137,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 138,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 139,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 140,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 141,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 142,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 143,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 144,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 145,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 146,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 147,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 148,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 149,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 150,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 151,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 152,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 153,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 154,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 155,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 156,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 157,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 158,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 159,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 160,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 161,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 162,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 163,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 164,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 165,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 166,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 167,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 168,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 169,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 170,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 171,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 172,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 173,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 174,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 175,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 176,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 177,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 178,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 179,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 180,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 181,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 182,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 183,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 184,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 185,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 186,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 187,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 188,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 189,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 190,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 191,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 192,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 193,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 194,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 195,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 196,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 197,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 198,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 199,
+                  },
+                  {
+                    name: '',
+                    realValue: '100',
+                    value: 200,
+                  },
+                ]

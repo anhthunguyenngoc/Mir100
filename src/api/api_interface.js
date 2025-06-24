@@ -384,6 +384,21 @@ export const I_PostMission_queues = (props) => {
  * @property {string} [scope_reference] - Tham chiếu đến phạm vi mà hành động thuộc về.
  */
 
+/**
+ * @typedef {Object} TGetRegisters
+ * @property {number} [id] - The index of the register.
+ * @property {string} [label] - A label for the register.
+ * @property {string} [url] - The URL of the resource.
+ * @property {number} [value] - The value of the register (float).
+ */
+
+/**
+ * @typedef {Object} TGetRegister
+ * @property {number} [id] - The index of the register.
+ * @property {string} [label] - A label for the register.
+ * @property {number} [value] - The value of the register (float).
+ */
+
 //======================================           POST           ======================================
 
 /**

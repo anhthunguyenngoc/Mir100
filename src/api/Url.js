@@ -1,6 +1,7 @@
 import {
   deletePosition,
   getPositionTypes,
+  GetRegister,
   postPositions,
   putMap,
   putMission,
@@ -46,6 +47,8 @@ export const URL = {
   getMission_actions: (mission_id) => `/missions/${mission_id}/actions`,
   getMission_action: (mission_id, guid) =>
     `/missions/${mission_id}/actions/${guid}`,
+  getRegister: (id) => `/registers/${id}`,
+  getRegisters: '/registers',
 
   deleteMission: (guid) => `/missions/${guid}`,
   deleteMissionQueue: '/mission_queue',

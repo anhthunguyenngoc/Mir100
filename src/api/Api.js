@@ -583,7 +583,7 @@ export const getMission_definition = async (guid) => {
  * @returns {Promise<{statusCode: number, data: Array<IApi.TGetMission_actions>>}}
  *   data: { action_type, guid, mission_id, parameters, priority, url }
  */
-export const GetMissionActions = async (mission_id) => {
+export const getMissionActions = async (mission_id) => {
   const response = await getAPI(URL.getMission_actions(mission_id));
   return {
     statusCode: response.statusCode,
@@ -608,6 +608,44 @@ export const GetMissionAction = async (mission_id, guid) => {
     data: response.rawData,
   };
 };
+
+/**
+ * GET /registers
+ *
+ * Description
+ *  Retrieve the list of PLC registers from the robot. Registers 1 to 100 are integers and registers 101-200
+ are float
+ * 
+ * @returns {Promise<{statusCode: number, data: Array<IApi.TGetRegisters>}}
+ *   data: { id, label, url, value }
+ */
+export const getRegisters = async () => {
+  const response = await getAPI(URL.getRegisters);
+  return {
+    statusCode: response.statusCode,
+    data: response.rawData,
+  };
+};
+
+/**
+ * GET /registers/{id}
+ *
+ * Description
+ *  Retrieve the value of the PLC register with the specified ID. Registers 1 to 100 are integers and
+ registers 101-200 are float
+ * 
+ * @param {String} id
+ * @returns {Promise<{statusCode: number, data: IApi.TGetRegister>}}
+ *   data: { id, label, value }
+ */
+export const getRegister = async (id) => {
+  const response = await getAPI(URL.getRegister(id));
+  return {
+    statusCode: response.statusCode,
+    data: response.rawData,
+  };
+};
+
 //====================================           DELETE           ====================================
 
 /**

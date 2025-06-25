@@ -207,10 +207,10 @@ export const processLidarData = (lidar, position, lidarPosition = 'front') => {
   if (!lidar || !position) return [];
 
   const points = [];
-  const angleRobotRad = position.orientation * Math.PI / 180;
+  const angleRobotRad = (position.orientation * Math.PI) / 180;
 
   // Offset lidar theo dọc robot
-  const offsetY = (lidarPosition === 'front') ? 0.445 : -0.445;
+  const offsetY = lidarPosition === 'front' ? 0.445 : -0.445;
 
   for (let i = 0; i < lidar.ranges.length; i++) {
     const r = lidar.ranges[i];
@@ -226,8 +226,10 @@ export const processLidarData = (lidar, position, lidarPosition = 'front') => {
       const yLidar = yLocal + offsetY;
 
       // Xoay theo góc robot
-      const xRot = xLidar * Math.cos(angleRobotRad) - yLidar * Math.sin(angleRobotRad);
-      const yRot = xLidar * Math.sin(angleRobotRad) + yLidar * Math.cos(angleRobotRad);
+      const xRot =
+        xLidar * Math.cos(angleRobotRad) - yLidar * Math.sin(angleRobotRad);
+      const yRot =
+        xLidar * Math.sin(angleRobotRad) + yLidar * Math.cos(angleRobotRad);
 
       // Dịch theo vị trí robot
       const xMap = xRot + position.x;
@@ -239,8 +241,6 @@ export const processLidarData = (lidar, position, lidarPosition = 'front') => {
 
   return points;
 };
-
-
 
 /**
  * Tính toán các điểm nằm trên đường thẳng từ startP đến endP,

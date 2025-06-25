@@ -6,6 +6,7 @@ import { ImageSrc } from '../../../constant/ImageSrc';
 import * as Context from 'context';
 import * as Icons from 'components/icons/Icons';
 import * as Const from 'constant';
+import * as api from '../../../api';
 
 export const MainHeader = ({ pageInfo }) => {
   const { robotStatus, pathname } = Context.useAppContext();
@@ -17,6 +18,18 @@ export const MainHeader = ({ pageInfo }) => {
     else {
       element.classList.add('hidden');
     }
+  }
+
+  async function putRobotState() {
+    try {
+      const body =
+        robotStatus.state_id == 3
+          ? { state_id: 4 }
+          : robotStatus.state_id == 4
+            ? { state_id: 3 }
+            : { state_id: 3 };
+      const { statusCode } = api.putStatus(body);
+    } catch (error) {}
   }
 
   return (
@@ -44,10 +57,16 @@ export const MainHeader = ({ pageInfo }) => {
         <li
           id="startRobot"
           className="header-button"
-          onClick="toggleHidden('startRobot-section')"
+          onClick={() => putRobotState()}
         >
-          <Icons.Start color={Const.Color.BUTTON} />
-          <span className="header-button-content">Paused</span>
+          {robotStatus?.state_id === 3 ? (
+            <Icons.Pause color={Const.Color.BUTTON} />
+          ) : (
+            <Icons.Start color={Const.Color.BUTTON} />
+          )}
+          <span className="header-button-content">
+            {robotStatus?.state_text}
+          </span>
         </li>
         <li
           id="status"

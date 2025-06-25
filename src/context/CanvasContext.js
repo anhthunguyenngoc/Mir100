@@ -96,6 +96,7 @@ export const CanvasProvider = ({ children, mapId }) => {
       console.log(decodedMap);
       setMap(decodedMap);
     } catch (err) {
+      setMap(Const.TestMap)
       console.error('Error fetching robot status:', err);
     }
   };
@@ -118,6 +119,7 @@ export const CanvasProvider = ({ children, mapId }) => {
 
       setMapPositions(detailMapPositions);
     } catch (err) {
+      setMapPositions(Const.TestPositions)
       console.error('Error fetching robot status:', err);
     }
   };

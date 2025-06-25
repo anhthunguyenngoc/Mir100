@@ -2118,22 +2118,26 @@ const Canvas = ({ isSpeedVisible }) => {
   });
 
   function rotatePoints(points, angleDeg) {
-  const angleRad = angleDeg * Math.PI / 180;
+    const angleRad = (angleDeg * Math.PI) / 180;
 
-  return points.map(p => {
-    const x = p.x;
-    const y = p.y;
-    const xRot = x * Math.cos(angleRad) - y * Math.sin(angleRad);
-    const yRot = x * Math.sin(angleRad) + y * Math.cos(angleRad);
-    return { x: xRot, y: yRot };
-  });
-}
+    return points.map((p) => {
+      const x = p.x;
+      const y = p.y;
+      const xRot = x * Math.cos(angleRad) - y * Math.sin(angleRad);
+      const yRot = x * Math.sin(angleRad) + y * Math.cos(angleRad);
+      return { x: xRot, y: yRot };
+    });
+  }
 
   useEffect(() => {
     if (!lidarMapPoints || !transforms || !lidarOrigin) return;
 
     // const points = rotatePoints(Utils.processLidarData(lidarPoints, transforms?.transforms), robotStatus?.position.orientation);
-    const points = Utils.processLidarData(lidarPoints, robotStatus?.position, 'front');
+    const points = Utils.processLidarData(
+      lidarPoints,
+      robotStatus?.position,
+      'front'
+    );
     // console.log(points)
     // const points = ps.map((p) => Utils.getCanvasPosition(p.x, p.y, map));
     if (!points) return;

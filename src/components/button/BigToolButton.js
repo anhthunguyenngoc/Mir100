@@ -16,7 +16,7 @@ export const BigToolButton = ({
   const [showSelection, setShowSelection] = useState(false);
 
   const toolBtnClick = () => {
-    if(!isActive) return;
+    if (!isActive) return;
 
     const currentButton = document.getElementById(id);
     const isSelected = currentButton.classList.contains('selected');
@@ -59,7 +59,7 @@ export const BigToolButton = ({
           <button
             className={`tool-btn icon-btn radius-5px center height-fit-content full-width ${showSelection ? 'selected' : ''} ${!isActive ? 'inactive' : ''}`}
             onClick={(e) => {
-              if(isActive) setShowSelection(!showSelection);
+              if (isActive) setShowSelection(!showSelection);
             }}
           >
             <img

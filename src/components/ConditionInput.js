@@ -245,7 +245,7 @@ export const ConditionInput = ({
       },
     ];
 
-    const newLogicalOperators = [...logicalOperators, '&&'];
+    const newLogicalOperators = logicalOperators ? [...logicalOperators, '&&'] : ['&&'];
 
     //Cập nhật props conditions
     updateTaskOrSubTaskProps(scope_reference, {

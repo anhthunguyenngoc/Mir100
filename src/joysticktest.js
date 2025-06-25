@@ -583,8 +583,8 @@
 //               overflow: 'auto',
 //             }}
 //           >
-//             <pre>{`<HorizontalScrollContainer 
-//   height="200px" 
+//             <pre>{`<HorizontalScrollContainer
+//   height="200px"
 //   showScrollbar={true}
 //   dragToScroll={true}
 // >
@@ -614,7 +614,7 @@ function App() {
 
   useEffect(() => {
     const ros = new ROSLIB.Ros({
-      url: 'ws://192.168.0.172:9090'
+      url: 'ws://192.168.0.172:9090',
     });
 
     ros.on('connection', () => {
@@ -630,12 +630,12 @@ function App() {
     });
 
     const tfClient = new ROSLIB.TFClient({
-  ros: ros,
-  fixedFrame: 'map',
-  angularThres: 0.01,
-  transThres: 0.01,
-  rate: 10.0
-});
+      ros: ros,
+      fixedFrame: 'map',
+      angularThres: 0.01,
+      transThres: 0.01,
+      rate: 10.0,
+    });
 
     const LIDAR_RANGE = 10.0;
 
@@ -644,43 +644,42 @@ function App() {
       // name: '/scan',
       // messageType: 'sensor_msgs/LaserScan'
       ros: ros,
-  name: '/tf',
-  messageType: 'tf2_msgs/TFMessage',
-  throttle_rate: 3000,
+      name: '/tf',
+      messageType: 'tf2_msgs/TFMessage',
+      throttle_rate: 3000,
     });
 
     const frames = new Set();
 
-scanListener.subscribe((msg) => {
-  console.log(msg)
-  msg.transforms.forEach((t) => {
-    const child = t.child_frame_id;
-    const parent = t.header.frame_id;
-    console.log(`TF: ${parent} -> ${child}`);
-    frames.add(child);
-  });
+    scanListener.subscribe((msg) => {
+      console.log(msg);
+      msg.transforms.forEach((t) => {
+        const child = t.child_frame_id;
+        const parent = t.header.frame_id;
+        console.log(`TF: ${parent} -> ${child}`);
+        frames.add(child);
+      });
 
-  console.log('Frames transformable to map:', Array.from(frames));
-});
+      console.log('Frames transformable to map:', Array.from(frames));
+    });
 
-//     scanListener.subscribe((msg) => {
-      
-//   tfClient.subscribe('laser', (transform) => {
-//     console.log(msg.header.frame_id,transform)
-//     const newPoints = [];
-//     msg.ranges.forEach((r, i) => {
-//       const angle = i * msg.angle_increment + msg.angle_min;
-//       if (r > msg.range_min && r < msg.range_max && r < LIDAR_RANGE) {
-//         const x = r * Math.cos(angle);
-//         const y = r * Math.sin(angle);
-//         const transformed = applyTransform(x, y, transform);
-//         newPoints.push(transformed);
-//       }
-//     });
-//     setPoints(newPoints);
-//   });
-// });
+    //     scanListener.subscribe((msg) => {
 
+    //   tfClient.subscribe('laser', (transform) => {
+    //     console.log(msg.header.frame_id,transform)
+    //     const newPoints = [];
+    //     msg.ranges.forEach((r, i) => {
+    //       const angle = i * msg.angle_increment + msg.angle_min;
+    //       if (r > msg.range_min && r < msg.range_max && r < LIDAR_RANGE) {
+    //         const x = r * Math.cos(angle);
+    //         const y = r * Math.sin(angle);
+    //         const transformed = applyTransform(x, y, transform);
+    //         newPoints.push(transformed);
+    //       }
+    //     });
+    //     setPoints(newPoints);
+    //   });
+    // });
 
     return () => {
       scanListener.unsubscribe();
@@ -704,10 +703,9 @@ scanListener.subscribe((msg) => {
 
     return {
       x: xRot + tx,
-      y: yRot + ty
+      y: yRot + ty,
     };
   }
-
 
   return (
     <div>
@@ -719,7 +717,9 @@ scanListener.subscribe((msg) => {
           </li>
         ))}
       </ul>
-      <p>Hiển thị tối đa 10 điểm mới nhất (console log thêm dữ liệu nếu cần).</p>
+      <p>
+        Hiển thị tối đa 10 điểm mới nhất (console log thêm dữ liệu nếu cần).
+      </p>
     </div>
   );
 }

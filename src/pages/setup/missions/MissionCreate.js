@@ -33,17 +33,17 @@ export const MissionCreate = () => {
       description: form['create-mission-description']?.value,
     });
 
-    // try {
-    //   const { statusCode, data } = await api.postMission(formData);
+    try {
+      const { statusCode, data } = await api.postMission(formData);
 
-    //   if (statusCode === api.STATUS_CODE.SUCCESS_POST) {
-    //     navigate(PATH.edit_mission(data.guid));
-    //   }
-    // } catch (error) {
-    //   console.log('Error post mission');
-    // }
+      if (statusCode === api.STATUS_CODE.SUCCESS_POST) {
+        navigate(PATH.edit_mission(data.guid));
+      }
+    } catch (error) {
+      console.log('Error post mission');
+    }
 
-    navigate(PATH.edit_mission());
+    // navigate(PATH.edit_mission());
   }
 
   const fetchMissionGroups = async () => {

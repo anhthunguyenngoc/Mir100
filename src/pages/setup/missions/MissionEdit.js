@@ -858,7 +858,7 @@ export function MissionEdit() {
     console.log('Final tasks to save:', sortedTasks);
 
     // Bước 5: Thực hiện lưu
-    exe1('374052c7-38a4-11f0-b4c9-000129af8ea5', sortedTasks);
+    exe1(guid, sortedTasks);
   };
 
   const clearProgram = () => {
@@ -884,8 +884,7 @@ export function MissionEdit() {
     }
   }
 
-  useEffect(() => {
-    async function fetchActions() {
+  async function fetchActions() {
       try {
         const { data: missionGroupIds } = await api.getMissionGroups();
         const constMissionGroups =
@@ -965,33 +964,33 @@ export function MissionEdit() {
         setSelectedTasks(createdActions);
       } catch (error) {
         console.error('Lỗi khi fetch mission groups:');
+        const allActions = Const.TestActions.flatMap((group) => {
+          if (!Array.isArray(group.actions)) return [];
+
+          return convertMissionGroupFromApi(group.missionGroup, group.actions, {
+            registerChoices: Const.TestRegisterChoices,
+          });
+        });
+
+        setActions(allActions);
+
+        fetchMissionActions(null, allActions)
+          .then((createdActions) => {
+            // const sortedActions = createdActions.sort(
+            //   (a, b) => a.priority - b.priority
+            // );
+            console.log(createdActions);
+            setSelectedTasks(createdActions);
+          })
+          .catch((error) => {
+            console.error('Lỗi khi fetch mission actions:', error);
+          });
       }
     }
 
-    // fetchActions();
-
-    const allActions = Const.TestActions.flatMap((group) => {
-      if (!Array.isArray(group.actions)) return [];
-
-      return convertMissionGroupFromApi(group.missionGroup, group.actions, {
-        registerChoices: Const.TestRegisterChoices,
-      });
-    });
-
-    setActions(allActions);
-
-    fetchMissionActions(null, allActions)
-      .then((createdActions) => {
-        // const sortedActions = createdActions.sort(
-        //   (a, b) => a.priority - b.priority
-        // );
-        console.log(createdActions);
-        setSelectedTasks(createdActions);
-      })
-      .catch((error) => {
-        console.error('Lỗi khi fetch mission actions:', error);
-      });
-  }, []);
+  useEffect(() => {
+        fetchActions();
+      }, []);
 
   const exe1 = async (mission_id, tasksToSave = null) => {
     try {
@@ -1004,17 +1003,11 @@ export function MissionEdit() {
           const isNullable = param.constraints.nullable ?? false;
 
           if (
-            isNullable &&
-            (valueToSend === undefined ||
+            valueToSend === undefined ||
               valueToSend === null ||
               valueToSend === '')
-          ) {
-            if (param.default !== undefined) {
-              valueToSend = param.default;
-            } else {
-              alert(`Tham số "${param.name}" không được để trống`);
-              throw new Error(`Tham số "${param.name}" không được để trống`);
-            }
+          {
+            valueToSend = param.default || ''
           }
 
           return {
@@ -1040,6 +1033,8 @@ export function MissionEdit() {
           },
         };
       });
+
+      console.log(tasksToSave, actionData)
 
       actionData.forEach(async (action) => {
         switch (action.status) {
@@ -1710,18 +1705,18 @@ const fetchMissionActions = async (mission_id, actions) => {
   //Lấy ra danh sách mission actions có sẵn
   try {
     //!!!
-    // const { data: missionActions } = await api.GetMissionActions(mission_id);
+    const { data: missionActions } = await api.getMissionActions(mission_id);
 
-    // const detailMissionActions = await Promise.all(
-    //       missionActions.map(async (action) => {
-    //         const detail = await fetchMissionAction(mission_id, action.guid);
-    //         return detail;
-    //       })
-    //     );
+    const detailMissionActions = await Promise.all(
+          missionActions.map(async (action) => {
+            const detail = await fetchMissionAction(mission_id, action.guid);
+            return detail;
+          })
+        );
 
     //Test
-    const detailMissionActions = Const.existedDetailAction;
-    console.log(detailMissionActions);
+    // const detailMissionActions = Const.existedDetailAction;
+    // console.log(detailMissionActions);
     //
 
     const allActions = mUtils.getAllActionDefinitions(actions);

@@ -29,7 +29,7 @@ export const Map = () => {
 
       setMaps(detailMaps);
     } catch (err) {
-      setMaps(Const.TestMaps)
+      setMaps(Const.TestMaps);
       console.error('Error fetching list map:', err);
     }
   };

@@ -164,44 +164,83 @@ export const getPointsOnPath = (pathData, step) => {
   return points;
 };
 
-export const processLidarData = (lidar, transforms) => {
-  if (!lidar || !transforms) return;
+// export const processLidarData = (lidar, transforms) => {
+//   if (!lidar || !transforms) return;
+
+//   const points = [];
+//   for (let i = 0; i < lidar.ranges.length; i++) {
+//     const r = lidar.ranges[i];
+//     const angle = i * lidar.angle_increment + lidar.angle_min;
+//     if (lidar.range_min < r && r < lidar.range_max) {
+//       // Tính toán tọa độ LiDAR ban đầu
+//       const x = r * Math.cos(angle);
+//       const y = r * Math.sin(angle);
+//       const point = { x, y };
+
+//       // Kiểm tra nếu transform từ 'base_footprint' sang 'map' có sẵn
+//       const transform = transforms[0];
+//       if (transform) {
+//         // Áp dụng xoay từ quaternion
+//         const q = transform.transform.rotation; // quaternion: {x, y, z, w}
+
+//         // Tính toán góc xoay từ quaternion
+//         const angle = 2 * Math.acos(q.w); // Góc từ quaternion (theo radian)
+//         const sinAngle = Math.sqrt(1 - q.w * q.w); // sin(θ)
+
+//         // Xoay điểm LiDAR
+//         const rotatedX = point.x * Math.cos(angle) - point.y * Math.sin(angle);
+//         const rotatedY = point.x * Math.sin(angle) + point.y * Math.cos(angle);
+
+//         // Áp dụng dịch chuyển từ translation
+//         const transformedX = rotatedX + transform.transform.translation.x;
+//         const transformedY = rotatedY + transform.transform.translation.y;
+
+//         // Lưu điểm đã được chuyển đổi
+//         points.push({ x: transformedX, y: transformedY });
+//       }
+//     }
+//   }
+//   return points; // Trả về các điểm đã xử lý
+// };
+
+export const processLidarData = (lidar, position, lidarPosition = 'front') => {
+  if (!lidar || !position) return [];
 
   const points = [];
+  const angleRobotRad = position.orientation * Math.PI / 180;
+
+  // Offset lidar theo dọc robot
+  const offsetY = (lidarPosition === 'front') ? 0.445 : -0.445;
+
   for (let i = 0; i < lidar.ranges.length; i++) {
     const r = lidar.ranges[i];
     const angle = i * lidar.angle_increment + lidar.angle_min;
+
     if (lidar.range_min < r && r < lidar.range_max) {
-      // Tính toán tọa độ LiDAR ban đầu
-      const x = r * Math.cos(angle);
-      const y = r * Math.sin(angle);
-      const point = { x, y };
+      // Điểm local của lidar
+      const xLocal = r * Math.cos(angle);
+      const yLocal = r * Math.sin(angle);
 
-      // Kiểm tra nếu transform từ 'base_footprint' sang 'map' có sẵn
-      const transform = transforms[0];
-      if (transform) {
-        // Áp dụng xoay từ quaternion
-        const q = transform.transform.rotation; // quaternion: {x, y, z, w}
+      // Lidar đặt lệch trục dọc, cộng offset
+      const xLidar = xLocal;
+      const yLidar = yLocal + offsetY;
 
-        // Tính toán góc xoay từ quaternion
-        const angle = 2 * Math.acos(q.w); // Góc từ quaternion (theo radian)
-        const sinAngle = Math.sqrt(1 - q.w * q.w); // sin(θ)
+      // Xoay theo góc robot
+      const xRot = xLidar * Math.cos(angleRobotRad) - yLidar * Math.sin(angleRobotRad);
+      const yRot = xLidar * Math.sin(angleRobotRad) + yLidar * Math.cos(angleRobotRad);
 
-        // Xoay điểm LiDAR
-        const rotatedX = point.x * Math.cos(angle) - point.y * Math.sin(angle);
-        const rotatedY = point.x * Math.sin(angle) + point.y * Math.cos(angle);
+      // Dịch theo vị trí robot
+      const xMap = xRot + position.x;
+      const yMap = yRot + position.y;
 
-        // Áp dụng dịch chuyển từ translation
-        const transformedX = rotatedX + transform.transform.translation.x;
-        const transformedY = rotatedY + transform.transform.translation.y;
-
-        // Lưu điểm đã được chuyển đổi
-        points.push({ x: transformedX, y: transformedY });
-      }
+      points.push({ x: xMap, y: yMap });
     }
   }
-  return points; // Trả về các điểm đã xử lý
+
+  return points;
 };
+
+
 
 /**
  * Tính toán các điểm nằm trên đường thẳng từ startP đến endP,

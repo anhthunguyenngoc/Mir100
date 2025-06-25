@@ -100,14 +100,15 @@ export function updatePriorityAndParameterInList(
 
 export function updateTaskOrSubTaskProps(
   actions,
-  taskId,         // ID của task hoặc subtask cần cập nhật
-  scope_reference, 
+  taskId, // ID của task hoặc subtask cần cập nhật
+  scope_reference,
   propsValue
 ) {
-
   return scope_reference
     ? actions.map((task) => {
-        const param = task.parameters?.find((item) => item.guid === scope_reference);
+        const param = task.parameters?.find(
+          (item) => item.guid === scope_reference
+        );
 
         if (param && task.subtasks?.[param.id]) {
           return {
@@ -118,7 +119,7 @@ export function updateTaskOrSubTaskProps(
                 if (subtask.uniqueId === taskId) {
                   return {
                     ...subtask,
-                    ...propsValue
+                    ...propsValue,
                   };
                 }
                 return subtask;
@@ -235,13 +236,19 @@ export const initConditions = (parameters, description, descriptions) => {
 //dùng khi update param
 export const getParamDefault = (parameters, des, compareValue) => {
   const requiredParams = getParameters(des);
-  
+  if (
+    requiredParams.includes('operator') &&
+    !requiredParams.includes('compare')
+  ) {
+    requiredParams.unshift('compare');
+  }
+
   return requiredParams.map((item) => {
     const param = parameters.find((i) => i.id == item);
 
     return {
       id: item,
-      ...(param.id === "compare" ? {...param, value: compareValue} : param),
+      ...(param.id === 'compare' ? { ...param, value: compareValue } : param),
     };
   });
 };
@@ -698,19 +705,21 @@ export const ConditionUtils = {
 };
 
 export function getAllActionDefinitions(actions) {
-  return actions.flatMap(group => group.actions || []);
+  return actions.flatMap((group) => group.actions || []);
 }
 
 export function getParamGuid(selectedTasks, taskId, paramId) {
-  const task = selectedTasks.find(t => t.uniqueId === taskId);
+  const task = selectedTasks.find((t) => t.uniqueId === taskId);
   if (!task) {
     console.log(`Không tìm thấy task với id: ${taskId}`);
     return null;
   }
 
-  const param = task.parameters?.find(p => p.id === paramId);
+  const param = task.parameters?.find((p) => p.id === paramId);
   if (!param) {
-    console.log(`Không tìm thấy parameter với id: ${paramId} trong task ${taskId}`);
+    console.log(
+      `Không tìm thấy parameter với id: ${paramId} trong task ${taskId}`
+    );
     return null;
   }
 
@@ -720,20 +729,21 @@ export function getParamGuid(selectedTasks, taskId, paramId) {
 export function updateSubTaskCountInTasks(selectedTasks, taskId, paramId) {
   let updated = false;
 
-  const newTasks = selectedTasks.map(task => {
+  const newTasks = selectedTasks.map((task) => {
     if (task.uniqueId !== taskId) return task;
 
     let paramUpdated = false;
-    const updatedParameters = task.parameters?.map(param => {
-      if (param.id !== paramId) return param;
+    const updatedParameters =
+      task.parameters?.map((param) => {
+        if (param.id !== paramId) return param;
 
-      paramUpdated = true;
-      updated = true;
-      return {
-        ...param,
-        subTaskCount: (param.subTaskCount || 0) + 1,
-      };
-    }) || [];
+        paramUpdated = true;
+        updated = true;
+        return {
+          ...param,
+          subTaskCount: (param.subTaskCount || 0) + 1,
+        };
+      }) || [];
 
     if (!paramUpdated) return task;
 
@@ -754,60 +764,69 @@ export function updateSubTaskCountInTasks(selectedTasks, taskId, paramId) {
  * @param {boolean} exactMatch - Tìm kiếm chính xác hay tìm kiếm gần đúng (mặc định: false)
  * @returns {Object} Kết quả tìm kiếm
  */
-function searchActions(allActions, searchTerm, searchType = 'both', exactMatch = false) {
-    if (!searchTerm || typeof searchTerm !== 'string') {
-        return {
-            success: false,
-            message: 'Từ khóa tìm kiếm không hợp lệ',
-            results: []
-        };
+function searchActions(
+  allActions,
+  searchTerm,
+  searchType = 'both',
+  exactMatch = false
+) {
+  if (!searchTerm || typeof searchTerm !== 'string') {
+    return {
+      success: false,
+      message: 'Từ khóa tìm kiếm không hợp lệ',
+      results: [],
+    };
+  }
+
+  const normalizedSearchTerm = searchTerm.toLowerCase().trim();
+  const results = [];
+
+  allActions.forEach((group) => {
+    const groupName = group.name.toLowerCase();
+    let matched = false;
+
+    // Tìm theo tên group
+    if (searchType === 'group' || searchType === 'both') {
+      const groupMatch = exactMatch
+        ? groupName === normalizedSearchTerm
+        : groupName.includes(normalizedSearchTerm);
+
+      if (groupMatch) {
+        matched = true;
+      }
     }
 
-    const normalizedSearchTerm = searchTerm.toLowerCase().trim();
-    const results = [];
+    // Tìm theo action
+    if (
+      !matched &&
+      (searchType === 'action' || searchType === 'both') &&
+      group.actions
+    ) {
+      const hasMatchingAction = group.actions.some((action) => {
+        const actionName = action.name.toLowerCase();
+        return exactMatch
+          ? actionName === normalizedSearchTerm
+          : actionName.includes(normalizedSearchTerm);
+      });
 
-    allActions.forEach(group => {
-        const groupName = group.name.toLowerCase();
-        let matched = false;
+      if (hasMatchingAction) {
+        matched = true;
+      }
+    }
 
-        // Tìm theo tên group
-        if ((searchType === 'group' || searchType === 'both')) {
-            const groupMatch = exactMatch 
-                ? groupName === normalizedSearchTerm
-                : groupName.includes(normalizedSearchTerm);
+    if (matched) {
+      results.push(group);
+    }
+  });
 
-            if (groupMatch) {
-                matched = true;
-            }
-        }
-
-        // Tìm theo action
-        if (!matched && (searchType === 'action' || searchType === 'both') && group.actions) {
-            const hasMatchingAction = group.actions.some(action => {
-                const actionName = action.name.toLowerCase();
-                return exactMatch 
-                    ? actionName === normalizedSearchTerm
-                    : actionName.includes(normalizedSearchTerm);
-            });
-
-            if (hasMatchingAction) {
-                matched = true;
-            }
-        }
-
-        if (matched) {
-            results.push(group);
-        }
-    });
-
-    return {
-        success: true,
-        searchTerm: searchTerm,
-        searchType: searchType,
-        exactMatch: exactMatch,
-        length: results.length,
-        results: results
-    };
+  return {
+    success: true,
+    searchTerm: searchTerm,
+    searchType: searchType,
+    exactMatch: exactMatch,
+    length: results.length,
+    results: results,
+  };
 }
 
 /**
@@ -817,150 +836,165 @@ function searchActions(allActions, searchTerm, searchType = 'both', exactMatch =
  * @returns {Object} Kết quả tìm kiếm
  */
 export function advancedSearchActions(allActions, options = {}) {
-    const {
-        searchTerm = '',
-        searchType = 'both', // 'action', 'group', 'both'
-        exactMatch = false,
-        limit = null // giới hạn số kết quả
-    } = options;
+  const {
+    searchTerm = '',
+    searchType = 'both', // 'action', 'group', 'both'
+    exactMatch = false,
+    limit = null, // giới hạn số kết quả
+  } = options;
 
-    let results = searchActions(allActions, searchTerm, searchType, exactMatch).results;
+  let results = searchActions(
+    allActions,
+    searchTerm,
+    searchType,
+    exactMatch
+  ).results;
 
-    // Giới hạn số kết quả nếu có
-    if (limit && limit > 0) {
-        results = results.slice(0, limit);
-    }
+  // Giới hạn số kết quả nếu có
+  if (limit && limit > 0) {
+    results = results.slice(0, limit);
+  }
 
-    return {
-        success: true,
-        searchOptions: options,
-        totalResults: results.length,
-        results: results
-    };
+  return {
+    success: true,
+    searchOptions: options,
+    totalResults: results.length,
+    results: results,
+  };
 }
 
 export function processDescriptions(action) {
-    if (!action.parameters || !Array.isArray(action.parameters)) {
-        return null;
-    }
+  if (!action.parameters || !Array.isArray(action.parameters)) {
+    return null;
+  }
 
-    const operatorParam = action.parameters.find(param => param.id === "operator");
-    if (!operatorParam) {
-        return null;
-    }
+  const operatorParam = action.parameters.find(
+    (param) => param.id === 'operator'
+  );
+  if (!operatorParam) {
+    return null;
+  }
 
-    const descriptionsToProcess = [];
+  const descriptionsToProcess = [];
 
-    if (action.description && action.description.includes('%(operator)s')) {
-        descriptionsToProcess.push({
-            text: action.description,
-            conditions: [],
-            isMainDescription: true
-        });
-    }
-
-    if (action.descriptions && Array.isArray(action.descriptions)) {
-        action.descriptions.forEach(desc => {
-            if (desc.text && desc.text.includes('%(operator)s')) {
-                descriptionsToProcess.push({
-                    text: desc.text,
-                    conditions: desc.conditions ? [...desc.conditions] : [],
-                    isMainDescription: false
-                });
-            }
-        });
-    }
-
-    let updatedDescription = null;
-    const updatedDescriptions = [];
-
-    descriptionsToProcess.forEach(desc => {
-        const params = getParameters(desc);
-        
-        // Nếu đã có đủ 3 params: compare, operator, value thì bỏ qua
-        if (
-            params.length === 3 &&
-            params.includes("compare") &&
-            params.includes("operator") &&
-            params.includes("value")
-        ) {
-            if (!desc.isMainDescription) {
-                updatedDescriptions.push({
-                    text: desc.text,
-                    conditions: desc.conditions
-                });
-            }
-            return;
-        }
-
-        const operatorIndex = desc.text.indexOf('%(operator)s');
-        if (operatorIndex !== -1) {
-            // Tìm phần trước %(operator)s
-            const beforeOperator = desc.text.substring(0, operatorIndex).trim();
-            
-            // Tìm vị trí của %(compare)s trong phần trước
-            const compareIndex = beforeOperator.indexOf('%(compare)s');
-            
-            if (compareIndex !== -1) {
-                // Lấy phần prefix (trước %(compare)s)
-                const prefix = beforeOperator.substring(0, compareIndex).trim();
-                
-                // Lấy phần giữa %(compare)s và %(operator)s
-                const afterCompare = beforeOperator.substring(compareIndex + '%(compare)s'.length).trim();
-                
-                // Tạo text mới: chỉ đối xứng phần giữa %(compare)s và %(operator)s
-                const newText = `${prefix} %(compare)s ${afterCompare} %(operator)s %(compare)s ${afterCompare}`.trim();
-                
-                if (desc.isMainDescription) {
-                    updatedDescription = newText;
-                } else {
-                    // Chỉ thêm nếu text mới chưa tồn tại
-                    const exists = action.descriptions && action.descriptions.some(d => d.text === newText);
-                    if (!exists) {
-                        updatedDescriptions.push({
-                            text: newText,
-                            conditions: desc.conditions
-                        });
-                    }
-                }
-            } else {
-                // Nếu không có %(compare)s, thêm %(compare)s và xử lý như trước
-                const words = beforeOperator.split(' ');
-                let prefix = '';
-                let comparePattern = '';
-                
-                if (words.length > 0) {
-                    prefix = words[0];
-                    if (words.length > 1) {
-                        comparePattern = words.slice(1).join(' ');
-                    }
-                }
-                
-                const newText = `${prefix} %(compare)s ${comparePattern} %(operator)s %(compare)s ${comparePattern}`.trim();
-                
-                if (desc.isMainDescription) {
-                    updatedDescription = newText;
-                } else {
-                    const exists = action.descriptions && action.descriptions.some(d => d.text === newText);
-                    if (!exists) {
-                        updatedDescriptions.push({
-                            text: newText,
-                            conditions: desc.conditions
-                        });
-                    }
-                }
-            }
-        }
+  if (action.description && action.description.includes('%(operator)s')) {
+    descriptionsToProcess.push({
+      text: action.description,
+      conditions: [],
+      isMainDescription: true,
     });
+  }
 
-    if (!updatedDescription && updatedDescriptions.length === 0) {
-        return null;
+  if (action.descriptions && Array.isArray(action.descriptions)) {
+    action.descriptions.forEach((desc) => {
+      if (desc.text && desc.text.includes('%(operator)s')) {
+        descriptionsToProcess.push({
+          text: desc.text,
+          conditions: desc.conditions ? [...desc.conditions] : [],
+          isMainDescription: false,
+        });
+      }
+    });
+  }
+
+  let updatedDescription = null;
+  const updatedDescriptions = [];
+
+  descriptionsToProcess.forEach((desc) => {
+    const params = getParameters(desc);
+
+    // Nếu đã có đủ 3 params: compare, operator, value thì bỏ qua
+    if (
+      params.length === 3 &&
+      params.includes('compare') &&
+      params.includes('operator') &&
+      params.includes('value')
+    ) {
+      if (!desc.isMainDescription) {
+        updatedDescriptions.push({
+          text: desc.text,
+          conditions: desc.conditions,
+        });
+      }
+      return;
     }
 
-    return {
-        description: updatedDescription,
-        descriptions: updatedDescriptions.length > 0 ? updatedDescriptions : null
-    };
+    const operatorIndex = desc.text.indexOf('%(operator)s');
+    if (operatorIndex !== -1) {
+      // Tìm phần trước %(operator)s
+      const beforeOperator = desc.text.substring(0, operatorIndex).trim();
+
+      // Tìm vị trí của %(compare)s trong phần trước
+      const compareIndex = beforeOperator.indexOf('%(compare)s');
+
+      if (compareIndex !== -1) {
+        // Lấy phần prefix (trước %(compare)s)
+        const prefix = beforeOperator.substring(0, compareIndex).trim();
+
+        // Lấy phần giữa %(compare)s và %(operator)s
+        const afterCompare = beforeOperator
+          .substring(compareIndex + '%(compare)s'.length)
+          .trim();
+
+        // Tạo text mới: chỉ đối xứng phần giữa %(compare)s và %(operator)s
+        const newText =
+          `${prefix} %(compare)s ${afterCompare} %(operator)s %(compare)s ${afterCompare}`.trim();
+
+        if (desc.isMainDescription) {
+          updatedDescription = newText;
+        } else {
+          // Chỉ thêm nếu text mới chưa tồn tại
+          const exists =
+            action.descriptions &&
+            action.descriptions.some((d) => d.text === newText);
+          if (!exists) {
+            updatedDescriptions.push({
+              text: newText,
+              conditions: desc.conditions,
+            });
+          }
+        }
+      } else {
+        // Nếu không có %(compare)s, thêm %(compare)s và xử lý như trước
+        const words = beforeOperator.split(' ');
+        let prefix = '';
+        let comparePattern = '';
+
+        if (words.length > 0) {
+          prefix = words[0];
+          if (words.length > 1) {
+            comparePattern = words.slice(1).join(' ');
+          }
+        }
+
+        const newText =
+          `${prefix} %(compare)s ${comparePattern} %(operator)s %(compare)s ${comparePattern}`.trim();
+
+        if (desc.isMainDescription) {
+          updatedDescription = newText;
+        } else {
+          const exists =
+            action.descriptions &&
+            action.descriptions.some((d) => d.text === newText);
+          if (!exists) {
+            updatedDescriptions.push({
+              text: newText,
+              conditions: desc.conditions,
+            });
+          }
+        }
+      }
+    }
+  });
+
+  if (!updatedDescription && updatedDescriptions.length === 0) {
+    return null;
+  }
+
+  return {
+    description: updatedDescription,
+    descriptions: updatedDescriptions.length > 0 ? updatedDescriptions : null,
+  };
 }
 
 /**
@@ -972,21 +1006,20 @@ export function processDescriptions(action) {
 export function updateRegisterChoices(parameters, registerChoices) {
   let isUpdate = false;
 
-  const newParameters = parameters.map(param => {
+  const newParameters = parameters.map((param) => {
     // Kiểm tra nếu param có id là "register"
-    if (param.id === "register") {
-
+    if (param.id === 'register') {
       isUpdate = true;
-      
+
       return {
         ...param,
         constraints: {
           ...param.constraints,
           choices: registerChoices,
-        }
+        },
       };
     }
-    
+
     // Trả về param gốc nếu không phải register
     return param;
   });

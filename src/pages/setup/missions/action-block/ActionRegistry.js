@@ -8,7 +8,7 @@ import * as PLC from './PLCAction';
 import * as Email from './EmailAction';
 import * as IO from './IOAction';
 import * as Error from './ErrorHandlingAction';
-import * as mUtils from '../../../../utils/MissionEditUtils'
+import * as mUtils from '../../../../utils/MissionEditUtils';
 
 const ActionRegistry = {
   if: Logic.IfAction,
@@ -36,7 +36,7 @@ const ActionRegistry = {
   sound_stop: SoundLight.StopSound,
   sound: SoundLight.Sound,
   light: SoundLight.Light,
-  
+
   wait_for_plc_register: PLC.WaitForPlcRegister,
   set_reset_plc: PLC.SetResetPlc,
   set_plc_register: PLC.SetPlcRegister,
@@ -87,13 +87,15 @@ function convertActionFromApi(apiAction, realValue) {
   const prototype = ActionRegistry[action_type] || BaseAction;
   const action = Object.create(prototype);
 
-  const { description: newDescription, descriptions: newDescriptions } = mUtils.processDescriptions({parameters, description, descriptions}) || {}
-  const newParameters = mUtils.updateRegisterChoices(parameters, registerChoices);
+  const newParameters = mUtils.updateRegisterChoices(
+    parameters,
+    registerChoices
+  );
 
   action.name = name;
   action.action_type = action_type;
-  action.description = newDescription ? newDescription : description;
-  action.descriptions = newDescriptions ? newDescriptions : descriptions;
+  action.description = description;
+  action.descriptions = descriptions;
   action.parameters = newParameters ? newParameters : parameters;
 
   return action;

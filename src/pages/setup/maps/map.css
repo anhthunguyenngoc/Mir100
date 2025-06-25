@@ -118,7 +118,7 @@ input:checked + .slider:before {
   background-color: var(--color-background);
 }
 
-.map-list {
+.list-div {
   gap: 2px;
 }
 

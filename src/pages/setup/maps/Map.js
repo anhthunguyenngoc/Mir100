@@ -29,6 +29,7 @@ export const Map = () => {
 
       setMaps(detailMaps);
     } catch (err) {
+      setMaps(Const.TestMaps)
       console.error('Error fetching list map:', err);
     }
   };
@@ -92,7 +93,7 @@ export const Map = () => {
         </div>
 
         <div
-          className="map-list flex col full-height"
+          className="list-div flex col full-height"
           style={{ overflowY: 'auto' }}
         >
           <div className="map-card map-card-title flex row align-center radius-5px">

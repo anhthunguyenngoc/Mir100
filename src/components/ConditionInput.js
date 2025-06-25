@@ -93,7 +93,8 @@ const CustomSelect = ({
           ...style,
         }}
       >
-        {options.find((item) => item.value == selected)?.name || selected ||
+        {options.find((item) => item.value == selected)?.name ||
+          selected ||
           options[0].name}
       </div>
 
@@ -114,28 +115,32 @@ export const ConditionInput = ({
   scope_reference,
   logicalOperators,
 }) => {
-    const [hoverId, setHoverId] = useState(null);
-  
+  const [hoverId, setHoverId] = useState(null);
+
   useEffect(() => {
-    const compareValue = options.find((param) => param.id === "compare")?.value;
+    const compareValue = options.find((param) => param.id === 'compare')?.value;
 
     const matchedDesc = descriptions.find((desc) =>
-        desc.conditions.some(
-          (cond) => cond.parameter_id === 'compare' && cond.value === compareValue
-        )
-      );
+      desc.conditions.some(
+        (cond) => cond.parameter_id === 'compare' && cond.value === compareValue
+      )
+    );
 
-    const updatedDescription = matchedDesc || {text: description} ;
-      const requiredParams = Utils.getParamDefault(options, updatedDescription, compareValue);
+    const updatedDescription = matchedDesc || { text: description };
+    const requiredParams = Utils.getParamDefault(
+      options,
+      updatedDescription,
+      compareValue
+    );
 
     updateTaskOrSubTaskProps(scope_reference, {
       conditionsData: {
         conditions: [
-      {
-        id: 1,
-        values: requiredParams,
-      },
-    ],
+          {
+            id: 1,
+            values: requiredParams,
+          },
+        ],
         logicalOperators: logicalOperators,
       },
     });
@@ -230,7 +235,6 @@ export const ConditionInput = ({
 
   // Thêm điều kiện mới
   const addCondition = () => {
-    
     const newId = conditions.length + 1;
     const init = Utils.initConditions(options, description, descriptions);
     const newConditions = [
@@ -264,53 +268,57 @@ export const ConditionInput = ({
 
   // Cập nhật giá trị của tham số trong điều kiện
   const updateConditionValue = (conditionId, paramId, newValue, index) => {
-  if (paramId === 'compare') {
-    const matchedDesc = descriptions.find((desc) =>
-      desc.conditions.some(
-        (cond) => cond.parameter_id === 'compare' && cond.value === newValue
-      )
-    );
+    if (paramId === 'compare') {
+      const matchedDesc = descriptions.find((desc) =>
+        desc.conditions.some(
+          (cond) => cond.parameter_id === 'compare' && cond.value === newValue
+        )
+      );
 
-    const updatedDescription = matchedDesc || { text: description };
-    let requiredParams = Utils.getParamDefault(options, updatedDescription, newValue);
+      const updatedDescription = matchedDesc || { text: description };
+      let requiredParams = Utils.getParamDefault(
+        options,
+        updatedDescription,
+        newValue
+      );
 
-    const newConditions = conditions.map((c) =>
-      c.id === conditionId
-        ? {
-            ...c,
-            values: requiredParams,
-          }
-        : c
-    );
+      const newConditions = conditions.map((c) =>
+        c.id === conditionId
+          ? {
+              ...c,
+              values: requiredParams,
+            }
+          : c
+      );
 
-    updateTaskOrSubTaskProps(scope_reference, {
-      conditionsData: {
-        conditions: newConditions,
-        logicalOperators,
-      },
-    });
-  } else {
-    const newConditions = conditions.map((c) =>
-      c.id === conditionId
-        ? {
-            ...c,
-            values: c.values.map((item, i) =>
-              (item.id == paramId && (i === index || paramId == 'compare'))
-                ? { ...item, value: newValue }
-                : item
-            ),
-          }
-        : c
-    );
+      updateTaskOrSubTaskProps(scope_reference, {
+        conditionsData: {
+          conditions: newConditions,
+          logicalOperators,
+        },
+      });
+    } else {
+      const newConditions = conditions.map((c) =>
+        c.id === conditionId
+          ? {
+              ...c,
+              values: c.values.map((item, i) =>
+                item.id == paramId && (i === index || paramId == 'compare')
+                  ? { ...item, value: newValue }
+                  : item
+              ),
+            }
+          : c
+      );
 
-    updateTaskOrSubTaskProps(scope_reference, {
-      conditionsData: {
-        conditions: newConditions,
-        logicalOperators,
-      },
-    });
-  }
-};
+      updateTaskOrSubTaskProps(scope_reference, {
+        conditionsData: {
+          conditions: newConditions,
+          logicalOperators,
+        },
+      });
+    }
+  };
 
   // Cập nhật toán tử logic
   const updateLogicalOperator = (index, value) => {

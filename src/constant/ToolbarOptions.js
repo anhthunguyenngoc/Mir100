@@ -193,24 +193,24 @@ export const path = [
 ];
 
 export const selection = [
-  {
-    id: 'defaultCursor',
-    imgSrc: 'defaultCursor',
-    alt: 'Default cursor',
-    name: '',
-    shortcut: '',
-    isActived: false,
-    showExpand: false,
-  },
-  {
-    id: 'move',
-    imgSrc: 'move',
-    alt: 'Move',
-    name: '',
-    shortcut: '',
-    isActived: false,
-    showExpand: false,
-  },
+  // {
+  //   id: 'defaultCursor',
+  //   imgSrc: 'defaultCursor',
+  //   alt: 'Default cursor',
+  //   name: '',
+  //   shortcut: '',
+  //   isActived: false,
+  //   showExpand: false,
+  // },
+  // {
+  //   id: 'move',
+  //   imgSrc: 'move',
+  //   alt: 'Move',
+  //   name: '',
+  //   shortcut: '',
+  //   isActived: false,
+  //   showExpand: false,
+  // },
   // {
   //   id: 'trim',
   //   imgSrc: 'trim',

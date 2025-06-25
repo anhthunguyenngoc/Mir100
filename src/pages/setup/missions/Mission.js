@@ -4,6 +4,8 @@ import * as api from '../../../api';
 import { PATH } from '../../../router';
 import { useAppContext } from 'context';
 import * as Const from '../../../constant';
+import * as Icons from '../../../components/icons/Icons';
+import * as Comp from '../../../components';
 
 import './mission.css';
 
@@ -19,6 +21,14 @@ export const Mission = () => {
 
   /** @type {[Array<api.TDetailedMissionQueue>, Function]} */
   const [missionQueues, setMissionQueues] = useState([]);
+
+  const verticalLineProps = {
+      width: '2px',
+      isVisible: true,
+      height: '100%',
+      color: Const.Color.WHITE,
+      borderRadius: '5px',
+    };
 
   const fetchMissionGroups = async () => {
     try {
@@ -59,6 +69,8 @@ export const Mission = () => {
       console.error('Error fetching missions:', err);
     }
   };
+
+  // useEffect
 
   const fetchMissionQueues = async () => {
     try {
@@ -127,20 +139,15 @@ export const Mission = () => {
   };
 
   useEffect(() => {
-    fetchMissionGroups();
-    fetchMissions();
-    fetchMissionQueues();
+    //Test
+    setMissions(Const.TestMissions);
+    setMissionQueues(Const.TestMissionQueue);
+
+    //!!!
+    // fetchMissionGroups();
+    // fetchMissions();
+    // fetchMissionQueues();
   }, []);
-
-  function createMissionClick() {
-    //chuyển hướng sang trang tạo mission mới
-    navigate(PATH.create_mission);
-  }
-
-  function editMissionClick(guid) {
-    //chuyển hướng sang trang edit mission, truyền vào guid vào path
-    navigate(PATH.edit_mission(guid));
-  }
 
   const deleteMission = (guid) => {
     console.log('Deleting mission:', guid);
@@ -179,7 +186,7 @@ export const Mission = () => {
     if (statusCode === api.STATUS_CODE.SUCCESS_POST) {
       // Thêm vào hàng đợi thành công => load lại danh sách mission trong hàng đợi
       console.log('Add mission queue successfully');
-      setMissionQueues(data);
+      fetchMissionQueues();
     } else {
       console.error('Failed to add mission queue:', data);
     }
@@ -208,10 +215,10 @@ export const Mission = () => {
     <div id="mission-content" className="content flex">
       <div className="full-width flex row gap-frame">
         <section className="flex col gap-frame" id="mission-list-container">
-          <div className="flex row full-width space-between">
-            <div id="mission-list-top">
-              <div>Show missions:</div>
-              <div className="row-5px">
+
+          <div id="filter-container" className="flex space-between full-width">
+            <div className="flex row gap-frame">
+            <div className="row-5px">
                 <select id="mission-groups-list" name="mission-groups-list">
                   {missionGroups.map((missionGroup) => (
                     <option key={missionGroup.guid} value={missionGroup.name}>
@@ -222,95 +229,110 @@ export const Mission = () => {
 
                 <button className="button">Create / Edit groups</button>
               </div>
-            </div>
-            <button
-              id="create-mission"
-              className="flex row gap-5px button"
-              onClick={() => createMissionClick()}
-            >
-              <img
-                className="size-20px"
-                alt="Create mission"
-                src={Const.ImageSrc.plus}
-                loading="lazy"
-              />
-              Create mission
-            </button>
-          </div>
-          <ul className="flex col gap-5px" id="mission-list">
-            {missions.map((mission) => (
-              <li
-                className="mission"
-                id={`mission-${mission.guid}`}
-                key={mission.guid}
-              >
-                <div className="mission-icon">
-                  <svg
-                    width="25"
-                    height="24"
-                    viewBox="0 0 33 32"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      className="stroke-color-btn"
-                      d="M22.3 10.4V6.2L26.65 2L28.1 4.8L31 6.2L26.65 10.4H22.3ZM22.3 10.4L16.5 15.9999M31 16C31 23.7319 24.5081 30 16.5 30C8.49187 30 2 23.7319 2 16C2 8.26801 8.49187 2 16.5 2M23.75 16C23.75 19.866 20.504 23 16.5 23C12.4959 23 9.25 19.866 9.25 16C9.25 12.134 12.4959 9 16.5 9"
-                      strokeWidth="3"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
 
-                <div className="mission-content">
-                  <div className="mission-info">
-                    <div id="mission-name">{mission.name}</div>
-                    <div id="mission-group">
-                      {/* {getGroupNameByGuid(mission.group_id)} */}
+                    <div className="flex row gap-5px search-container">
+                      <input
+                        style={{ height: 'auto' }}
+                        placeholder="Write name to search by..."
+                        name="search"
+                        type="text"
+                      />
+                      <button className="button" onClick={() => {}}>
+                        <Icons.Search width="20px" height="20px" />
+                      </button>
                     </div>
+                    </div>
+
+                    <div className="flex row gap-5px">
+                      <button
+                        id="create-mission"
+                        className="button flex row gap-5px"
+                        onClick={() => {
+                          navigate(PATH.create_mission);
+                        }}
+                      >
+                        <img
+                          className="plus-btn-img"
+                          alt="Create mission"
+                          src={Const.ImageSrc.plus}
+                          loading="lazy"
+                        />
+                        <span>Create mission</span>
+                      </button>
+                    </div>
+
+                    
                   </div>
 
-                  <div className="row-5px">
-                    <button
-                      className="button"
-                      onClick={() => editMissionClick(mission.guid)}
-                    >
-                      <img
-                        className="size-20px"
-                        alt="Edit mission"
-                        src={Const.ImageSrc.edit}
-                        loading="lazy"
-                      />
-                    </button>
-
-                    <button
-                      className="del-btn button"
-                      onClick={() => deleteMission(mission.guid)}
-                    >
-                      <img
-                        className="size-20px"
-                        alt="Delete mission"
-                        src={Const.ImageSrc.delete}
-                        loading="lazy"
-                      />
-                    </button>
-
-                    <button
-                      className="button"
-                      onClick={() => postMissionQueues(mission.guid)}
-                    >
-                      <img
-                        className="size-20px"
-                        alt="Add to queue"
-                        src={Const.ImageSrc.addQueue}
-                        loading="lazy"
-                      />
-                    </button>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
+          <div
+                    className="list-div flex col full-height"
+                    style={{ overflowY: 'auto' }}
+                  >
+                    <div className="map-card map-card-title flex row align-center radius-5px">
+                      <div className="map-icon padding-h-15px">
+                        <div className="fill-color-btn stroke-color-btn plus-btn-img" />
+                      </div>
+                      <Comp.VerticalLine {...verticalLineProps} />
+                      <div className="map-name width-70per padding-5px">
+                        <strong>Name</strong>
+                      </div>
+                      <Comp.VerticalLine {...verticalLineProps} />
+                      <div className="map-owner width-30per padding-5px flex justify-center">
+                        <span style={{ width: '70px', textAlign: 'center' }}>
+                          <strong>Created by</strong>
+                        </span>
+                      </div>
+                      <Comp.VerticalLine {...verticalLineProps} />
+                      <div className="map-actions flex row padding-15px gap-5px">
+                        <span style={{ width: '95px', textAlign: 'center' }}>
+                          <strong>Actions</strong>
+                        </span>
+                      </div>
+                    </div>
+          {missions.map((mission) => (
+                      <div
+                        className="map-card flex row align-center radius-5px"
+                        key={mission.guid}
+                      >
+                        <div className="map-icon padding-h-15px">
+                          <Icons.Mission mainColor={Const.Color.BUTTON} subColor={Const.Color.BUTTON} className="plus-btn-img" />
+                        </div>
+                        <Comp.VerticalLine {...verticalLineProps} />
+                        <div className="map-name width-70per padding-5px">{mission.name}</div>
+                        <Comp.VerticalLine {...verticalLineProps} />
+                        <div className="map-owner width-30per padding-5px flex justify-center">
+                          <span className="map-owner-label">Created by:</span>
+                          <span style={{ minWidth: '70px', textAlign: 'center' }}>
+                            {mission.created_by_name}
+                          </span>
+                        </div>
+                        <Comp.VerticalLine {...verticalLineProps} />
+                        <div
+                          className="map-actions flex row padding-15px gap-10px flex justify-center"
+                          style={{ minWidth: '125px' }}
+                        >
+                          <Icons.Edit
+                            width="25px"
+                            height="25px"
+                            onClick={() => navigate(PATH.edit_mission(mission.guid))}
+                          />
+                          <Icons.QueueAdd
+                            width="25px"
+                            height="25px"
+                            mainColor={Const.Color.BUTTON}
+                            subColor='#93BFC2'
+                            onClick={() => postMissionQueues(mission.guid)}
+                          />
+                          <Icons.Delete
+                            width="25px"
+                            height="25px"
+                            color={Const.Color.ERROR}
+                            onClick={() => deleteMission(mission.guid)}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                    </div>
         </section>
 
         <section className="flex col gap-frame" id="mission-queue-container">
@@ -322,43 +344,37 @@ export const Mission = () => {
 
           <ul className="flex col gap-5px" id="mission-queue-list">
             {missionQueues.map((missionQueue) => (
-              <li
-                className="full-width flex row align-center border"
-                id={`mission-queue-${missionQueue.id}`}
-                key={missionQueue.id}
-              >
-                <div className="flex row align-center padding-7px mission-queue-icon">
-                  <svg
-                    className="plus-btn-img"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M16.1924 5.65683C16.5829 5.2663 16.5829 4.63314 16.1924 4.24261L13.364 1.41419C12.5829 0.633139 11.3166 0.633137 10.5355 1.41419L7.70711 4.24261C7.31658 4.63314 7.31658 5.2663 7.70711 5.65683C8.09763 6.04735 8.73079 6.04735 9.12132 5.65683L11 3.77812V11.0503H3.72784L5.60655 9.17157C5.99707 8.78104 5.99707 8.14788 5.60655 7.75735C5.21602 7.36683 4.58286 7.36683 4.19234 7.75735L1.36391 10.5858C0.582863 11.3668 0.582859 12.6332 1.36391 13.4142L4.19234 16.2426C4.58286 16.6332 5.21603 16.6332 5.60655 16.2426C5.99707 15.8521 5.99707 15.219 5.60655 14.8284L3.8284 13.0503H11V20.2219L9.12132 18.3432C8.73079 17.9526 8.09763 17.9526 7.7071 18.3432C7.31658 18.7337 7.31658 19.3669 7.7071 19.7574L10.5355 22.5858C11.3166 23.3669 12.5829 23.3669 13.364 22.5858L16.1924 19.7574C16.5829 19.3669 16.5829 18.7337 16.1924 18.3432C15.8019 17.9526 15.1687 17.9526 14.7782 18.3432L13 20.1213V13.0503H20.071L18.2929 14.8284C17.9024 15.219 17.9024 15.8521 18.2929 16.2426C18.6834 16.6332 19.3166 16.6332 19.7071 16.2426L22.5355 13.4142C23.3166 12.6332 23.3166 11.3668 22.5355 10.5858L19.7071 7.75735C19.3166 7.36683 18.6834 7.36683 18.2929 7.75735C17.9024 8.14788 17.9024 8.78104 18.2929 9.17157L20.1716 11.0503H13V3.87867L14.7782 5.65683C15.1687 6.04735 15.8019 6.04735 16.1924 5.65683Z" />
-                  </svg>
-                </div>
-
-                <div className="full-width flex row align-center padding-7px">
-                  <div className="full-width flex col">
-                    <div id="mission-queue-title">{missionQueue.name}</div>
-                  </div>
-                  <div className="row-5px">
-                    <div>{missionQueue.state}</div>
-                    <button
-                      className="del-btn button"
-                      id="del-mission-queue"
-                      onClick={() => deleteMissionQueue(missionQueue.id)}
-                    >
-                      <img
-                        className="size-20px"
-                        alt="Delete mission from queue"
-                        src={Const.ImageSrc.delete}
-                        loading="lazy"
-                      />
-                    </button>
-                  </div>
-                </div>
-              </li>
+              <div
+                        className="map-card flex row align-center radius-5px"
+                        key={missionQueue.id}
+                      >
+                        <div className="map-icon padding-h-15px">
+                          <Icons.Queue mainColor={Const.Color.BUTTON}
+                            subColor='#93BFC2' className="plus-btn-img" />
+                        </div>
+                        <Comp.VerticalLine {...verticalLineProps} />
+                        <div className="map-name width-70per padding-5px">{missionQueue.name}</div>
+                        <Comp.VerticalLine {...verticalLineProps} />
+                        <div className="map-owner width-30per padding-5px flex justify-center">
+                          <span className="map-owner-label">State:</span>
+                          <span style={{ minWidth: '70px', textAlign: 'center' }}>
+                            {missionQueue.state}
+                          </span>
+                        </div>
+                        <Comp.VerticalLine {...verticalLineProps} />
+                        <div
+                          className="map-actions flex row padding-15px gap-10px flex justify-center"
+                          style={{ minWidth: '65px' }}
+                        >
+                          <Icons.QueueRemove
+                            width="25px"
+                            height="25px"
+                            mainColor={Const.Color.ERROR}
+                            subColor='#C7939B'
+                            onClick={() => deleteMissionQueue(missionQueue.guid)}
+                          />
+                        </div>
+                      </div>
             ))}
           </ul>
         </section>

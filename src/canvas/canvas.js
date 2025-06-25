@@ -494,93 +494,93 @@ const Canvas = ({ isSpeedVisible }) => {
     });
 
     //Test
-        // return fakeMapPositions.map((position) => {
-        //   const p = Utils.getCanvasPosition(position.pos_x, position.pos_y, {
-        //     metadata: { height: 568 },
-        //     resolution: 0.05,
-        //     origin_x: 0,
-        //     origin_y: 0,
-        //   });
-        //   return (
-        //     <ShapeComp.MyImage
-        //       ref={imageRef}
-        //       x={p.x}
-        //       y={p.y}
-        //       rotation={position.orientation}
-        //       imageSrc={Const.getPositionImage(position.type_id)}
-        //       width={20}
-        //       height={20}
-        //       onDblClick={(e, x, y) => {
-        //         setPositionDialog({
-        //           isVisible: true,
-        //           name: position.name,
-        //           type_id: position.type_id,
-        //           id: position.guid,
-        //         });
-        //         setIsClickVisible(false);
-        //       }}
-        //       onClick={(e, x, y) => {
-        //         handlePositionClick(e, x, y);
-        //         setPositionDialog({
-        //           isVisible: false,
-        //           name: position.name,
-        //           type_id: position.type_id,
-        //           id: position.guid,
-        //         });
-        //         setTooltipContent(
-        //           <div className="flex row" style={{ gap: '2px' }}>
-        //             {[
-        //               actionList.GOTO,
-        //               actionList.CREATE_PATH,
-        //               actionList.MOVE,
-        //               actionList.EDIT,
-        //               actionList.DELETE,
-        //             ].map((action, index) => {
-        //               return (
-        //                 <Comp.Tooltip hoverContent={action.alt}>
-        //                   <Comp.SmallToolButton
-        //                     imageSrc={action.imageSrc}
-        //                     showExpand={false}
-        //                     alt={action.alt}
-        //                     onClick={action?.onClick}
-        //                     buttonStyle={{
-        //                       borderRadius: '0',
-        //                       ...(index === 0 && {
-        //                         borderTopLeftRadius: '5px',
-        //                         borderBottomLeftRadius: '5px',
-        //                       }),
-        //                       ...(index === 4 && {
-        //                         borderTopRightRadius: '5px',
-        //                         borderBottomRightRadius: '5px',
-        //                       }),
-        //                     }}
-        //                   />
-        //                 </Comp.Tooltip>
-        //               );
-        //             })}
-        //           </div>
-        //         );
-        //       }}
-        //       onMouseEnter={(e, x, y) => {
-        //         handlePositionHover(e, x, y);
-        //         setTooltipContent(
-        //           <div
-        //             className="radius-5px"
-        //             style={{
-        //               padding: '5px 10px',
-        //               backgroundColor: Const.Color.BUTTON,
-        //             }}
-        //           >
-        //             {position.name}
-        //           </div>
-        //         );
-        //       }}
-        //       onMouseLeave={() => {
-        //         setIsHoverVisible(false);
-        //       }}
-        //     />
-        //   );
-        // });
+    // return fakeMapPositions.map((position) => {
+    //   const p = Utils.getCanvasPosition(position.pos_x, position.pos_y, {
+    //     metadata: { height: 568 },
+    //     resolution: 0.05,
+    //     origin_x: 0,
+    //     origin_y: 0,
+    //   });
+    //   return (
+    //     <ShapeComp.MyImage
+    //       ref={imageRef}
+    //       x={p.x}
+    //       y={p.y}
+    //       rotation={position.orientation}
+    //       imageSrc={Const.getPositionImage(position.type_id)}
+    //       width={20}
+    //       height={20}
+    //       onDblClick={(e, x, y) => {
+    //         setPositionDialog({
+    //           isVisible: true,
+    //           name: position.name,
+    //           type_id: position.type_id,
+    //           id: position.guid,
+    //         });
+    //         setIsClickVisible(false);
+    //       }}
+    //       onClick={(e, x, y) => {
+    //         handlePositionClick(e, x, y);
+    //         setPositionDialog({
+    //           isVisible: false,
+    //           name: position.name,
+    //           type_id: position.type_id,
+    //           id: position.guid,
+    //         });
+    //         setTooltipContent(
+    //           <div className="flex row" style={{ gap: '2px' }}>
+    //             {[
+    //               actionList.GOTO,
+    //               actionList.CREATE_PATH,
+    //               actionList.MOVE,
+    //               actionList.EDIT,
+    //               actionList.DELETE,
+    //             ].map((action, index) => {
+    //               return (
+    //                 <Comp.Tooltip hoverContent={action.alt}>
+    //                   <Comp.SmallToolButton
+    //                     imageSrc={action.imageSrc}
+    //                     showExpand={false}
+    //                     alt={action.alt}
+    //                     onClick={action?.onClick}
+    //                     buttonStyle={{
+    //                       borderRadius: '0',
+    //                       ...(index === 0 && {
+    //                         borderTopLeftRadius: '5px',
+    //                         borderBottomLeftRadius: '5px',
+    //                       }),
+    //                       ...(index === 4 && {
+    //                         borderTopRightRadius: '5px',
+    //                         borderBottomRightRadius: '5px',
+    //                       }),
+    //                     }}
+    //                   />
+    //                 </Comp.Tooltip>
+    //               );
+    //             })}
+    //           </div>
+    //         );
+    //       }}
+    //       onMouseEnter={(e, x, y) => {
+    //         handlePositionHover(e, x, y);
+    //         setTooltipContent(
+    //           <div
+    //             className="radius-5px"
+    //             style={{
+    //               padding: '5px 10px',
+    //               backgroundColor: Const.Color.BUTTON,
+    //             }}
+    //           >
+    //             {position.name}
+    //           </div>
+    //         );
+    //       }}
+    //       onMouseLeave={() => {
+    //         setIsHoverVisible(false);
+    //       }}
+    //     />
+    //   );
+    // });
   };
 
   const renderCreatePosition = () => {
@@ -614,8 +614,8 @@ const Canvas = ({ isSpeedVisible }) => {
   };
 
   useEffect(() => {
-    console.log(layers)
-  }, [layers])
+    console.log(layers);
+  }, [layers]);
 
   const renderlidarMapPoints = () => {
     if (!lidarMapPoints) return;
@@ -2117,11 +2117,25 @@ const Canvas = ({ isSpeedVisible }) => {
     },
   });
 
+  function rotatePoints(points, angleDeg) {
+  const angleRad = angleDeg * Math.PI / 180;
+
+  return points.map(p => {
+    const x = p.x;
+    const y = p.y;
+    const xRot = x * Math.cos(angleRad) - y * Math.sin(angleRad);
+    const yRot = x * Math.sin(angleRad) + y * Math.cos(angleRad);
+    return { x: xRot, y: yRot };
+  });
+}
+
   useEffect(() => {
     if (!lidarMapPoints || !transforms || !lidarOrigin) return;
 
-    const points = Utils.processLidarData(lidarPoints, transforms?.transforms);
-
+    // const points = rotatePoints(Utils.processLidarData(lidarPoints, transforms?.transforms), robotStatus?.position.orientation);
+    const points = Utils.processLidarData(lidarPoints, robotStatus?.position, 'front');
+    // console.log(points)
+    // const points = ps.map((p) => Utils.getCanvasPosition(p.x, p.y, map));
     if (!points) return;
 
     const lidarMapP = points.map((p) => {
@@ -2448,11 +2462,11 @@ const Canvas = ({ isSpeedVisible }) => {
               scaleY={zoom / 100}
               opacity={layer.selected ? 1 : 0.6}
             >
-              {renderedMapArray} 
+              {renderedMapArray}
 
               {renderMetadata()}
 
-              {/* {renderlidarMapPoints()} */}
+              {renderlidarMapPoints()}
 
               {renderPositions()}
 

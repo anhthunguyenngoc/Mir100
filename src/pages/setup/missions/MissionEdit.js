@@ -277,7 +277,7 @@ const SortableTask = ({
                 backgroundColor: '#ffffff',
                 color: task.color,
                 borderRadius: '12px',
-                padding: '2px 8px',
+                padding: '2px',
                 fontSize: '12px',
                 fontWeight: 'bold',
                 border: `1px solid ${task.color}`,
@@ -656,7 +656,7 @@ export function MissionEdit() {
         status: 1,
       };
 
-       setSelectedTasks((prevTasks) => {
+      setSelectedTasks((prevTasks) => {
         const updatedTasks = prevTasks.map((task) => {
           if (task.uniqueId !== parentId) return task;
 
@@ -873,15 +873,15 @@ export function MissionEdit() {
 
   async function fetchRegisters() {
     try {
-        const { data } = await api.getRegisters();
-        return data.map((register) => ({
-          name: register.label == '' ? register.id : register.label,
-          value: register.id,
-          realValue: register.value,
-        }))
-      } catch (error) {
-        console.error('Lỗi khi fetch registers');
-      }
+      const { data } = await api.getRegisters();
+      return data.map((register) => ({
+        name: register.label == '' ? register.id : register.label,
+        value: register.id,
+        realValue: register.value,
+      }));
+    } catch (error) {
+      console.error('Lỗi khi fetch registers');
+    }
   }
 
   useEffect(() => {
@@ -951,7 +951,9 @@ export function MissionEdit() {
         const allActions = results.flatMap((group) => {
           if (!Array.isArray(group.actions)) return [];
 
-          return convertMissionGroupFromApi(group.missionGroup, group.actions, { registerChoices });
+          return convertMissionGroupFromApi(group.missionGroup, group.actions, {
+            registerChoices,
+          });
         });
 
         setActions(allActions);
@@ -971,10 +973,12 @@ export function MissionEdit() {
     const allActions = Const.TestActions.flatMap((group) => {
       if (!Array.isArray(group.actions)) return [];
 
-      return convertMissionGroupFromApi(group.missionGroup, group.actions, { registerChoices: Const.TestRegisterChoices });
+      return convertMissionGroupFromApi(group.missionGroup, group.actions, {
+        registerChoices: Const.TestRegisterChoices,
+      });
     });
 
-    setActions(allActions)
+    setActions(allActions);
 
     fetchMissionActions(null, allActions)
       .then((createdActions) => {
@@ -987,7 +991,6 @@ export function MissionEdit() {
       .catch((error) => {
         console.error('Lỗi khi fetch mission actions:', error);
       });
-
   }, []);
 
   const exe1 = async (mission_id, tasksToSave = null) => {
@@ -1064,7 +1067,7 @@ export function MissionEdit() {
   };
 
   useEffect(() => {
-    console.log(actions)
+    console.log(actions);
     //
     // api.postMissionsAction("374052c7-38a4-11f0-b4c9-000129af8ea5", {
     //   "action_type": "move",
@@ -1134,7 +1137,7 @@ export function MissionEdit() {
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <TaskPalette actions={actions}/>
+        <TaskPalette actions={actions} />
         <SortableContext
           items={allItems}
           strategy={verticalListSortingStrategy}
@@ -1402,7 +1405,7 @@ export function MissionEdit() {
 
 const TaskPalette = ({ actions }) => {
   const [searchValue, setSearchValue] = useState('');
-  const [ displayActions, setDisplayActions] = useState(actions);
+  const [displayActions, setDisplayActions] = useState(actions);
 
   const handleSearchChange = (e) => {
     const value = e.target.value;
@@ -1415,7 +1418,7 @@ const TaskPalette = ({ actions }) => {
         searchTerm: trimmedValue,
         searchType: 'both',
         exactMatch: false,
-        limit: null
+        limit: null,
       });
       setDisplayActions(searchResult.results);
     } else {
@@ -1426,7 +1429,7 @@ const TaskPalette = ({ actions }) => {
 
   useEffect(() => {
     setDisplayActions(actions);
-  }, [actions])
+  }, [actions]);
 
   return (
     <section className="width-30per">
@@ -1601,87 +1604,97 @@ function processActionsSubTasks(detailMissionActions) {
   // Bước 1: Lọc ra các action có scope_reference khác null
   const actionsWithScopeRef = [];
   const indicesToRemove = new Set(); // Set để lưu các index cần xóa
-  
+
   detailMissionActions.forEach((action, index) => {
-    if (action.scope_reference !== null && action.scope_reference !== undefined) {
+    if (
+      action.scope_reference !== null &&
+      action.scope_reference !== undefined
+    ) {
       actionsWithScopeRef.push({
         action: action,
-        originalIndex: index
+        originalIndex: index,
       });
       indicesToRemove.add(index); // Đánh dấu index cần xóa
     }
   });
-  
+
   console.log('Actions có scope_reference:', actionsWithScopeRef);
   console.log('Các index sẽ bị xóa:', Array.from(indicesToRemove));
-  
+
   // Bước 2: Xử lý từng action có scope_reference
   actionsWithScopeRef.forEach(({ action: scopedAction, originalIndex }) => {
     const scopeRefGuid = scopedAction.scope_reference;
-    
+
     // Tìm các action có parameter type "Scope" với guid khớp
     detailMissionActions.forEach((parentAction, parentIndex) => {
       if (parentAction.parameters && Array.isArray(parentAction.parameters)) {
-        parentAction.parameters.forEach(param => {
+        parentAction.parameters.forEach((param) => {
           // Kiểm tra param có type "Scope" và guid khớp với scope_reference
-          if (param.type === "Scope" && param.guid === scopeRefGuid) {
+          if (param.type === 'Scope' && param.guid === scopeRefGuid) {
             // Khởi tạo subtasks nếu chưa có
             if (!parentAction.subtasks) {
               parentAction.subtasks = {};
             }
-            
+
             const keyString = param.id.toString();
-            
+
             // Khởi tạo mảng cho key này nếu chưa có
             if (!parentAction.subtasks[keyString]) {
               parentAction.subtasks[keyString] = [];
             }
-            
+
             // Thêm action vào mảng
             parentAction.subtasks[keyString].push(scopedAction);
-            
-            console.log(`Đã thêm action (index ${originalIndex}) vào subtasks của action (index ${parentIndex}) với key "${keyString}"`);
+
+            console.log(
+              `Đã thêm action (index ${originalIndex}) vào subtasks của action (index ${parentIndex}) với key "${keyString}"`
+            );
           }
         });
       }
     });
   });
-  
+
   // Bước 3: Xóa các action đã được thêm vào subtasks khỏi mảng gốc
   // Sắp xếp các index theo thứ tự giảm dần để xóa từ cuối lên đầu
-  const sortedIndicesToRemove = Array.from(indicesToRemove).sort((a, b) => b - a);
-  
+  const sortedIndicesToRemove = Array.from(indicesToRemove).sort(
+    (a, b) => b - a
+  );
+
   console.log('\n=== XÓA ACTIONS KHỎI MẢNG GỐC ===');
-  sortedIndicesToRemove.forEach(index => {
+  sortedIndicesToRemove.forEach((index) => {
     const removedAction = detailMissionActions.splice(index, 1)[0];
-    console.log(`Đã xóa action tại index ${index}: ${removedAction.name} (guid: ${removedAction.guid})`);
+    console.log(
+      `Đã xóa action tại index ${index}: ${removedAction.name} (guid: ${removedAction.guid})`
+    );
   });
-  
+
   return detailMissionActions;
 }
 
 function processActionsConditions(actions) {
   return actions.map((action) => {
-    const {parameters, description, descriptions} = action; 
-    let applicableDesc = {text: description } || descriptions[0] || null;
-    
-    if(!applicableDesc) return {
-      ...action,
-      conditionsData: {
-        conditions: [],
-        logicalOperators: []
-      }
-    }
-    
+    const { parameters, description, descriptions } = action;
+    let applicableDesc = { text: description } || descriptions[0] || null;
+
+    if (!applicableDesc)
+      return {
+        ...action,
+        conditionsData: {
+          conditions: [],
+          logicalOperators: [],
+        },
+      };
+
     // Bước 2: Dùng hàm getParameters để lấy danh sách param
     const params = mUtils.initConditions(parameters, description, descriptions);
-    console.log(params)
+    console.log(params);
     // Bước 3: Tạo condition mới
     const newCondition = {
       id: 1, // ID là index tiếp theo
-      values: params // Values là mảng các param
+      values: params, // Values là mảng các param
     };
-    
+
     return {
       ...action,
       conditionsData: {
@@ -1689,64 +1702,63 @@ function processActionsConditions(actions) {
         logicalOperators: [],
       },
     };
-  })
+  });
 }
 
 //lấy ra danh sách action
 const fetchMissionActions = async (mission_id, actions) => {
   //Lấy ra danh sách mission actions có sẵn
- try {
-  //!!!
-  // const { data: missionActions } = await api.GetMissionActions(mission_id);
+  try {
+    //!!!
+    // const { data: missionActions } = await api.GetMissionActions(mission_id);
 
-  // const detailMissionActions = await Promise.all(
-  //       missionActions.map(async (action) => {
-  //         const detail = await fetchMissionAction(mission_id, action.guid);
-  //         return detail;
-  //       })
-  //     );
+    // const detailMissionActions = await Promise.all(
+    //       missionActions.map(async (action) => {
+    //         const detail = await fetchMissionAction(mission_id, action.guid);
+    //         return detail;
+    //       })
+    //     );
 
-  //Test
-  const detailMissionActions = Const.existedDetailAction;
-  console.log(detailMissionActions)
-  //
+    //Test
+    const detailMissionActions = Const.existedDetailAction;
+    console.log(detailMissionActions);
+    //
 
-  const allActions = mUtils.getAllActionDefinitions(actions);
-  
-  const createdAction = detailMissionActions
-    .map((action) => {
-      const actionType = allActions.find(
-        (type) => type.action_type === action.action_type
-      );
-      
-      if (!actionType) return null;
+    const allActions = mUtils.getAllActionDefinitions(actions);
 
-      return {
-        ...action,
-        uniqueId: `${action.action_type}_${action.priority}`,
-        guid: action.guid,
-        parameters: mUtils.enhanceParameters(
-          actionType.parameters,
-          action.parameters,
-        ),
-        description: action.description,
-        descriptions: actionType.descriptions,
-        name: actionType.name,
-        color: actionType.color,
-        icon: actionType.icon,
-        status: 0,
-      };
-    })
-    .filter(Boolean); // Loại bỏ các phần tử null nếu không tìm thấy actionType
+    const createdAction = detailMissionActions
+      .map((action) => {
+        const actionType = allActions.find(
+          (type) => type.action_type === action.action_type
+        );
+
+        if (!actionType) return null;
+
+        return {
+          ...action,
+          uniqueId: `${action.action_type}_${action.priority}`,
+          guid: action.guid,
+          parameters: mUtils.enhanceParameters(
+            actionType.parameters,
+            action.parameters
+          ),
+          description: action.description,
+          descriptions: actionType.descriptions,
+          name: actionType.name,
+          color: actionType.color,
+          icon: actionType.icon,
+          status: 0,
+        };
+      })
+      .filter(Boolean); // Loại bỏ các phần tử null nếu không tìm thấy actionType
 
     const actionsWithConditions = processActionsConditions(createdAction);
-    console.log(actionsWithConditions)
+    console.log(actionsWithConditions);
     const actionsWithSubTasks = processActionsSubTasks(actionsWithConditions);
-  return actionsWithSubTasks;
-} catch (err) {
-  console.warn(`Không lấy được detail cho mission_id ${mission_id}: ${err} `);
-}
-
+    return actionsWithSubTasks;
+  } catch (err) {
+    console.warn(`Không lấy được detail cho mission_id ${mission_id}: ${err} `);
+  }
 };
 
 //Xóa action

@@ -116,7 +116,7 @@ export const CanvasToolbar = ({
         style={{ marginBottom: '5px' }}
       >
         <div className="height-fit-content width-fit-content flex col gap-15px">
-          <div className="height-fit-content width-fit-content flex row gap-10px">
+          <div className="height-fit-content full-width flex row gap-10px justify-center">
             <ul className="center col padding-10px gap-5px">
               <BigToolButton
                 id={activeSelectOption.id}
@@ -270,7 +270,7 @@ export const CanvasToolbar = ({
           <span className="light-text center">Group</span>
         </div>
 
-        <VerticalLine {...verticalLine} />
+        {/* <VerticalLine {...verticalLine} />
 
         <div className="width-fit-content flex col gap-15px">
           <ul className="grid-oneline full-height width-fit-content gap-5px"></ul>
@@ -282,7 +282,7 @@ export const CanvasToolbar = ({
         <div className="width-fit-content flex col gap-15px">
           <ul className="grid-oneline full-height width-fit-content gap-5px"></ul>
           <span className="light-text center">Export</span>
-        </div>
+        </div> */}
 
         {/* <button onClick={() => toggleDrawingMode("line")}>
                 {drawingMode === "line" ? "Hủy vẽ Line" : "Vẽ Line"}
